@@ -23,5 +23,3 @@ Small Figure:
     * `packages`
 * R
     * `packages`
-
-testtesttest
