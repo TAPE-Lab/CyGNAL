@@ -8,8 +8,9 @@ The Cell Communication Lab studies how oncogenic mutations (e.g. loss of APC) co
 In this repo we present a workflow for analysing mass cytometry data similar to that used in our pre-print: [Single-Cell Signalling Analysis of Heterocellular Organoids](https://www.biorxiv.org/content/10.1101/659896v1). The work here is being underdone by Ferran Cardoso (@FerranC96), Pelagia Kyriakidou, and Xiao Qin (@qinxiao1990).
 
 Small Figure:
-![alt text][Cell_type_and_state_ID]
-[Cell_type_and_state_ID]: (https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/test.png) "Overview"
+![alt text][Overview]
+
+[Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/test.png "Overview of cell identification"
 
 ## How to use
 *NOTE*: The data contained here has been trimmed to minimise file size while mantaining educational purposes of the scripts
