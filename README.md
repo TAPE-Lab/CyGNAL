@@ -1,9 +1,9 @@
 CyTOF_Data Analysis
 ============
-Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute, lead by Dr. Chris Tape.
+Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute, led by Dr. Chris Tape.
 The Cell Communication Lab studies how oncogenic mutations (e.g. loss of APC) communicate with stromal and immune cells in CRC. By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer. 
 
-In this repo we present a workflow for analysing mass cytometry data similar to those shown on our pre-print: [Single-Cell Signalling Analysis of Heterocellular Organoids](https://www.biorxiv.org/content/10.1101/659896v1).
+In this repo we present a workflow for analysing mass cytometry data similar to that used in our pre-print: [Single-Cell Signalling Analysis of Heterocellular Organoids](https://www.biorxiv.org/content/10.1101/659896v1).
 The work here is being underdone by Ferran Cardoso (@FerranC96), Pelagia Kyriakidou, and Xiao Qin (@qinxiao1990).
 
 Small Figure:
