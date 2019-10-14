@@ -8,7 +8,7 @@ The work here is being underdone by Dr. Xiao Qin (@qinxiao1990) and Ferran Cardo
 
 Small Figure:
 ![alt text][Cell_type_and_state_ID]
-[Cell_type_and_state_ID]: 
+[Cell_type_and_state_ID]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/test.png "Overview"
 
 ## How to use
 *NOTE*: The data contained here has been trimmed to minimise file size while mantaining educational purposes of the scripts
