@@ -7,7 +7,7 @@ In this repo we present a workflow for analysing mass cytometry data similar to 
 The work here is being underdone by Dr. Xiao Qin (@qinxiao1990) and Ferran Cardoso (@FerranC96).
 
 ## How to use
-*NOTE*: The data contianed here has been trimmed to minimise file size while mantaining educational purposes of the scripts
+*NOTE*: The data contained here has been trimmed to minimise file size while mantaining educational purposes of the scripts
 
 1. First step
 2. Second step
