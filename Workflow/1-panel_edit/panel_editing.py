@@ -35,6 +35,9 @@ filelist = [f for f in os.listdir(f"./input") if f.endswith(".txt")]
 # filelist = [f for f in os.listdir(f"./input") if f.endswith(".csv")]
 filelist
 
+#Check the files found in the directory:
+for i in filelist:
+    print (i)
 #%% [markdown]
 #FUTURE WORK: Once I have gone through all steps, implement the code as 
 # functions and write and overarching script to run everything as a 
