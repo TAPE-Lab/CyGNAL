@@ -35,7 +35,10 @@ filelist = [f for f in os.listdir(f"./input") if f.endswith(".txt")]
 # filelist = [f for f in os.listdir(f"./input") if f.endswith(".csv")]
 filelist
 
-
+#%% [markdown]
+#FUTURE WORK: Once I have gone through all steps, implement the code as 
+# functions and write and overarching script to run everything as a 
+# consolidated pipeline -> Might have to split it whenever Cytobank is involved 
 #%%
 # get the original column names
 file = f"./input/{filelist[0]}"
