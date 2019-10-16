@@ -4,8 +4,8 @@
 # ms-python.python added
 import os
 try:
-	os.chdir(os.path.join(os.getcwd(), '../../../../../../var/folders/hw/fqkcybzs3gq_bksy6wfr534m0000gr/T'))
-	print(os.getcwd())
+	os.chdir(os.path.join(os.getcwd(), 'Workflow/2-umap'))
+	
 except:
 	pass
 
@@ -39,64 +39,62 @@ hv.extension("bokeh", width=90)
 InteractiveShell.ast_node_interactivity = "all"
 
 #%% [markdown]
-# ### Step 1: Concatenate all files
-# #### Consider:
-# - Do you need to downsample each condition to the same cell number?
+## UMAP
+# Perform umap analysis, but let's first create and concatenate any files that we will be suing as input
+# Input: Output from step 1, originally cytobank non-transformed .txt exports
+# We do lose support for vs files (vSNE on cytobank?)
+### Step 1: Concatenate all files
+#### Consider:
+#- Do you need to downsample each condition to the same cell number?
 
-#%%
+#%% Function to concatenate all files
+def concatenate_fcs(folder_name):
+    filenames_no_arcsinh = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+    no_arc = pd.DataFrame()
+    file_list =[] 
+    #Add counter to keep track of the number of files in input -> 
+    # -> cell ID will be a mix of these (Filenumber | filename.txt)
+    fcounter = 0
+    for file in filenames_no_arcsinh:
+        fcounter += 1
+        df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
+        df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
+        df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
+        no_arc = no_arc.append(df, ignore_index=True)
+    return no_arc
+#%% Perform concatenation
 # set up working directory
-# files to be concatenated are kept in a subfolder called 'files' in the current working folder (i.e. current_dir/files)
-# both arcsinh and non-arcsinh transformed files need to be exported from Cytobank as txt files
+#   files to be concatenated are kept in a subfolder called 'files' in the 
+# current working folder (i.e. current_dir/files)
 # umap is generated using arcsinh transformed data
-# the non-arcsinh transformed data is used for data uploading back into Cytobank after umap info is incorporated
+#   the non-arcsinh transformed data is used for data uploading back into Cytobank after umap info is incorporated
 
 folder_name = "input"
 
-# create the list of fcs files to be concatenated
+no_arc = concatenate_fcs(folder_name)
 
-filenames_no_arcsinh = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+#%% Arcsinh transform the data
+def arcsinh_transf(cofactor):
+    arc = no_arc.iloc[:,:-1] #leave out the last column ('file_origin')
+    #Select only the columns containing the markers (as they start with a number for the isotope)
+    cols = [x for x in arc.columns if x[0].isdigit()]
+    #Apply the arcsinh only to those columns (don't want to change time or any other)
+    arc = arc.apply(lambda x: np.arcsinh(x/cofactor) if x.name in cols else x)
+    # put back the 'file_origin' column to the arcsinh-transformed data
+    arc["file_origin"] = no_arc["file_origin"]
+    return arc, cols
 
-# the arcsinh and non-arcsinh data files have to be of the SAME order! 
-# or otherwise the umap info will not be appended to the cells correctly
-# filenames_no_arcsinh_order = [f.split("_arcsinh.txt")[0] for f in filenames_arcsinh]
-# filenames_no_arcsinh = [f"{f}_no-arcsinh.txt" for f in filenames_no_arcsinh_order]
+#%% Perform transformation
 
-# filenames_arcsinh
-filenames_no_arcsinh
+#Literature recommends cofactor of 5 for cytof data
+cofactor = 5
 
-
-#%%
-# concatenating input files
-# add a new column of 'file_origin' that will be used to separate each file after umap calculation
-
-# arc = pd.DataFrame()
-# for file in filenames_arcsinh:
-#     df = pd.read_csv(f"{folder_name}/{file}", sep="\t")
-#     df["file_origin"] = file
-#     arc = arc.append(df, ignore_index=True)
-#     print(f"arc.shape = ({arc.shape[0]}, {arc.shape[1]})")
-    
-no_arc = pd.DataFrame()
-for file in filenames_no_arcsinh:
-    df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
-    df["file_origin"] = file
-    no_arc = no_arc.append(df, ignore_index=True)
-    print(f"no_arc.shape = ({no_arc.shape[0]}, {no_arc.shape[1]})")
-
-# arcsinh transformation; leave out the last column ('file_origin')
-cofactor = 5  
-arc = no_arc.iloc[:,:-1].apply(lambda x: np.arcsinh(x/cofactor))
-
-# put back the 'file_origin' column to the arcsinh-transformed data
-arc["file_origin"] = no_arc["file_origin"]
-
-arc.head()
-no_arc.head()
+arc, cols = arcsinh_transf(cofactor)
+#Storing marker columns for later use in UMAP
 
 #%% [markdown]
 # ### Step 2: Make umaps
-#%% [markdown]
-# #### Step 2.1: Setup UMAP parameters
+# # #### Step 2.1: Setup UMAP parameters
 
 #%%
 # UMAP PARAMETERS 
@@ -108,35 +106,32 @@ m = 0.1
 comp = 2
 d = "euclidean"
 
-
-#%%
-######
 # include here the information that would be helpful to understand the umaps
-######
-
 info_run = "fig-1_demo"
 
 #%% [markdown]
 # #### Step 2.2: Define the markers used for UMAP calculation
+#%% Read them from a .csv file in ./input
+filenames_no_arcsinh = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
 
 #%%
-# group columns of the dataframe based on the type of measurement
-standard_columns = ["Event #", "Time", "Event_length", "Center", "Offset", "Width", "Residual","tSNE1", "tSNE2", "Unnamed: 0", "Unnamed: 0.1", "barcode_num", "barcode_name", "barcode_whole_name", "file_origin"]
-not_markers_cols = [column for column in arc.columns if column in standard_columns]
-all_markers_cols = [column for column in arc.columns if column not in standard_columns]
-cytobank_vs_cols = [column for column in arc.columns if "(v)" in column] # this is valid only when the data is exported from viSNE experiments
+# OLD CODE CAN ALL BE DEPRECATED. LEVERAGE INSTEAD THE COLS FOUND EARLIER: group columns of the dataframe based on the type of measurement
+#standard_columns = ["Event #", "Time", "Event_length", "Center", "Offset", "Width", "Residual","tSNE1", "tSNE2", "Unnamed: 0", "Unnamed: 0.1", "barcode_num", "barcode_name", "barcode_whole_name", "file_origin"]
+not_markers_cols = [column for column in arc.columns if column not in cols]
+all_markers_cols = [column for column in arc.columns if column in cols]
+
+#cytobank_vs_cols = [column for column in arc.columns if "(v)" in column] # this is valid only when the data is exported from viSNE experiments
 
 # define the v's for umap calculation (vs_markers_cols)
 not_these = [] # columns to be excluded for umap calculation
 yes_these = [c for c in arc.columns if 'RB' in c or 'Caspase' in c or 'pHH3' in c or 'IdU' in c or
-             'LRIG1' in c or 'Lysozyme' in c or 'CHGA' in c or 'DCAMKL1' in c or 'CLCA1' in c or 'FABP1' in c or 'CD44' in c] # columns to be included for umap calculation         
-
-vs_markers_cols = [column for column in cytobank_vs_cols if column not in not_these] + yes_these # or choose the v's to be used from scratch
+            'LRIG1' in c or 'Lysozyme' in c or 'CHGA' in c or 'DCAMKL1' in c or 'CLCA1' in c or 'FABP1' in c or 'CD44' in c] # columns to be included for umap calculation         
+vs_markers_cols = yes_these # or choose the v's to be used from scratch
 no_vs_markers_cols = [column for column in all_markers_cols if column not in vs_markers_cols]
 
 # keep the columns ('v's) needed for umap calculation (all_together_vs_marks)
 all_together_vs_marks = arc[vs_markers_cols].copy()
-# all_together_vs_marks.head()
+all_together_vs_marks.head()
 
 print(f"Markers used for UMAP calculation: \n")
 print('\n'.join([m for m in all_together_vs_marks]))

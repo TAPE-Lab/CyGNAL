@@ -1,15 +1,5 @@
 # To add a new cell, type '#%%'
 # To add a new markdown cell, type '#%% [markdown]'
-#%% Change working directory from the workspace root to the ipynb file location.
-# Turn this addition off with the DataScience.changeDirOnImportExport setting
-# ms-python.python added
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(),
-        '../../../../../../var/folders/95/kmz2y98s2pn02b7lmnk8blsr0000gn/T'))
-	print(os.getcwd())
-except:
-	pass
 
 #%%
 import os, glob
@@ -26,31 +16,21 @@ hv.extension("bokeh", width=90)
 # display all output in each cell
 InteractiveShell.ast_node_interactivity = "all"
 
-
-#%%
-# prepare file list; put the data files to be processed in the 'input' folder
-# most of the time these files should share the same panel
-# put the files in a list (txt/csv)
-filelist = [f for f in os.listdir(f"./input") if f.endswith(".txt")]
-# filelist = [f for f in os.listdir(f"./input") if f.endswith(".csv")]
-filelist
-
-#Check the files found in the directory:
-for i in filelist:
-    print (i)
 #%% [markdown]
 #FUTURE WORK: Once I have gone through all steps, implement the code as 
 # functions and write and overarching script to run everything as a 
 # consolidated pipeline -> Might have to split it whenever Cytobank is involved 
-#%%
-# get the original column names
-file = f"./input/{filelist[0]}"
-df_file = pd.read_csv(file, sep = '\t')
-type(df_file)
-df_file
-df_file_cols = list(df_file.columns)
 
-df_file_cols
+
+#%%
+# prepare file list; put the data files to be processed in the 'input' folder
+# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
+filelist = [f for f in os.listdir(f"./input") if f.endswith(".txt")]
+
+#Check the files found in the directory:
+print ("Files found in ./input:")
+for i in filelist:
+    print (i)
 
 #%%
 #FCR 14/10/19: Automated column name editing with regex
@@ -80,14 +60,6 @@ def rename_columns(df_file_cols):
     
     return df_file_cols_renamed
 
-renamed_columns = rename_columns(df_file_cols)
-
-# len(renamed_columns)
-# len(df_file_cols)
-# renamed_columns
-df_file_cols
-
-#%%
 #Filtering
 def filter_columns(renamed_columns):
     reg_filter = re.compile("^\d+[A-Za-z]+$")
@@ -100,34 +72,67 @@ def filter_columns(renamed_columns):
             columns_to_keep.append(i)
     return columns_to_keep, filtered_columns
 
-columns_to_keep, filtered_columns = filter_columns(renamed_columns)
 
-# for i in filtered_columns:
-#     print (i)
-# len(filtered_columns)
-# len(renamed_columns)
 
 #%%
-# Final step: Write reduced file
-for file in filelist:
-    name = file.split(".")[0] # change this line based on the naming of the input files
+# Perform changes and save them to file
+cols = []
+for i in filelist:
+    file = f"./input/{i}"
+    df_file = pd.read_csv(file, sep = '\t')
+    shape_before = df_file.shape
+    df_file_cols = list(df_file.columns)
     
-    f = pd.read_csv(os.path.join(f"./input/{file}"), sep="\t")
+    #%% Perform renaming and filtering
+    renamed_columns = rename_columns(df_file_cols)
+    columns_to_keep, filtered_columns = filter_columns(renamed_columns)
+    df_file.columns = renamed_columns
+    f_reduced = df_file[columns_to_keep].iloc[:].copy()
+    print ("Removed the following columns: ", filtered_columns)
     
-    file_cols = list(f.columns)
-    if file_cols == df_file_cols: # again, all the files should share the same panel
-        f.columns = renamed_columns
-        f_reduced = f[columns_to_keep].iloc[:].copy()
-        f_reduced.to_csv(f"./output/{name}.txt", index = False, sep = '\t') 
-            # index = False to be compatible with Cytobank
-        
-        # print the info of the renaming procedure
-        shape_before = f.shape
-        shape_after = f_reduced.shape
-        print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+    #Store columns present in each of the input files
+    cols.append([x for x in f_reduced.columns if x[0].isdigit()])
+    name = file.split(".")[0]
+    f_reduced.to_csv(f"./output/{name}.txt", index = False, sep = '\t') 
+        # index = False to be compatible with Cytobank    
+    shape_after = f_reduced.shape
+    print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
 
-    else:
-        print(f"{file} HAS NOT THE SAME COLUMNS")
+#%% [markdown]
+#Add also the generation of a .csv file with the markers in the panel.
+#It should be ok to do it here b4 concatenation in the next step because if they are to be concatenaded they shpould already have the same panel of markers
+if not all(x==cols[0] for x in cols):
+    print ("Check your input files: The panels don't match!")
+else:
+    all_markers = cols[0]
+    
+
+#%%
+# # Final step: Write reduced file
+# for file in filelist:
+#     name = file.split(".")[0] # change this line based on the naming of the input files
+    
+#     f = pd.read_csv(os.path.join(f"./input/{file}"), sep="\t")
+    
+#     file_cols = list(f.columns)
+#     if file_cols == df_file_cols: # again, all the files should share the same panel
+#         f.columns = renamed_columns
+#         f_reduced = f[columns_to_keep].iloc[:].copy()
+#         f_reduced.to_csv(f"./output/{name}.txt", index = False, sep = '\t') 
+#             # index = False to be compatible with Cytobank
+        
+#         # print the info of the renaming procedure
+#         shape_before = f.shape
+#         shape_after = f_reduced.shape
+#         print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+
+#     else:
+#         print(f"{file} HAS NOT THE SAME COLUMNS")
+
+#%% [markdown]
+#Add also the generation of a .csv file with the markers in the panel.
+#It should be ok to do it here b4 concatenation in the next step because if they are to be concatenaded they shpould already have the same panel of markers
+
 
 #%%
 # DEPRECATED old info (51<53 since we now keep Cisplatin and Event#/Cell_Index)
@@ -280,8 +285,7 @@ for file in filelist:
 # df_file_cols_testing = []
 # df_file_cols_filtered = []
 
-# len(df_file_cols)
-                        
+# len(df_file_cols)  
 # for i in df_file_cols:
 #     if reg_filter.search(i):
 #         df_file_cols_filtered.append(i)
