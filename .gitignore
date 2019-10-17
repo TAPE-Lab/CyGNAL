@@ -31,7 +31,7 @@ Temporary Items
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -41,7 +41,7 @@ Temporary Items
 .history
 
 ### Data files
-/8-cell-state-info/input
-/8-cell-state-info/output
+Workflow/8-cell-state-info/input
+Workflow/8-cell-state-info/output
 
 # End of https://www.gitignore.io/api/macos,visualstudiocode
