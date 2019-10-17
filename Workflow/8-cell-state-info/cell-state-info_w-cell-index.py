@@ -4,7 +4,7 @@
 # ms-python.python added
 import os
 try:
-	os.chdir(os.path.join(os.getcwd(), 'step-n_cell-state-info'))
+	os.chdir(os.path.join(os.getcwd(), 'Workflow/8-cell-state-info'))
 	print(os.getcwd())
 except:
 	pass
@@ -29,7 +29,8 @@ filelist = [f for f in os.listdir(f"./input") if f.endswith(".txt")]
 filelist
 
 #%%
-# generate a list of cell-types
+# generate lists of cell-types and cell-states for iteration
+ 
 cell_type = [f.split('_')[0] for f in filelist]
 cell_type = list(set(cell_type))
 cell_type
@@ -39,10 +40,12 @@ cell_state = list(set(cell_state))
 cell_state
 
 #%%
+# generate a dictionary of dataframes
+# keys: cell-type_cell-state
+ 
 dfs = {}
 for file in filelist:
     df = pd.read_csv(f'./input/{file}', sep = '\t', index_col = 0)
-    # df.reset_index(drop = True, inplace = True)
     c_type = file.split('_')[0]
     c_state = file.split('.txt')[0].split('_')[-1]
     dfs[c_type + '_' + c_state] = df
@@ -50,6 +53,8 @@ for file in filelist:
 dfs.keys()
 
 #%%
+# subset the dfs dictionary based on cell-types
+
 dfs_sub = {}
 for c_type in cell_type:
     sub = 'dfs_' + c_type
