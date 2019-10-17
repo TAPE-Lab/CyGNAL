@@ -86,7 +86,6 @@ def arcsinh_transf(cofactor):
     return arc, cols
 
 #%% Perform transformation
-
 #Literature recommends cofactor of 5 for cytof data
 cofactor = 5
 
@@ -95,23 +94,9 @@ arc, cols = arcsinh_transf(cofactor)
 
 #%% [markdown]
 # ### Step 2: Make umaps
-# # #### Step 2.1: Setup UMAP parameters
-
-#%%
-# UMAP PARAMETERS 
-nn = "no-norm"
-rs = 2.0
-nsr = 8
-n = 15
-m = 0.1
-comp = 2
-d = "euclidean"
-
-# include here the information that would be helpful to understand the umaps
-info_run = "fig-1_demo"
 
 #%% [markdown]
-# #### Step 2.2: Define the markers used for UMAP calculation
+# #### Step 2.1: Define the markers used for UMAP calculation
 #%% Read them from a .csv file in ./input
 #Sanity check
 marker_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".csv")]
@@ -120,6 +105,7 @@ if len(marker_files) != 1:
 
 marker_file = pd.read_csv(f"{folder_name}/{marker_files[0]}", header=None)
 
+#%%
 #Get markers flagged for use
 def identify_markers(marker_file):
     markers_umap = marker_file.loc[marker_file[1] == "Y", [0]].values.tolist()
@@ -150,127 +136,146 @@ print(f"\n Number of markers used: {len(all_together_vs_marks.columns)}")
 #%% [markdown]
 # ##### Optional: z-score transformation
 
-#%%
+#%% Z-SCORE: Not used now, interactive inplementation on later stages of the pipeline
 # z-score transformation (for the Organoid Methods Paper, only applied to supplementary figure 1)
-all_together_vs_marks = all_together_vs_marks.apply(zscore)
-all_together_vs_marks.head()
+# all_together_vs_marks.head()
+# all_together_vs_marks = all_together_vs_marks.apply(zscore)
+# all_together_vs_marks.head()
 
 #%% [markdown]
-# #### Step 2.3 UMAP Calculation
-
+# #### Step 2.2: Define UMAP parameters
 #%%
+# UMAP PARAMETERS 
+nn = "no-norm"
+rs = 2.0
+nsr = 8
+n = 15
+m = 0.1
+comp = 2
+d = "euclidean"
+# include here the information that would be helpful to understand the umaps
+info_run =  input("Write UMAP info run (using no spaces!): ")
+
+umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d, "info":info_run}
+
+
+
+#%% UMAP function
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
-umap_emb = pd.DataFrame(umap.UMAP(n_neighbors=n, min_dist=m, metric=d, n_components=comp, repulsion_strength=rs, negative_sample_rate=nsr).fit_transform(all_together_vs_marks), 
-                        columns=[f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_1",f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_2"])
 
+def perform_umap(umap_params, all_together_vs_marks, no_arc):
+    run_name = "UMAP_"+umap_params["info"]
+    umap_emb = pd.DataFrame(umap.UMAP(n_neighbors=umap_params["n"], min_dist=umap_params["m"],
+                metric=umap_params["d"], n_components=umap_params["comp"],
+                repulsion_strength=umap_params["rs"],
+                negative_sample_rate=umap_params["nsr"]).fit_transform(all_together_vs_marks), 
+                    columns=[run_name+"_D1",run_name+"_D2"])
+    # append umap info columns
+    no_arc[run_name+"_D1"] = umap_emb[run_name+"_D1"]
+    no_arc[run_name+"_D2"] = umap_emb[run_name+"_D2"]
+
+#columns=[f"umap_{umap_params["info"]}_norm={umap_params["nn"]}_rs={umap_params["rs"]}_nsr={umap_params["nrs"]}_n={n}_m={umap_params["m"]}_{umap_params["d"]}_1",f"umap_{umap_params["info"]}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_2"])
 
 #%%
-# append umap info columns
-
-no_arc[f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_1"] = umap_emb[f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_1"]
-no_arc[f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_2"] = umap_emb[f"umap_{info_run}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_2"]
-
-no_arc.head()
-umap_emb.head()
-
-no_arc.tail()
-umap_emb.tail()
+print (no_arc)
+perform_umap(umap_params, all_together_vs_marks, no_arc)
+print (no_arc)
 
 #COMMENT#
 
-#%% [markdown]
-# ### Step 3: Get files ready for cytobank upload
-# Note: You should use "no-arcsinh" when you want to convert the files to a Cytobank- and Scaffold- compatible format
-#%% [markdown]
-# #### Step 3.1: Format the column names
+# #%% [markdown]
+# # ### Step 3: Get files ready for cytobank upload
+# # Note: You should use "no-arcsinh" when you want to convert the files to a Cytobank- and Scaffold- compatible format
+# #%% [markdown]
+# # #### Step 3.1: Format the column names
 
-#%%
-# reformat/clean-up the column names for umap info
+# #%%
+# # reformat/clean-up the column names for umap info
 
-data = no_arc.copy()
-[c for c in list(data.columns) if "umap" in c]
+# data = no_arc.copy()
+# [c for c in list(data.columns) if "umap" in c]
 
-["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
-p = ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
+# ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
+# p = ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
 
-col_change = dict(zip([c for c in list(data.columns) if "umap" in c], p))
-col_change
+# col_change = dict(zip([c for c in list(data.columns) if "umap" in c], p))
+# col_change
 
-data.rename(columns = col_change, inplace = True)
+# data.rename(columns = col_change, inplace = True)
 
 
-#%%
-# rename the columns for Cytobank
-# this step has something to do with Cytobank's configuration of Channel Name/Reagent
-# alternatively, leave the renaming to the final clean-step (use 'python_panel_editing_tool.ipynb')
+# #%%
+# # rename the columns for Cytobank
+# # this step has something to do with Cytobank's configuration of Channel Name/Reagent
+# # alternatively, leave the renaming to the final clean-step (use 'python_panel_editing_tool.ipynb')
 
-cytobank_naming = {}
+# cytobank_naming = {}
 
-parenthesis = [c for c in list(data.columns) if "_(" in c]
-vs = [c for c in parenthesis if " (v)" in c]
-not_vs = [c for c in parenthesis if c not in vs]
-stay_same = [c for c in list(data.columns) if c not in parenthesis]
+# parenthesis = [c for c in list(data.columns) if "_(" in c]
+# vs = [c for c in parenthesis if " (v)" in c]
+# not_vs = [c for c in parenthesis if c not in vs]
+# stay_same = [c for c in list(data.columns) if c not in parenthesis]
 
-# if len(parenthesis + stay_same) != len(list(peli.columns)):
-#     print("THERE ARE SOME DUPLICATES, COLUMN NAMES THAT ARE IN MORE THAN ONE CATEGORIES\n")
+# # if len(parenthesis + stay_same) != len(list(peli.columns)):
+# #     print("THERE ARE SOME DUPLICATES, COLUMN NAMES THAT ARE IN MORE THAN ONE CATEGORIES\n")
 
-for c in vs:
-    names = c.split(" (v)_(")
-    channel_name = names[1][:-1]
-    marker_reagent = names[0][:]
-    cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
+# for c in vs:
+#     names = c.split(" (v)_(")
+#     channel_name = names[1][:-1]
+#     marker_reagent = names[0][:]
+#     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
 
-for c in not_vs:
-    names = c.split("_(")
-    channel_name = names[1][:-1]
-    marker_reagent = names[0]
-    cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
+# for c in not_vs:
+#     names = c.split("_(")
+#     channel_name = names[1][:-1]
+#     marker_reagent = names[0]
+#     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
 
-for c in stay_same:
-    cytobank_naming[c] = (f"{c}__{c}")
+# for c in stay_same:
+#     cytobank_naming[c] = (f"{c}__{c}")
     
-data.rename(columns = cytobank_naming, inplace = True)
-list(data.columns)
+# data.rename(columns = cytobank_naming, inplace = True)
+# list(data.columns)
 
-#%% [markdown]
-# #### Step 3.2: Revolve the data into separtate conditions
-# For the following steps, you need to enter the info for each sample manually
+# #%% [markdown]
+# # #### Step 3.2: Revolve the data into separtate conditions
+# # For the following steps, you need to enter the info for each sample manually
 
-#%%
-# display the list of files of origin
-data["file_origin__file_origin"].unique()
-
-
-#%%
-# split the data into individual dataframes for each sample
-id_data = data[data["file_origin__file_origin"]==f"id_no-arcsinh.txt"]
-cd_data = data[data["file_origin__file_origin"]==f"cd_no-arcsinh.txt"]
-iv_data = data[data["file_origin__file_origin"]==f"iv_no-arcsinh.txt"]
-control_data = data[data["file_origin__file_origin"]==f"control_no-arcsinh.txt"]
-cv_data = data[data["file_origin__file_origin"]==f"cv_no-arcsinh.txt"]
-all_data = data.iloc[:,:].copy()
+# #%%
+# # display the list of files of origin
+# data["file_origin__file_origin"].unique()
 
 
-#%%
-# generate a dictionary of dataframes for looping; n+1 files (each + all)
-all_updated_dict = {}
-all_updated_dict["id_data"] = id_data.iloc[:,:].copy()
-all_updated_dict["cd_data"] = cd_data.iloc[:,:].copy()
-all_updated_dict["iv_data"] = iv_data.iloc[:,:].copy()
-all_updated_dict["control_data"] = control_data.iloc[:,:].copy()
-all_updated_dict["cv_data"] = cv_data.iloc[:,:].copy()
-all_updated_dict["all_data"] = all_data.iloc[:,:].copy()
+# #%%
+# # split the data into individual dataframes for each sample
+# id_data = data[data["file_origin__file_origin"]==f"id_no-arcsinh.txt"]
+# cd_data = data[data["file_origin__file_origin"]==f"cd_no-arcsinh.txt"]
+# iv_data = data[data["file_origin__file_origin"]==f"iv_no-arcsinh.txt"]
+# control_data = data[data["file_origin__file_origin"]==f"control_no-arcsinh.txt"]
+# cv_data = data[data["file_origin__file_origin"]==f"cv_no-arcsinh.txt"]
+# all_data = data.iloc[:,:].copy()
 
 
-#%%
-# save the output; the index column needs to be dropped, or otherwise Cytobank will give error messages
-for k, v in all_updated_dict.items():
-    data_new = v.copy()
-    name = k.split("_data")[0]
-    data_new.to_csv(f"{name}_no-arcsinh_input-to-cytobank.txt", sep="\t", index = False)
+# #%%
+# # generate a dictionary of dataframes for looping; n+1 files (each + all)
+# all_updated_dict = {}
+# all_updated_dict["id_data"] = id_data.iloc[:,:].copy()
+# all_updated_dict["cd_data"] = cd_data.iloc[:,:].copy()
+# all_updated_dict["iv_data"] = iv_data.iloc[:,:].copy()
+# all_updated_dict["control_data"] = control_data.iloc[:,:].copy()
+# all_updated_dict["cv_data"] = cv_data.iloc[:,:].copy()
+# all_updated_dict["all_data"] = all_data.iloc[:,:].copy()
 
 
-#%%
+# #%%
+# # save the output; the index column needs to be dropped, or otherwise Cytobank will give error messages
+# for k, v in all_updated_dict.items():
+#     data_new = v.copy()
+#     name = k.split("_data")[0]
+#     data_new.to_csv(f"{name}_no-arcsinh_input-to-cytobank.txt", sep="\t", index = False)
+
+
+# #%%
 
 
