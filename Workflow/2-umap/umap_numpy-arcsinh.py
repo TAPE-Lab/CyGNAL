@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 import fcsparser as fcs
 import umap
+import sys
 
 import os
 import shutil
@@ -112,26 +113,35 @@ info_run = "fig-1_demo"
 #%% [markdown]
 # #### Step 2.2: Define the markers used for UMAP calculation
 #%% Read them from a .csv file in ./input
-filenames_no_arcsinh = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+#Sanity check
+marker_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".csv")]
+if len(marker_files) != 1:
+    sys.exit("ERROR: There should be ONE .csv file with the markers to use in ./input!")
+
+marker_file = pd.read_csv(f"{folder_name}/{marker_files[0]}", header=None)
+
+#Get markers flagged for use
+def identify_markers(marker_file):
+    markers_umap = marker_file.loc[marker_file[1] == "Y", [0]].values.tolist()
+    markers_umap = [item for sublist in markers_umap for item in sublist] #Flatten list
+    return markers_umap
 
 #%%
 # OLD CODE CAN ALL BE DEPRECATED. LEVERAGE INSTEAD THE COLS FOUND EARLIER: group columns of the dataframe based on the type of measurement
 #standard_columns = ["Event #", "Time", "Event_length", "Center", "Offset", "Width", "Residual","tSNE1", "tSNE2", "Unnamed: 0", "Unnamed: 0.1", "barcode_num", "barcode_name", "barcode_whole_name", "file_origin"]
+
 not_markers_cols = [column for column in arc.columns if column not in cols]
-all_markers_cols = [column for column in arc.columns if column in cols]
+all_markers_cols = cols.copy()
 
 #cytobank_vs_cols = [column for column in arc.columns if "(v)" in column] # this is valid only when the data is exported from viSNE experiments
 
 # define the v's for umap calculation (vs_markers_cols)
 not_these = [] # columns to be excluded for umap calculation
-yes_these = [c for c in arc.columns if 'RB' in c or 'Caspase' in c or 'pHH3' in c or 'IdU' in c or
-            'LRIG1' in c or 'Lysozyme' in c or 'CHGA' in c or 'DCAMKL1' in c or 'CLCA1' in c or 'FABP1' in c or 'CD44' in c] # columns to be included for umap calculation         
-vs_markers_cols = yes_these # or choose the v's to be used from scratch
+vs_markers_cols = identify_markers(marker_file)
 no_vs_markers_cols = [column for column in all_markers_cols if column not in vs_markers_cols]
 
 # keep the columns ('v's) needed for umap calculation (all_together_vs_marks)
 all_together_vs_marks = arc[vs_markers_cols].copy()
-all_together_vs_marks.head()
 
 print(f"Markers used for UMAP calculation: \n")
 print('\n'.join([m for m in all_together_vs_marks]))
@@ -166,6 +176,8 @@ umap_emb.head()
 
 no_arc.tail()
 umap_emb.tail()
+
+#COMMENT#
 
 #%% [markdown]
 # ### Step 3: Get files ready for cytobank upload

@@ -9,7 +9,6 @@ import holoviews as hv
 import re
 from IPython.core.interactiveshell import InteractiveShell
 
-
 #%%
 # wide cells
 hv.extension("bokeh", width=90)
@@ -98,235 +97,21 @@ for i in filelist:
     shape_after = f_reduced.shape
     print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
 
-#%% [markdown]
+#%%
 #Add also the generation of a .csv file with the markers in the panel.
 #It should be ok to do it here b4 concatenation in the next step because if they are to be concatenaded they shpould already have the same panel of markers
+
+def write_panel_markers(cols):
+    all_markers = cols[0]
+    counter_marker = []
+    for i in all_markers:
+        counter_marker.append("N")
+    markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
+    markers.to_csv(f"./output/panel_markers.csv", index=False, header=False)
+
+
 if not all(x==cols[0] for x in cols):
     print ("Check your input files: The panels don't match!")
 else:
-    all_markers = cols[0]
-    
+    write_panel_markers(cols)
 
-#%%
-# # Final step: Write reduced file
-# for file in filelist:
-#     name = file.split(".")[0] # change this line based on the naming of the input files
-    
-#     f = pd.read_csv(os.path.join(f"./input/{file}"), sep="\t")
-    
-#     file_cols = list(f.columns)
-#     if file_cols == df_file_cols: # again, all the files should share the same panel
-#         f.columns = renamed_columns
-#         f_reduced = f[columns_to_keep].iloc[:].copy()
-#         f_reduced.to_csv(f"./output/{name}.txt", index = False, sep = '\t') 
-#             # index = False to be compatible with Cytobank
-        
-#         # print the info of the renaming procedure
-#         shape_before = f.shape
-#         shape_after = f_reduced.shape
-#         print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
-
-#     else:
-#         print(f"{file} HAS NOT THE SAME COLUMNS")
-
-#%% [markdown]
-#Add also the generation of a .csv file with the markers in the panel.
-#It should be ok to do it here b4 concatenation in the next step because if they are to be concatenaded they shpould already have the same panel of markers
-
-
-#%%
-# DEPRECATED old info (51<53 since we now keep Cisplatin and Event#/Cell_Index)
-# file: figure-1_full-gate_1st-cytobank-export_no-arcsinh
-# rows before: 1002294 - columns before: 76
-# rows after: 1002294 - columns after: 51
-
-#DEPRECATED
-# # first copy the column names
-# # rename the columns in place, don't delete any item from the list now
-# renamed_panel = ['Event #',
-#  'Time',
-#  'Event Length',
-#  '75As_(As75Di)',
-#  '89Y_pHH3',
-#  '111Cd_(Cd111Di)',
-#  '112Cd_(Cd112Di)',
-#  '113In_EpCAM',
-#  '114Cd_(Cd114Di)',
-#  '115In_Pan-CK',
-#  '116Cd_(Cd116Di)',
-#  '117Sn_(Sn117Di)',
-#  '120Sn_(Sn120Di)',
-#  '124Te_(Te124Di)',
-#  '126Te_(Te126Di)',
-#  '127I_IdU',
-#  '128Te_(Te128Di)',
-#  '130Te_TePhe',
-#  '131Xe_(Xe131Di)',
-#  '133Cs_(Cs133Di)',
-#  '137Ba_(Ba137Di)',
-#  '138Ba_(Ba138Di)',
-#  '139La_(La139Di)',
-#  '140Ce_EQ Beads',
-#  '141Pr_pPDPK1',
-#  '142Nd_cCaspase 3',
-#  '143Nd_C-MYC',
-#  '144Nd_Lysozyme',
-#  '145Nd_FABP1',
-#  '146Nd_pMKK4_SEK1',
-#  '147Sm_pBTK',
-#  '148Nd_pSRC',
-#  '149Sm_p4E-BP1',
-#  '150Nd_pRB',
-#  '151Eu_pPKCa',
-#  '152Sm_pAKT T308',
-#  '153Eu_pCREB',
-#  '154Sm_pSMAD1_5_9',
-#  '155Gd_pAKT S473',
-#  '156Gd_pNF-kB p65',
-#  '157Gd_pMKK3_MKK6',
-#  '158Gd_pP38 MAPK',
-#  '159Tb_pMAPKAPK2',
-#  '160Gd_pAMPKa',
-#  '161Dy_pBAD',
-#  '162Dy_LRIG1',
-#  '163Dy_pP90RSK',
-#  '164Dy_pP120-Catenin',
-#  '165Ho_Beta-Catenin_Active',
-#  '166Er_pGSK3b',
-#  '167Er_pERK1_2',
-#  '168Er_pSMAD2_3',
-#  '169Tm_GFP',
-#  '170Er_pMEK1_2',
-#  '171Yb_CLCA1',
-#  '172Yb_pS6',
-#  '173Yb_DCAMKL1',
-#  '174Yb_CHGA',
-#  '175Lu_CD44',
-#  '176Yb_Cyclin B1',
-#  '176Lu_(Lu176Di)',
-#  '190Pt_(Pt190Di)',
-#  '191Ir_DNA 1',
-#  '192Pt_(Pt192Di)',
-#  '193Ir_DNA 2',
-#  '194Pt_(Pt194Di)',
-#  '195Pt_(Pt195Di)',
-#  '196Pt_(Pt196Di)',
-#  '198Pt_Cisplatin',
-#  '199Hg_(Hg199Di)',
-#  '200Hg_(Hg200Di)',
-#  '209Bi_DiMeHH3',
-#  'Center',
-#  'Offset',
-#  'Width',
-#  'Residual']
-
-# cols_to_keep = ['Time',
-#  'Event Length',
-#  '89Y_pHH3',
-#  '113In_EpCAM',
-#  '115In_Pan-CK',
-#  '127I_IdU',
-#  '130Te_TePhe',
-#  '140Ce_EQ Beads',
-#  '141Pr_pPDPK1',
-#  '142Nd_cCaspase 3',
-#  '143Nd_C-MYC',
-#  '144Nd_Lysozyme',
-#  '145Nd_FABP1',
-#  '146Nd_pMKK4_SEK1',
-#  '147Sm_pBTK',
-#  '148Nd_pSRC',
-#  '149Sm_p4E-BP1',
-#  '150Nd_pRB',
-#  '151Eu_pPKCa',
-#  '152Sm_pAKT T308',
-#  '153Eu_pCREB',
-#  '154Sm_pSMAD1_5_9',
-#  '155Gd_pAKT S473',
-#  '156Gd_pNF-kB p65',
-#  '157Gd_pMKK3_MKK6',
-#  '158Gd_pP38 MAPK',
-#  '159Tb_pMAPKAPK2',
-#  '160Gd_pAMPKa',
-#  '161Dy_pBAD',
-#  '162Dy_LRIG1',
-#  '163Dy_pP90RSK',
-#  '164Dy_pP120-Catenin',
-#  '165Ho_Beta-Catenin_Active',
-#  '166Er_pGSK3b',
-#  '167Er_pERK1_2',
-#  '168Er_pSMAD2_3',
-#  '169Tm_GFP',
-#  '170Er_pMEK1_2',
-#  '171Yb_CLCA1',
-#  '172Yb_pS6',
-#  '173Yb_DCAMKL1',
-#  '174Yb_CHGA',
-#  '175Lu_CD44',
-#  '176Yb_Cyclin B1',
-#  '191Ir_DNA 1',
-#  '193Ir_DNA 2',
-#  '209Bi_DiMeHH3',
-#  'Center',
-#  'Offset',
-#  'Width',
-#  'Residual']
-
-#DEPRECATED @Ferran
-#DEPRECATED->FC
-# #FCR 14/10/19: Automated column name editing with regex --TESTING GROUNDS--
-# import re
-
-# #Idea is to first filter non-relevant columns and then rename the remaining
-# reg_filter = re.compile("^\d*[A-Za-z]*_\(.*$")
-# reg_rename = re.compile("(__[a-z].*$|__\d.*$|_\(.*$|___.*$)")
-
-# #Filtering
-# df_file_cols_testing = []
-# df_file_cols_filtered = []
-
-# len(df_file_cols)  
-# for i in df_file_cols:
-#     if reg_filter.search(i):
-#         df_file_cols_filtered.append(i)
-#     else:
-#         df_file_cols_testing.append(i)    
-# len(df_file_cols_testing)
-# for i in df_file_cols_filtered:
-#     print (i)
-# len(df_file_cols_filtered)
-
-# # Keeping with Xiao's convention, rename Event # to Cell_Index
-# for n,i in enumerate(df_file_cols_testing):
-#     if i=="Event #":
-#         df_file_cols_testing[n] = "Cell_Index"
-
-# for i in df_file_cols_testing:
-#     print(i)
-
-# #Start with the renaming!
-
-# df_file_cols_processed = []
-
-# for i in df_file_cols_testing:
-#     try:
-#         df_file_cols_processed.append(reg_rename.sub("",i))
-#     except:
-#         df_file_cols_processed.append(i)
-
-# #Second pass to remove trailing underscores
-# df_file_cols_final =[]
-# for i in df_file_cols_processed:
-#     try:
-#         df_file_cols_final.append(re.sub(r"_$","",i))
-#     except:
-#         df_file_cols_final.append(i)
-
-
-# len(df_file_cols_processed)
-# for i in df_file_cols_processed:
-#     print (i)
-# len(df_file_cols_final)
-# for i in df_file_cols_final:
-#     print (i)
-# #TEST V0: __([a-z].*$|)
