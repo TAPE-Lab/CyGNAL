@@ -52,7 +52,6 @@ InteractiveShell.ast_node_interactivity = "all"
 def concatenate_fcs(folder_name):
     filenames_no_arcsinh = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
     no_arc = pd.DataFrame()
-    file_list =[] 
     #Add counter to keep track of the number of files in input -> 
     # -> cell ID will be a mix of these (Filenumber | filename.txt)
     fcounter = 0
@@ -62,7 +61,7 @@ def concatenate_fcs(folder_name):
         df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
         df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
         no_arc = no_arc.append(df, ignore_index=True)
-    return no_arc
+    return no_arc, filenames_no_arcsinh
 #%% Perform concatenation
 # set up working directory
 #   files to be concatenated are kept in a subfolder called 'files' in the 
@@ -72,7 +71,7 @@ def concatenate_fcs(folder_name):
 
 folder_name = "input"
 
-no_arc = concatenate_fcs(folder_name)
+no_arc, input_files = concatenate_fcs(folder_name)
 
 #%% Arcsinh transform the data
 def arcsinh_transf(cofactor):
@@ -164,87 +163,36 @@ umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d, "i
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
 
-def perform_umap(umap_params, all_together_vs_marks, no_arc):
+def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
     run_name = "UMAP_"+umap_params["info"]
+    #Calculate UMAP on arc tranf data (all_together...)
     umap_emb = pd.DataFrame(umap.UMAP(n_neighbors=umap_params["n"], min_dist=umap_params["m"],
                 metric=umap_params["d"], n_components=umap_params["comp"],
                 repulsion_strength=umap_params["rs"],
                 negative_sample_rate=umap_params["nsr"]).fit_transform(all_together_vs_marks), 
                     columns=[run_name+"_D1",run_name+"_D2"])
-    # append umap info columns
+    # append umap info columns into untransformed data
     no_arc[run_name+"_D1"] = umap_emb[run_name+"_D1"]
     no_arc[run_name+"_D2"] = umap_emb[run_name+"_D2"]
-
-#columns=[f"umap_{umap_params["info"]}_norm={umap_params["nn"]}_rs={umap_params["rs"]}_nsr={umap_params["nrs"]}_n={n}_m={umap_params["m"]}_{umap_params["d"]}_1",f"umap_{umap_params["info"]}_norm={nn}_rs={rs}_nsr={nsr}_n={n}_m={m}_{d}_2"])
+    
+    #Write merged file and individual files with UMAP dimensions
+    whole_file = "merged_" + info_run
+    no_arc.to_csv(f"./output/{whole_file}.txt", index = False, sep = '\t')
+    for i in input_files:
+        partial_file = i +"__" + info_run
+        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/{partial_file}.txt", index = False, sep = '\t')
 
 #%%
-print (no_arc)
+whole_file = "merged_" + info_run
+no_arc.to_csv(f"./output/{whole_file}.txt", index = False, sep = '\t')
+
+#%% Actually perform the UMAP
 perform_umap(umap_params, all_together_vs_marks, no_arc)
-print (no_arc)
 
 #COMMENT#
-
-# #%% [markdown]
-# # ### Step 3: Get files ready for cytobank upload
-# # Note: You should use "no-arcsinh" when you want to convert the files to a Cytobank- and Scaffold- compatible format
-# #%% [markdown]
-# # #### Step 3.1: Format the column names
-
-# #%%
-# # reformat/clean-up the column names for umap info
-
-# data = no_arc.copy()
-# [c for c in list(data.columns) if "umap" in c]
-
-# ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
-# p = ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
-
-# col_change = dict(zip([c for c in list(data.columns) if "umap" in c], p))
-# col_change
-
-# data.rename(columns = col_change, inplace = True)
-
-
-# #%%
-# # rename the columns for Cytobank
-# # this step has something to do with Cytobank's configuration of Channel Name/Reagent
-# # alternatively, leave the renaming to the final clean-step (use 'python_panel_editing_tool.ipynb')
-
-# cytobank_naming = {}
-
-# parenthesis = [c for c in list(data.columns) if "_(" in c]
-# vs = [c for c in parenthesis if " (v)" in c]
-# not_vs = [c for c in parenthesis if c not in vs]
-# stay_same = [c for c in list(data.columns) if c not in parenthesis]
-
-# # if len(parenthesis + stay_same) != len(list(peli.columns)):
-# #     print("THERE ARE SOME DUPLICATES, COLUMN NAMES THAT ARE IN MORE THAN ONE CATEGORIES\n")
-
-# for c in vs:
-#     names = c.split(" (v)_(")
-#     channel_name = names[1][:-1]
-#     marker_reagent = names[0][:]
-#     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
-
-# for c in not_vs:
-#     names = c.split("_(")
-#     channel_name = names[1][:-1]
-#     marker_reagent = names[0]
-#     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
-
-# for c in stay_same:
-#     cytobank_naming[c] = (f"{c}__{c}")
-    
-# data.rename(columns = cytobank_naming, inplace = True)
-# list(data.columns)
-
-# #%% [markdown]
-# # #### Step 3.2: Revolve the data into separtate conditions
-# # For the following steps, you need to enter the info for each sample manually
-
-# #%%
-# # display the list of files of origin
-# data["file_origin__file_origin"].unique()
+#%% [markdown]
+# #### Step 3.2: Separate data according to the file of origin,
+#   while also saving a file with all 
 
 
 # #%%
@@ -278,4 +226,59 @@ print (no_arc)
 
 # #%%
 
+
+
+# # #%% [markdown]
+# # # ### Step 3: Get files ready for cytobank upload
+# # # Note: You should use "no-arcsinh" when you want to convert the files to a Cytobank- and Scaffold- compatible format
+# # #%% [markdown]
+# # # #### Step 3.1: Format the column names
+
+# # #%%
+# # # reformat/clean-up the column names for umap info
+
+# # data = no_arc.copy()
+# # [c for c in list(data.columns) if "umap" in c]
+
+# # ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
+# # p = ["".join("_n_".join("d_".join("".join(c.split("norm=")).split("comp=2_min_dist=")).split("n_neighbors=")).split("metric=")) for c in list(data.columns) if "umap" in c]
+
+# # col_change = dict(zip([c for c in list(data.columns) if "umap" in c], p))
+# # col_change
+
+# # data.rename(columns = col_change, inplace = True)
+
+
+# # #%%
+# # # rename the columns for Cytobank
+# # # this step has something to do with Cytobank's configuration of Channel Name/Reagent
+# # # alternatively, leave the renaming to the final clean-step (use 'python_panel_editing_tool.ipynb')
+
+# # cytobank_naming = {}
+
+# # parenthesis = [c for c in list(data.columns) if "_(" in c]
+# # vs = [c for c in parenthesis if " (v)" in c]
+# # not_vs = [c for c in parenthesis if c not in vs]
+# # stay_same = [c for c in list(data.columns) if c not in parenthesis]
+
+# # # if len(parenthesis + stay_same) != len(list(peli.columns)):
+# # #     print("THERE ARE SOME DUPLICATES, COLUMN NAMES THAT ARE IN MORE THAN ONE CATEGORIES\n")
+
+# # for c in vs:
+# #     names = c.split(" (v)_(")
+# #     channel_name = names[1][:-1]
+# #     marker_reagent = names[0][:]
+# #     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
+
+# # for c in not_vs:
+# #     names = c.split("_(")
+# #     channel_name = names[1][:-1]
+# #     marker_reagent = names[0]
+# #     cytobank_naming[c] = (f"{channel_name}__{marker_reagent}")
+
+# # for c in stay_same:
+# #     cytobank_naming[c] = (f"{c}__{c}")
+    
+# # data.rename(columns = cytobank_naming, inplace = True)
+# # list(data.columns)
 
