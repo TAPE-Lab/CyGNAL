@@ -62,3 +62,6 @@ Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_
 Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/1-data_preprocess/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/output/merged_test1.txt
+Workflow/1-data_preprocess/__pycache__/panel_editing_functions.cpython-37.pyc
+Workflow/2-umap/__pycache__/umap_functions.cpython-37.pyc
+Workflow/2-umap/__pycache__/umap.cpython-37.pyc

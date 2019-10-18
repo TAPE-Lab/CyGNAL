@@ -44,37 +44,9 @@ def filter_columns(renamed_columns):
     return columns_to_keep, filtered_columns
 
 
-
-#%%
-# Perform changes and save them to file
-cols = []
-for i in filelist:
-    file = f"./input/{i}"
-    df_file = pd.read_csv(file, sep = '\t')
-    shape_before = df_file.shape
-    df_file_cols = list(df_file.columns)
-    
-    #%% Perform renaming and filtering
-    renamed_columns = rename_columns(df_file_cols)
-    columns_to_keep, filtered_columns = filter_columns(renamed_columns)
-    df_file.columns = renamed_columns
-    f_reduced = df_file[columns_to_keep].iloc[:].copy()
-    print ("Removed the following columns: ", filtered_columns)
-    
-    #Store columns present in each of the input files
-    cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-    # name = file.split(".")[0]
-    # print (i)
-    # print (file)
-    # print(name)
-    f_reduced.to_csv(f"./output/{i}", index = False, sep = '\t') 
-        # index = False to be compatible with Cytobank    
-    shape_after = f_reduced.shape
-    print(f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
-
-#%%
 #Add also the generation of a .csv file with the markers in the panel.
-#It should be ok to do it here b4 concatenation in the next step because if they are to be concatenaded they shpould already have the same panel of markers
+#It should be ok to do it here b4 concatenation in the next step because if 
+# they are to be concatenaded they shpould already have the same panel of markers
 
 def write_panel_markers(cols):
     all_markers = cols[0]
@@ -83,10 +55,4 @@ def write_panel_markers(cols):
         counter_marker.append("N")
     markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
     markers.to_csv(f"./output/panel_markers.csv", index=False, header=False)
-
-
-if not all(x==cols[0] for x in cols):
-    print ("Check your input files: The panels don't match!")
-else:
-    write_panel_markers(cols)
 
