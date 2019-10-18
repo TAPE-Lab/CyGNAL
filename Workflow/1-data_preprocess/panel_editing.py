@@ -91,11 +91,14 @@ for i in filelist:
     
     #Store columns present in each of the input files
     cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-    name = file.split(".")[0]
-    f_reduced.to_csv(f"./output/{name}.txt", index = False, sep = '\t') 
+    # name = file.split(".")[0]
+    # print (i)
+    # print (file)
+    # print(name)
+    f_reduced.to_csv(f"./output/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank    
     shape_after = f_reduced.shape
-    print(f"file: {name}\nrows before: {shape_before[0]} - columns before: {shape_before[1]}\nrows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+    print(f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
 
 #%%
 #Add also the generation of a .csv file with the markers in the panel.

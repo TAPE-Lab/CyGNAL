@@ -47,8 +47,6 @@
 # Workflow/1-panel_edit/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 .vscode/settings.json
 .vscode/settings.json
-Workflow/1-panel_edit/input/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
-Workflow/1-panel_edit/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/input/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/output/test_new_input/all_no-arcsinh_input-to-cytobank.txt
 Workflow/2-umap/output/test_new_input/cd_no-arcsinh_input-to-cytobank.txt
@@ -57,16 +55,9 @@ Workflow/2-umap/output/test_new_input/cv_no-arcsinh_input-to-cytobank.txt
 Workflow/2-umap/output/test_new_input/id_no-arcsinh_input-to-cytobank.txt
 Workflow/2-umap/output/test_new_input/iv_no-arcsinh_input-to-cytobank.txt
 Workflow/2-umap/input/new_input/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
-Workflow/1-panel_edit/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
-Workflow/1-panel_edit/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/input/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_OLD.txt
 Workflow/2-umap/input/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/1-data_panel_prepocessing/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
-Workflow/1-data_panel_prepocessing/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
-Workflow/1-data_panel_prepocessing/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
-Workflow/1-data_panel_prepocessing/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
 Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
-Workflow/1-data_preprocess/output/.txt
-Workflow/1-data_preprocess/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
 Workflow/1-data_preprocess/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
