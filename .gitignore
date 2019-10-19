@@ -62,3 +62,8 @@ Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_
 Workflow/1-data_preprocess/input/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/1-data_preprocess/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/output/merged_test1.txt
+
+Workflow/8-cell-state-info/input
+Workflow/8-cell-state-info/output
+Workflow/4-emd/input
+Workflow/4-emd/output
