@@ -45,7 +45,8 @@
 # Workflow/1-panel_edit/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 # Workflow/1-panel_edit/input/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 # Workflow/1-panel_edit/output/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
-
+.vscode/settings.json
+.vscode/settings.json
 Workflow/2-umap/input/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/2-umap/output/test_new_input/all_no-arcsinh_input-to-cytobank.txt
 Workflow/2-umap/output/test_new_input/cd_no-arcsinh_input-to-cytobank.txt
@@ -66,4 +67,3 @@ Workflow/8-cell-state-info/input
 Workflow/8-cell-state-info/output
 Workflow/4-emd/input
 Workflow/4-emd/output
-.vscode/settings.json
