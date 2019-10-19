@@ -4,7 +4,7 @@
 # ms-python.python added
 import os
 try:
-	os.chdir(os.path.join(os.getcwd(), 'step-n_cell-state-info'))
+	os.chdir(os.path.join(os.getcwd(), 'Workflow/8-cell-state-info'))
 	print(os.getcwd())
 except:
 	pass
@@ -17,14 +17,16 @@ import numpy as np
 import holoviews as hv
 from IPython.core.interactiveshell import InteractiveShell
 
-#%%
-import rpy2.robjects as ro
-from rpy2.robjects.packages import importr 
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.conversion import localconverter
-
-pandas2ri.activate()
-%load_ext rpy2.ipython
+#%% [markdown]
+### Usage
+#### Note: This script is used when Cyclin B1 is gated on the *histogram*.
+# This script takes txt files exported from Cytobank as input
+# The gating strategy is decribed in the Organoid Methods Paper, Supplementary Figure 2
+# When Cyclin B1 is gated on the histogram, G1 cells can be identified as a population and exported as a standalone txt file
+# That makes the assignment of the G1 cell-state easier than the one implemented with the use of cell-index
+# However, I prefer to gate Cyclin B1 on biaxial plots... (XQ) So this script should probably not be used.
+# The output dataframes have two extra columns: 'cell-state' and 'cell-state_num'
+# 0 - apoptosis, 1 - G0, 2 - G1, 3 - S-phase, 4 - G2, 5 - M-phase
 
 #%%
 # wide cells
