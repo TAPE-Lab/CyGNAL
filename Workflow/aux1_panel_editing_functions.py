@@ -54,5 +54,5 @@ def write_panel_markers(cols):
     for i in all_markers:
         counter_marker.append("N")
     markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
-    markers.to_csv(f"./output/panel_markers.csv", index=False, header=False)
+    markers.to_csv(f"./output/1-data_preprocess/panel_markers.csv", index=False, header=False)
 

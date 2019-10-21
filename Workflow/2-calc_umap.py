@@ -5,7 +5,7 @@ import numpy as np
 import umap
 import sys
 import os
-from umap_functions import *
+from aux2_umap_functions import *
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 # umap is generated using arcsinh transformed data
 #   the non-arcsinh transformed data is used for data uploading back into Cytobank after umap info is incorporated
 
-folder_name = "input"
+folder_name = "input/2-umap"
 
 no_arc, input_files = concatenate_fcs(folder_name)
 
@@ -43,7 +43,7 @@ arc, cols = arcsinh_transf(cofactor, no_arc)
 #Sanity check
 marker_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".csv")]
 if len(marker_files) != 1:
-    sys.exit("ERROR: There should be ONE .csv file with the markers to use in ./input!")
+    sys.exit("ERROR: There should be ONE .csv file with the markers to use in the input folder!")
 
 marker_file = pd.read_csv(f"{folder_name}/{marker_files[0]}", header=None)
 
@@ -107,9 +107,9 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
     
     #Write merged file and individual files with UMAP dimensions
     whole_file = "merged_" + info_run
-    no_arc.to_csv(f"./output/{whole_file}.txt", index = False, sep = '\t')
+    no_arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False, sep = '\t')
     for i in input_files:
         partial_file = i +"__" + info_run
-        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/{partial_file}.txt", index = False, sep = '\t')
+        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
 
 perform_umap(umap_params, all_together_vs_marks, no_arc, input_files)

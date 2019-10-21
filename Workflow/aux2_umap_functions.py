@@ -58,8 +58,8 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
     
     #Write merged file and individual files with UMAP dimensions
     whole_file = "merged_" + info_run
-    no_arc.to_csv(f"./output/{whole_file}.txt", index = False, sep = '\t')
+    no_arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False, sep = '\t')
     for i in input_files:
         partial_file = i +"__" + info_run
-        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/{partial_file}.txt", index = False, sep = '\t')
+        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
 
