@@ -38,10 +38,6 @@ for i in filelist:
     
     #Store columns present in each of the input files
     cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-    # name = file.split(".")[0]
-    # print (i)
-    # print (file)
-    # print(name)
     f_reduced.to_csv(f"./output/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank    
     shape_after = f_reduced.shape
