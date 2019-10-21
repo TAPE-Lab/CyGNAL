@@ -6,6 +6,7 @@ import umap
 import sys
 import os
 from aux2_umap_functions import *
+from aux_functions import concatenate_fcs
 
 import warnings
 warnings.filterwarnings('ignore')
