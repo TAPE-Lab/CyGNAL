@@ -8,6 +8,26 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
+
+#Downsampling the data to equate fil_origin sizes
+def downsample_data(no_arc):
+    downsampled_dframe = no_arc.copy()
+    #Defiine downsampling size (N) per file:
+    downsample_size = no_arc["file_origin"].value_counts().min() #at least N cells in all input files
+    print ("Working with ", downsample_size, " cells per file_origin")
+    #Group by file+origin and sample without replacement -> 
+    # thus we can sample file for which len(file)=N without -tive consequences
+    reduced_df = downsampled_dframe.groupby("file_origin").apply(lambda x:
+                    x.sample(downsample_size))
+    #Create new file to store downsampling status for all cell IDs
+    new_df = pd.DataFrame()
+    new_df["Cell_Index"] = no_arc["Cell_Index"]
+    new_df["In_donwsampled_file"] = new_df["Cell_Index"].isin(
+                                        reduced_df["Cell_Index"])
+    new_df.to_csv(f"./output/2-umap/downsampled_IDs.csv", index = False)
+    return reduced_df
+
+
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):
     arc = no_arc.iloc[:,:-1] #leave out the last column ('file_origin')
@@ -46,5 +66,5 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
     no_arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False, sep = '\t')
     for i in input_files:
         partial_file = i +"__" + info_run
-        no_arc.loc[no_arc["file_origin"].str.endswith(input_files[0]),:].to_csv(f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
+        no_arc.loc[no_arc["file_origin"].str.endswith(i),:].to_csv(f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
 

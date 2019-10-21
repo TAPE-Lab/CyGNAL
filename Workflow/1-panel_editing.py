@@ -1,3 +1,6 @@
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Panel editing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
 #FIRST STEP: Data and pranel preprocessing. Marker list generation.
 #Jupyter/IP no longer supported here
 
@@ -41,7 +44,8 @@ for i in filelist:
     f_reduced.to_csv(f"./output/1-data_preprocess/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank    
     shape_after = f_reduced.shape
-    print (f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+    print (
+        f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
 
 
 #Add also the generation of a .csv file with the markers in the panel.
