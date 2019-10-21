@@ -68,4 +68,11 @@ Workflow/8-cell-state-info/input
 Workflow/8-cell-state-info/output
 Workflow/4-emd/input
 Workflow/4-emd/output
-
+Workflow/__pycache__/aux1_panel_editing_functions.cpython-37.pyc
+Workflow/__pycache__/aux2_umap_functions.cpython-37.pyc
+Workflow/input/1-data_preprocess/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
+Workflow/input/1-data_preprocess/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
+Workflow/input/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_OLD.txt
+Workflow/input/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
+Workflow/input/2-umap/figure-1_full-gate_1st-cytobank-export_no-arcsinh copy.txt
+Workflow/__pycache__/aux_functions.cpython-37.pyc
