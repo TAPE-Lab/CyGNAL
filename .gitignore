@@ -28,7 +28,7 @@
 
 # # OS generated files #
 # ######################
-# .DS_Store
+.DS_Store
 # .DS_Store?
 # ._*
 # .Spotlight-V100
@@ -68,6 +68,8 @@ Workflow/8-cell-state-info/input
 Workflow/8-cell-state-info/output
 Workflow/4-emd/input
 Workflow/4-emd/output
+Workflow/5-dremi/input/dremi-test_1000-cells.txt
+Workflow/5-dremi/output
 Workflow/__pycache__/aux1_panel_editing_functions.cpython-37.pyc
 Workflow/__pycache__/aux2_umap_functions.cpython-37.pyc
 Workflow/input/1-data_preprocess/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
@@ -76,29 +78,5 @@ Workflow/input/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_OL
 Workflow/input/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
 Workflow/input/2-umap/figure-1_full-gate_1st-cytobank-export_no-arcsinh copy.txt
 Workflow/__pycache__/aux_functions.cpython-37.pyc
-Workflow/input/1-data_preprocess/3%-2.txt
-Workflow/input/1-data_preprocess/3%-1.txt
-Workflow/input/1-data_preprocess/4%-1.txt
-Workflow/input/1-data_preprocess/4%-2.txt
-Workflow/input/2-umap/3%-2.txt
-Workflow/input/2-umap/4%-1.txt
-Workflow/input/2-umap/4%-2.txt
-Workflow/input/2-umap/3%-1.txt
-Workflow/input/2-umap/Tests/panel_markers.csv
-Workflow/output/1-data_preprocess/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
-Workflow/output/1-data_preprocess/Testing/panel_markers.csv
-Workflow/output/1-data_preprocess/3%-1.txt
-Workflow/output/1-data_preprocess/3%-2.txt
-Workflow/output/1-data_preprocess/4%-1.txt
-Workflow/output/1-data_preprocess/4%-2.txt
-Workflow/output/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh copy.txt__testing_umapcols.txt
-Workflow/output/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh copy.txt__testumap_final.txt
-Workflow/output/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED copy.txt__testumap_final.txt
-Workflow/output/2-umap/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt__testumap_final.txt
-Workflow/output/2-umap/Tests/merged_testing_umapcols.txt
-Workflow/output/2-umap/Tests/merged_testumap_final.txt
-Workflow/output/2-umap/merged_final_umap_test.txt
-Workflow/output/2-umap/4%-2.txt__final_umap_test.txt
-Workflow/output/2-umap/4%-1.txt__final_umap_test.txt
-Workflow/output/2-umap/3%-2.txt__final_umap_test.txt
-Workflow/output/2-umap/3%-1.txt__final_umap_test.txt
+Workflow/input
+Workflow/output
