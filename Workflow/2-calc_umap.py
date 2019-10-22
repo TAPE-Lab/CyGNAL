@@ -11,8 +11,8 @@ import os
 from aux2_umap_functions import *
 from aux_functions import concatenate_fcs
 
-import warnings
-warnings.filterwarnings('ignore')
+# import warnings
+# warnings.filterwarnings('ignore')
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UMAP PARAMETERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
@@ -24,6 +24,8 @@ m = 0.1
 comp = 2
 d = "euclidean"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#include here the information that would be helpful to understand the umaps
+info_run =  input("Write UMAP info run (using no spaces!): ")
 
 
 # Perform umap analysis, but let's first create and concatenate any 
@@ -45,7 +47,9 @@ no_arc, input_files = concatenate_fcs(folder_name)
 #Using sample()
 if no_arc["file_origin"].value_counts().size > 1:
     print ("Downsampling taking place. Check output folder for more info")
-    no_arc = downsample_data(no_arc)
+    print (no_arc["file_origin"].value_counts())
+    no_arc = downsample_data(no_arc, info_run)
+    print (no_arc["file_origin"].value_counts())
 else:
     print ("Only one input file detected; no downsampling")
 
@@ -78,7 +82,7 @@ no_vs_markers_cols = [column for column in all_markers_cols if
                         column not in vs_markers_cols]
 
 # keep the columns ('v's) needed for umap calculation (all_together_vs_marks)
-all_together_vs_marks = arc[vs_markers_cols].copy()
+all_together_vs_marks = arc.loc[:, vs_markers_cols].copy()
 
 print(f"Markers used for UMAP calculation: \n")
 print('\n'.join([m for m in all_together_vs_marks]))
@@ -96,11 +100,10 @@ print(f"\n Number of markers used: {len(all_together_vs_marks.columns)}")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform UMAP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Define UMAP parameters
-#include here the information that would be helpful to understand the umaps
-info_run =  input("Write UMAP info run (using no spaces!): ")
 
 umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d,
                 "info":info_run}
 
 #Actually perform the UMAP
 perform_umap(umap_params, all_together_vs_marks, no_arc, input_files)
+print (no_arc)
