@@ -28,7 +28,7 @@
 
 # # OS generated files #
 # ######################
-# .DS_Store
+.DS_Store
 # .DS_Store?
 # ._*
 # .Spotlight-V100
@@ -68,6 +68,8 @@ Workflow/8-cell-state-info/input
 Workflow/8-cell-state-info/output
 Workflow/4-emd/input
 Workflow/4-emd/output
+Workflow/5-dremi/input/dremi-test_1000-cells.txt
+Workflow/5-dremi/output
 Workflow/__pycache__/aux1_panel_editing_functions.cpython-37.pyc
 Workflow/__pycache__/aux2_umap_functions.cpython-37.pyc
 Workflow/input/1-data_preprocess/Testing/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
