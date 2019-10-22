@@ -22,3 +22,8 @@ def concatenate_fcs(folder_name):
         df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
         no_arc = no_arc.append(df, ignore_index=True)
     return no_arc, input_files
+
+# Random downsampling of a dataframe to n rows
+def downsample_df(df, n):
+    df_downsampled = df.sample(n)
+    return df_downsampled
