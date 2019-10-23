@@ -13,6 +13,8 @@ def rename_columns(df_file_cols):
     reg_rename = re.compile("(__[a-z].*$|__\d.*$|_\(.*$|___.*$)")
     df_file_cols_processed = []
     df_file_cols_renamed = []
+    df_file_cols_final = []
+
     for i in df_file_cols:
         try:
             df_file_cols_processed.append(reg_rename.sub("",i))
@@ -24,12 +26,19 @@ def rename_columns(df_file_cols):
             df_file_cols_renamed.append(re.sub(r"_$","",i))
         except:
             df_file_cols_renamed.append(i)
+    #Third pass to remove PTMs
+    #Note: Beta-catenin__Active -> Beta-catenin
+    for i in df_file_cols_renamed:
+        try:
+            df_file_cols_final.append(re.sub(r"__[a-zA-Z0-9_]+","",i))
+        except:
+            df_file_cols_final.append(i)
     # Keeping with Xiao's convention, rename Event # to Cell_Index
-    for n,i in enumerate(df_file_cols_renamed):
+    for n,i in enumerate(df_file_cols_final):
         if i=="Event #":
-            df_file_cols_renamed[n] = "Cell_Index"
+            df_file_cols_final[n] = "Cell_Index"
     
-    return df_file_cols_renamed
+    return df_file_cols_final
 
 #Filtering
 def filter_columns(renamed_columns):
