@@ -31,18 +31,6 @@ def downsample_data(no_arc, info_run):
     no_arc = no_arc[no_arc["Cell_Index"].isin(reduced_df["Cell_Index"])]
     return reduced_df
 
-
-#Arcsinh transform the data
-def arcsinh_transf(cofactor, no_arc):
-    arc = no_arc.iloc[:,:-1] #leave out the last column ('file_origin')
-    #Select only the columns containing the markers (as they start with a number for the isotope)
-    cols = [x for x in arc.columns if x[0].isdigit()]
-    #Apply the arcsinh only to those columns (don't want to change time or any other)
-    arc = arc.apply(lambda x: np.arcsinh(x/cofactor) if x.name in cols else x)
-    # put back the 'file_origin' column to the arcsinh-transformed data
-    arc["file_origin"] = no_arc["file_origin"]
-    return arc, cols
-
 #Get markers flagged for use
 def identify_markers(marker_file):
     markers_umap = marker_file.loc[marker_file[1] == "Y", [0]].values.tolist()

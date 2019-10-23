@@ -9,7 +9,7 @@ import umap
 import sys
 import os
 from aux2_umap_functions import *
-from aux_functions import concatenate_fcs
+from aux_functions import concatenate_fcs, arcsinh_transf
 
 # import warnings
 # warnings.filterwarnings('ignore')
