@@ -1,15 +1,7 @@
-# To add a new cell, type '#%%'
-# To add a new markdown cell, type '#%% [markdown]'
-#%% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-# ms-python.python added
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), 'Workflow/5-dremi'))
-	print(os.getcwd())
-except:
-	pass
-
-#%%
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~DREMI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
+# No support for IP/Jupyter notebooks or vs in files (vsNE from Cytobank)
 
 import pandas as pd
 import numpy as np
@@ -20,15 +12,7 @@ from itertools import permutations
 import warnings
 warnings.filterwarnings('ignore')
 
-#%%
-# wide cells
-import holoviews as hv
-from IPython.core.interactiveshell import InteractiveShell
-hv.extension("bokeh", width=90)
-# display all output in each cell
-InteractiveShell.ast_node_interactivity = "all"
 
-#%%
 # parameter setup
 cofactor = 5
 k = 10
@@ -41,7 +25,7 @@ plot = False
 outliers_removal = False # optional: removal of outliers based on standard deviation 
 num_std_for_outliers = [3,4,5]
 
-#%%
+
 # create new folders to save the output of the script: plots and info
 if plot == True:
     if os.path.isdir('./output/plots') == False:
@@ -50,7 +34,7 @@ if plot == True:
 if os.path.isdir('./output/info') == False:
     os.makedirs('./output/info')
 
-#%%
+
 # create the list of txt files to be analysed (all txt files in the input folder)
 
 dremi_files = [file for file in os.listdir('./input') if file.endswith(".txt")]
@@ -60,7 +44,7 @@ if len(dremi_files) == 0:
 print('Sample files:')
 print('\n'.join([f for f in dremi_files]))
 
-#%%
+
 # find outliers for both marker_x and marker_y based on cufoffs of standard deviations
 # return the number of outliers and a dataframe after outlier removal
 # update the df_info_dict with the number of outliers
@@ -86,7 +70,7 @@ def outlier_removal(df, cutoff, marker_x, marker_y):
 
     return(num_outliers_total, df_wo_outliers)
 
-#%%
+
 # create a dataframe to store the dremi result
 df_info = pd.DataFrame()
 
@@ -128,8 +112,7 @@ for f in dremi_files:
 
                 (num_outliers_total, df_wo_outliers) = outlier_removal(data_arc, cutoff, marker_x, marker_y)
                 if num_outliers_total > 0:
-                    dremi_wo_outliers_arc = scprep.stats.knnDREMI(df_wo_outliers[marker_x], df_wo_outliers[marker_y], k=k, n_bins=n_bins, n_mesh=n_mesh, plot=plot, return_drevi=return_drevi, 
-                                                                  filename=f"./output/plots/x={marker_x}_y={marker_y}/sample={filename}_x={marker_x}_y={marker_y}_cutoff={cutoff}.png")
+                    dremi_wo_outliers_arc = scprep.stats.knnDREMI(df_wo_outliers[marker_x], df_wo_outliers[marker_y], k=k, n_bins=n_bins, n_mesh=n_mesh, plot=plot, return_drevi=return_drevi, filename=f"./output/plots/x={marker_x}_y={marker_y}/sample={filename}_x={marker_x}_y={marker_y}_cutoff={cutoff}.png")
                     df_info_dict[colname_arc] = dremi_wo_outliers_arc
                 if num_outliers_total == 0:
                     df_info_dict[colname_arc] = "-" # this is a placeholder
