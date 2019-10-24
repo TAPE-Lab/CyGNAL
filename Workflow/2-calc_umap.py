@@ -105,5 +105,5 @@ umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d,
                 "info":info_run}
 
 #Actually perform the UMAP
-perform_umap(umap_params, all_together_vs_marks, no_arc, input_files)
-print (no_arc)
+perform_umap(umap_params, all_together_vs_marks, arc, input_files)
+print (arc)
