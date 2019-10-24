@@ -27,7 +27,10 @@ def arcsinh_transf(cofactor, no_arc):
     #Apply the arcsinh only to those columns (don't want to change time or any other)
     arc = no_arc.apply(lambda x: np.arcsinh(x/cofactor) if x.name in cols else x)
     # put back the 'file_origin' column to the arcsinh-transformed data
-    arc["file_origin"] = no_arc["file_origin"]
+    if "file_origin" in  no_arc.columns:
+        arc["file_origin"] = no_arc["file_origin"]
+    else:
+        print ("(there was no concatenation prior to transforming)")
     return arc, cols
 
 # Random downsampling of a dataframe to n rows

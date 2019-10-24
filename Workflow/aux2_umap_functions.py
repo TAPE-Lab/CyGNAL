@@ -40,7 +40,7 @@ def identify_markers(marker_file):
 # UMAP function
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
-def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
+def perform_umap(umap_params, all_together_vs_marks, arc, input_files):
     info_run = umap_params["info"]
     run_name = "UMAP_"+info_run
     #Calculate UMAP on arc tranf data (all_together...)
@@ -56,15 +56,15 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files):
     # no_arc[run_name+"_D1"] = umap_emb[run_name+"_D1"]
     # no_arc[run_name+"_D2"] = umap_emb[run_name+"_D2"]
     umap_emb = umap_emb.reset_index(drop=True)
-    no_arc = no_arc.reset_index(drop=True)
-    no_arc = no_arc.join(umap_emb)
+    arc = arc.reset_index(drop=True)
+    arc = arc.join(umap_emb)
 
     #Write merged file and individual files with UMAP dimensions
     whole_file = "merged_" + info_run
-    no_arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False,
+    arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False,
                     sep = '\t')
     for i in input_files:
         partial_file = i +"__" + info_run
-        no_arc.loc[no_arc["file_origin"].str.endswith(i),:].to_csv(
+        arc.loc[arc["file_origin"].str.endswith(i),:].to_csv(
             f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
 
