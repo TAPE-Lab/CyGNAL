@@ -26,11 +26,10 @@ def rename_columns(df_file_cols):
             df_file_cols_renamed.append(re.sub(r"_$","",i))
         except:
             df_file_cols_renamed.append(i)
-    #Third pass to remove PTMs
-    #Note: Beta-catenin__Active -> Beta-catenin
+    #Third pass replace '__' with '_'
     for i in df_file_cols_renamed:
         try:
-            df_file_cols_final.append(re.sub(r"__[a-zA-Z0-9_]+","",i))
+            df_file_cols_final.append(re.sub(r"__","_",i))
         except:
             df_file_cols_final.append(i)
     # Keeping with Xiao's convention, rename Event # to Cell_Index
