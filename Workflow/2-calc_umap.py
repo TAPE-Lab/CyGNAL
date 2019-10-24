@@ -37,7 +37,8 @@ folder_name = "input/2-umap"    # set up input directory
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform concatenation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-no_arc, input_files = concatenate_fcs(folder_name)
+input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+no_arc = concatenate_fcs(folder_name)
 
 
 #~~~~~~~~~~~~~~~~~~~~Downsampling if using multiple files~~~~~~~~~~~~~~~~~~~~~#
