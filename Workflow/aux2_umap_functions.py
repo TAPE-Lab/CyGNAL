@@ -23,12 +23,12 @@ def downsample_data(no_arc, info_run):
     
     #Create new file to store downsampling status for all cell IDs
     new_df = pd.DataFrame()
-    new_df["Cell_Index"] = no_arc["Cell_Index"]
-    new_df["In_donwsampled_file"] = new_df["Cell_Index"].isin(
-                                        reduced_df["Cell_Index"])
+    new_df["Sample_ID-Cell_Index"] = no_arc["Sample_ID-Cell_Index"]
+    new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(
+                                        reduced_df["Sample_ID-Cell_Index"])
     new_df.to_csv(f"./output/2-umap/{info_run}_downsampled_IDs.csv", 
                     index = False)
-    no_arc = no_arc[no_arc["Cell_Index"].isin(reduced_df["Cell_Index"])]
+    no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])]
     return reduced_df
 
 #Get markers flagged for use
@@ -59,6 +59,15 @@ def perform_umap(umap_params, all_together_vs_marks, arc, input_files):
     arc = arc.reset_index(drop=True)
     arc = arc.join(umap_emb)
 
+    # #Check if user wants to upload the UMAP info to Cytobank
+    # #If yes, generate a 
+    # while True:
+    #     convert = input("Prepare txt files for Cytobank upload? (Y/N): ")
+    #     if convert not in ('Y', 'N', 'y', 'n'):
+    #         continue
+    #     else:
+    #         break
+        
     #Write merged file and individual files with UMAP dimensions
     whole_file = "merged_" + info_run
     arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False,
@@ -68,3 +77,4 @@ def perform_umap(umap_params, all_together_vs_marks, arc, input_files):
         arc.loc[arc["file_origin"].str.endswith(i),:].to_csv(
             f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
 
+            

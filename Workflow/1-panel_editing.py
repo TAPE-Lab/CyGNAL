@@ -53,4 +53,3 @@ if not all(x==cols[0] for x in cols):
     print ("Check your input files: The panels don't match!")
 else:
     write_panel_markers(cols)
-
