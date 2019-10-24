@@ -8,22 +8,26 @@ import numpy as np
 import scprep
 import sys
 from itertools import permutations
+from aux_functions import yes_or_NO
+
 
 import warnings
 warnings.filterwarnings('ignore')
 
 
-# parameter setup
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DREMI PARAMETERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 cofactor = 5
 k = 10
 n_bins = 20
 n_mesh = 3
 return_drevi = False
+folder_name = "input/4-dremi"
+std_cutoff = [3,4,5]
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 ### User Input ### 
-plot = False
-outliers_removal = False # optional: removal of outliers based on standard deviation 
-num_std_for_outliers = [3,4,5]
+plot = yes_or_NO("Generate plots?")
+outliers_removal = yes_or_NO("Perform std-based outlier removal?")
 
 
 # create new folders to save the output of the script: plots and info
@@ -107,7 +111,7 @@ for f in dremi_files:
         df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc
 
         if outliers_removal == True:
-            for cutoff in num_std_for_outliers:
+            for cutoff in std_cutoff:
                 colname_arc = f"wo_outliers_arcsinh_cutoff={cutoff}_std_DREMI_score"
 
                 (num_outliers_total, df_wo_outliers) = outlier_removal(data_arc, cutoff, marker_x, marker_y)
@@ -121,5 +125,3 @@ for f in dremi_files:
 
 # save info in the dataframe df_info to a txt file
 df_info.to_csv('./output/info/dremi_info.txt', sep = '\t', index=False) 
-
-#%%

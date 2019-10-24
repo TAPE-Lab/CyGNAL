@@ -132,3 +132,11 @@ Workflow/output/2-umap/merged_ara_si.txt
 Workflow/5-dremi/dremi_specific_marker_combinations.py
 Workflow/5-dremi/Untitled.ipynb
 Workflow/5-dremi/.ipynb_checkpoints/Untitled-checkpoint.ipynb
+Workflow/__pycache__/aux1_data_preprocess.cpython-37.pyc
+Workflow/__pycache__/aux2_umap.cpython-37.pyc
+Workflow/output/2-umap/3%-1.txt__plz_yes.txt
+Workflow/output/2-umap/3%-2.txt__plz_yes.txt
+Workflow/output/2-umap/4%-1.txt__plz_yes.txt
+Workflow/output/2-umap/4%-2.txt__plz_yes.txt
+Workflow/output/2-umap/merged_plz_yes.txt
+Workflow/output/2-umap/plz_yes_downsampled_IDs.csv

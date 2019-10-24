@@ -10,7 +10,7 @@ import os
 
 
 #Downsampling the data to equate fil_origin sizes
-def downsample_data(no_arc, info_run):
+def downsample_data(no_arc, info_run, output_dir):
     downsampled_dframe = no_arc.copy()
     #Defiine downsampling size (N) per file:
     downsample_size = downsampled_dframe["file_origin"].value_counts().min() #at least N cells in all input files
@@ -26,7 +26,7 @@ def downsample_data(no_arc, info_run):
     new_df["Sample_ID-Cell_Index"] = no_arc["Sample_ID-Cell_Index"]
     new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(
                                         reduced_df["Sample_ID-Cell_Index"])
-    new_df.to_csv(f"./output/2-umap/{info_run}_downsampled_IDs.csv", 
+    new_df.to_csv(f"{output_dir}/{info_run}_downsampled_IDs.csv", 
                     index = False)
     no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])]
     return reduced_df
@@ -40,7 +40,7 @@ def identify_markers(marker_file):
 # UMAP function
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
-def perform_umap(umap_params, all_together_vs_marks, arc, input_files):
+def perform_umap(umap_params, all_together_vs_marks, arc, input_files, output_dir):
     info_run = umap_params["info"]
     run_name = "UMAP_"+info_run
     #Calculate UMAP on arc tranf data (all_together...)
@@ -70,11 +70,11 @@ def perform_umap(umap_params, all_together_vs_marks, arc, input_files):
         
     #Write merged file and individual files with UMAP dimensions
     whole_file = "merged_" + info_run
-    arc.to_csv(f"./output/2-umap/{whole_file}.txt", index = False,
+    arc.to_csv(f"{output_dir}/{whole_file}.txt", index = False,
                     sep = '\t')
     for i in input_files:
         partial_file = i +"__" + info_run
         arc.loc[arc["file_origin"].str.endswith(i),:].to_csv(
-            f"./output/2-umap/{partial_file}.txt", index = False, sep = '\t')
+            f"{output_dir}/{partial_file}.txt", index = False, sep = '\t')
 
             

@@ -5,9 +5,22 @@ import umap
 import sys
 import os
 
+#Simple yes or no input function (default NO)
+def yes_or_NO(question):
+    while True:
+        reply = str(input(question+' (y/[n]): ')).lower().strip()
+        if reply[:1] == 'y':
+            return True
+        elif reply[:1] == 'n':
+            return False
+        elif reply[:1] == "":
+            return False
+        else:
+            print ("Please answer Y or N")
+
 #Function to concatenate all files
 def concatenate_fcs(folder_name):
-    input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+    input_files = [f for f in os.listdir(folder_name) if f.endswith(".txt")]
     no_arc = pd.DataFrame()
     #Add counter to keep track of the number of files in input -> 
     # -> cell ID will be a mix of these (Filenumber | filename.txt)

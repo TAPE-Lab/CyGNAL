@@ -5,16 +5,28 @@
 #Jupyter/IP no longer supported here
 
 import pandas as pd
-from aux1_panel_editing_functions import *
+import OpenSSL.version
+from aux1_data_preprocess import *
 
 #FUTURE WORK: Once I have gone through all steps, implement the code as 
 # functions and write and overarching script to run everything as a 
 # consolidated pipeline -> Might have to split it whenever Cytobank is involved 
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+folder_name = "1-data_preprocess"
+
+if os.path.isdir(f"./input/{folder_name}") == False:
+    os.makedirs(f"./input/{folder_name}") 
+if os.path.isdir(f"./output/{folder_name}") == False:
+    os.makedirs(f"./output/{folder_name}")
+    
+input_dir = f"./input/{folder_name}"
+output_dir = f"./output/{folder_name}"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 # prepare file list; put the data files to be processed in the 'input' folder
 # IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
-filelist = [f for f in os.listdir(f"./input/1-data_preprocess") if f.endswith(".txt")]
+filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 
 #Check the files found in the directory:
 print ("Input files:")
@@ -27,7 +39,7 @@ for i in filelist:
 
 cols = []
 for i in filelist:
-    file = f"./input/1-data_preprocess/{i}"
+    file = f"{input_dir}/{i}"
     df_file = pd.read_csv(file, sep = '\t')
     shape_before = df_file.shape
     df_file_cols = list(df_file.columns)
@@ -41,7 +53,7 @@ for i in filelist:
     
     #Store columns present in each of the input files
     cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-    f_reduced.to_csv(f"./output/1-data_preprocess/{i}", index = False, sep = '\t') 
+    f_reduced.to_csv(f"{output_dir}/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank    
     shape_after = f_reduced.shape
     print (
@@ -52,4 +64,4 @@ for i in filelist:
 if not all(x==cols[0] for x in cols):
     print ("Check your input files: The panels don't match!")
 else:
-    write_panel_markers(cols)
+    write_panel_markers(cols, output_dir)

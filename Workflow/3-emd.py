@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import scprep
 import os
-from aux3_emd_functions import *
+from aux3_emd import *
 from aux_functions import concatenate_fcs, arcsinh_transf
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
