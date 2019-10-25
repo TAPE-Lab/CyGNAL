@@ -23,9 +23,9 @@ n = 15
 m = 0.1
 comp = 2
 d = "euclidean"
+info_run =  input("Write UMAP info run (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #include here the information that would be helpful to understand the umaps
-info_run =  input("Write UMAP info run (using no spaces!): ")
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -114,6 +114,5 @@ print(f"\n Number of markers used: {len(all_together_vs_marks.columns)}")
 umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d,
                 "info":info_run}
 
-#Actually perform the UMAP
-perform_umap(umap_params, all_together_vs_marks, arc, input_files, output_dir)
-print (arc)
+#Actually perform the UMAP with arc tranf data and save to original untransformed matrix
+perform_umap(umap_params, all_together_vs_marks, no_arc, input_files, output_dir)

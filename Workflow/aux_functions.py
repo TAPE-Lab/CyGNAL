@@ -21,6 +21,9 @@ def yes_or_NO(question):
 #Function to concatenate all files
 def concatenate_fcs(folder_name):
     input_files = [f for f in os.listdir(folder_name) if f.endswith(".txt")]
+    if len(input_files) ==0:
+        sys.exit (f"ERROR: There are no files in {folder_name}!")
+
     no_arc = pd.DataFrame()
     #Add counter to keep track of the number of files in input -> 
     # -> cell ID will be a mix of these (Filenumber | filename.txt)
@@ -28,9 +31,11 @@ def concatenate_fcs(folder_name):
     for file in input_files:
         fcounter += 1
         df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
-        df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
-        df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
-        # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
+        # add a new column of 'file_origin' that will be used to separate each file after umap calculation
+        df["file_origin"] = str(fcounter)+" | "+ file 
+        #File+ID #This way the cell-index will be preserved after Cytobank upload
+        df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
+                                        lambda x: str(fcounter)+"-"+str(x))
         no_arc = no_arc.append(df, ignore_index=True)
     return no_arc, input_files
 
@@ -64,7 +69,8 @@ def concatenate_save(folder_name):
         fcounter += 1
         df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
         df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
-        df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
+        df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
+                                        lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
         # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
         concat = concat.append(df, ignore_index=True)
 

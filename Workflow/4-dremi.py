@@ -7,9 +7,10 @@ import pandas as pd
 import numpy as np
 import scprep
 import sys
+import os
 from itertools import permutations
-from aux_functions import yes_or_NO
-
+from aux_functions import yes_or_NO, arcsinh_transf
+from aux4_dremi import *
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -23,27 +24,35 @@ n_mesh = 3
 return_drevi = False
 folder_name = "input/4-dremi"
 std_cutoff = [3,4,5]
+info_run =  input("Write DREMI info run (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+folder_name = "4-dremi"
+
+if os.path.isdir(f"./input/{folder_name}") == False:
+    os.makedirs(f"./input/{folder_name}") 
+if os.path.isdir(f"./output/{folder_name}") == False:
+    os.makedirs(f"./output/{folder_name}")
+input_dir = f"./input/{folder_name}"
+output_dir = f"./output/{folder_name}"
 
 ### User Input ### 
 plot = yes_or_NO("Generate plots?")
 outliers_removal = yes_or_NO("Perform std-based outlier removal?")
 
-
-# create new folders to save the output of the script: plots and info
 if plot == True:
-    if os.path.isdir('./output/plots') == False:
-        os.makedirs('./output/plots')
-
-if os.path.isdir('./output/info') == False:
-    os.makedirs('./output/info')
+    if os.path.isdir(f'{output_dir}/plots') == False:
+        os.makedirs(f'{output_dir}/plots')
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
 # create the list of txt files to be analysed (all txt files in the input folder)
 
-dremi_files = [file for file in os.listdir('./input') if file.endswith(".txt")]
+dremi_files = [file for file in os.listdir(input_dir) if file.endswith(".txt")]
 if len(dremi_files) == 0:
-    sys.exit("Error: no txt files in the input folder")
+    sys.exit("ERROR: no txt files in the input folder")
 
 print('Sample files:')
 print('\n'.join([f for f in dremi_files]))
@@ -84,10 +93,9 @@ df_info = pd.DataFrame()
 for f in dremi_files:
     filename = f.split(".txt")[0]
 
-    data = pd.read_csv(f'./input/{f}', sep = '\t') # may or may not have an index column
-    markers = [m for m in list(data.columns) if m[0].isdigit()]
-    data_arc = data.loc[:, markers].apply(lambda x: np.arcsinh(x/cofactor))
-    
+    data = pd.read_csv(f'{input_dir}/{f}', sep = '\t') # may or may not have an index column
+    data_arc, markers = arcsinh_transf(cofactor, data)
+
     # generate the list of marker-marker pairs for dremi calculation 
     marker_pairs = [comb for comb in list(permutations(markers, 2))]
     
@@ -98,16 +106,16 @@ for f in dremi_files:
         df_info_dict["file"] = filename
         df_info_dict["marker_x"] = marker_x
         df_info_dict["marker_y"] = marker_y
-        df_info_dict["marker_x-marker_y"] = marker_x + '_' + marker_y
+        df_info_dict["marker_x-marker_y"] = marker_x + '-' + marker_y
         df_info_dict["num_of_cells"] = data.shape[0]
         
         if plot == True:
-            os.makedirs(f'./output/plots/x={marker_x}_y={marker_y}')
+            os.makedirs(f'{output_dir}/plots/x={marker_x}-y={marker_y}')
 
         # save dremi scores without outlier removal
         # this step is always run regardless of the True or False value of the User Input plot / outliers_removal
         dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x], data_arc[marker_y], k=k, n_bins=n_bins, n_mesh=n_mesh, plot=plot, return_drevi=return_drevi, 
-                                                        filename=f"./output/plots/x={marker_x}_y={marker_y}/sample={filename}_x={marker_x}_y={marker_y}.png")
+                                                        filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
         df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc
 
         if outliers_removal == True:
@@ -116,7 +124,7 @@ for f in dremi_files:
 
                 (num_outliers_total, df_wo_outliers) = outlier_removal(data_arc, cutoff, marker_x, marker_y)
                 if num_outliers_total > 0:
-                    dremi_wo_outliers_arc = scprep.stats.knnDREMI(df_wo_outliers[marker_x], df_wo_outliers[marker_y], k=k, n_bins=n_bins, n_mesh=n_mesh, plot=plot, return_drevi=return_drevi, filename=f"./output/plots/x={marker_x}_y={marker_y}/sample={filename}_x={marker_x}_y={marker_y}_cutoff={cutoff}.png")
+                    dremi_wo_outliers_arc = scprep.stats.knnDREMI(df_wo_outliers[marker_x], df_wo_outliers[marker_y], k=k, n_bins=n_bins, n_mesh=n_mesh, plot=plot, return_drevi=return_drevi, filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}-cutoff={cutoff}.png")
                     df_info_dict[colname_arc] = dremi_wo_outliers_arc
                 if num_outliers_total == 0:
                     df_info_dict[colname_arc] = "-" # this is a placeholder
@@ -124,4 +132,4 @@ for f in dremi_files:
         df_info = df_info.append(df_info_dict, ignore_index=True) # save the info in the dict (df_info_dict) to a dataframe (df_info)   
 
 # save info in the dataframe df_info to a txt file
-df_info.to_csv('./output/info/dremi_info.txt', sep = '\t', index=False) 
+df_info.to_csv(f"{output_dir}/DREMI_{info_run}.txt", sep = '\t', index=False) 
