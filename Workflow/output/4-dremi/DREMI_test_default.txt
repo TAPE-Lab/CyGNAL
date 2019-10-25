@@ -1,0 +1,7 @@
+file	marker_x	marker_x-marker_y	marker_y	num_of_cells	with_outliers_arcsinh_DREMI_score
+dremi-test_1000-cells_3-markers	89Y_pHH3__S28	89Y_pHH3__S28-113In_CD326__EpCAM	113In_CD326__EpCAM	1000.0	0.09744857037391874
+dremi-test_1000-cells_3-markers	89Y_pHH3__S28	89Y_pHH3__S28-115In_Pan-CK	115In_Pan-CK	1000.0	0.053593728531015294
+dremi-test_1000-cells_3-markers	113In_CD326__EpCAM	113In_CD326__EpCAM-89Y_pHH3__S28	89Y_pHH3__S28	1000.0	0.10413735891472475
+dremi-test_1000-cells_3-markers	113In_CD326__EpCAM	113In_CD326__EpCAM-115In_Pan-CK	115In_Pan-CK	1000.0	0.1365838880178014
+dremi-test_1000-cells_3-markers	115In_Pan-CK	115In_Pan-CK-89Y_pHH3__S28	89Y_pHH3__S28	1000.0	0.05435305697326731
+dremi-test_1000-cells_3-markers	115In_Pan-CK	115In_Pan-CK-113In_CD326__EpCAM	113In_CD326__EpCAM	1000.0	0.08512657167917936
