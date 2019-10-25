@@ -5,6 +5,19 @@ import umap
 import sys
 import os
 
+#Simple yes or no input function (default NO)
+def yes_or_NO(question):
+    while True:
+        reply = str(input(question+' (y/[n]): ')).lower().strip()
+        if reply[:1] == 'y':
+            return True
+        elif reply[:1] == 'n':
+            return False
+        elif reply[:1] == "":
+            return False
+        else:
+            print ("Please answer Y or N")
+
 #Function to concatenate all files
 def concatenate_fcs(folder_name):
     input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
@@ -19,7 +32,7 @@ def concatenate_fcs(folder_name):
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
         # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
         no_arc = no_arc.append(df, ignore_index=True)
-    return no_arc, input_files
+    return no_arc
 
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):
@@ -30,8 +43,8 @@ def arcsinh_transf(cofactor, no_arc):
     # put back the 'file_origin' column to the arcsinh-transformed data
     if "file_origin" in  no_arc.columns:
         arc["file_origin"] = no_arc["file_origin"]
-    else:
-        print ("(there was no concatenation prior to transforming)")
+    # else:
+    #     print ("(there was no concatenation prior to transforming)")
     return arc, cols
 
 # Random downsampling of a dataframe to n rows
