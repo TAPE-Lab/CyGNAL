@@ -170,3 +170,4 @@ Workflow/6-emd-dremi-heatmap/output/figure-2_stem_all-event_dremi_info_for-heatm
 Workflow/input/v1-emd_dremi_htmp/Tests/dremi_info.txt
 Workflow/input/v1-emd_dremi_htmp/Tests/emd_info.txt
 Workflow/output/v1-emd_dremi_htmp/Tests/figure-2_stem_all-event_dremi_info_for-heatmap.csv
+.RData
