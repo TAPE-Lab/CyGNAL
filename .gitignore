@@ -159,3 +159,6 @@ Workflow/output/4-dremi/plots/x=89Y_pHH3__S28-y=113In_CD326__EpCAM/sample=dremi-
 Workflow/output/4-dremi/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=115In_Pan-CK-cutoff=3.png
 Workflow/output/4-dremi/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=115In_Pan-CK-cutoff=4.png
 Workflow/output/4-dremi/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=115In_Pan-CK-cutoff=5.png
+.Rproj.user
+CyTOF_DataAnalysis.Rproj
+.Rhistory
