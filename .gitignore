@@ -162,3 +162,11 @@ Workflow/output/4-dremi/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1
 .Rproj.user
 CyTOF_DataAnalysis.Rproj
 .Rhistory
+Workflow/6-emd-dremi-heatmap/emd-and-dremi-result_reformat_and_heatmap.ipynb
+Workflow/6-emd-dremi-heatmap/.ipynb_checkpoints/6-checkpoint.ipynb
+Workflow/6-emd-dremi-heatmap/input/dremi_info.txt
+Workflow/6-emd-dremi-heatmap/input/emd_info.txt
+Workflow/6-emd-dremi-heatmap/output/figure-2_stem_all-event_dremi_info_for-heatmap.csv
+Workflow/input/v1-emd_dremi_htmp/Tests/dremi_info.txt
+Workflow/input/v1-emd_dremi_htmp/Tests/emd_info.txt
+Workflow/output/v1-emd_dremi_htmp/Tests/figure-2_stem_all-event_dremi_info_for-heatmap.csv
