@@ -171,3 +171,6 @@ Workflow/input/v1-emd_dremi_htmp/Tests/dremi_info.txt
 Workflow/input/v1-emd_dremi_htmp/Tests/emd_info.txt
 Workflow/output/v1-emd_dremi_htmp/Tests/figure-2_stem_all-event_dremi_info_for-heatmap.csv
 .RData
+Workflow/6-emd-dremi-heatmap/.ipynb_checkpoints/emd-and-dremi-result_reformat_and_heatmap-checkpoint.ipynb
+Workflow/input/v1-emd_dremi_htmp/dremi_info.txt
+Workflow/input/v1-emd_dremi_htmp/emd_info.txt
