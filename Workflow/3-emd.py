@@ -12,7 +12,7 @@ from aux_functions import concatenate_fcs, arcsinh_transf
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5
-normalisation = 'no-norm'
+normalisation = 'no_norm'
 info_run =  input("Write EMD denominator info run (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 

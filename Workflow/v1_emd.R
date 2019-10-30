@@ -9,8 +9,8 @@ library(RColorBrewer)
 library(shiny)
 
 emd_info <- read_tsv(args)
-minx <- min(emd_info$EMD_no-norm_arc)
-maxx <- max(emd_info$EMD_no-norm_arc)
+minx <- min(emd_info$EMD_no_norm_arc)
+maxx <- max(emd_info$EMD_no_norm_arc)
 initial_emd <- emd_info %>% select(2,3,5) %>% ggplot(aes(x=fct_rev(compare_from), y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
 
 # Define UI for application that draws a histogram
