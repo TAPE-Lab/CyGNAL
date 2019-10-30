@@ -174,3 +174,17 @@ Workflow/output/v1-emd_dremi_htmp/Tests/figure-2_stem_all-event_dremi_info_for-h
 Workflow/6-emd-dremi-heatmap/.ipynb_checkpoints/emd-and-dremi-result_reformat_and_heatmap-checkpoint.ipynb
 Workflow/input/v1-emd_dremi_htmp/dremi_info.txt
 Workflow/input/v1-emd_dremi_htmp/emd_info.txt
+Workflow/input/4-dremi/Tests/dremi-test_1000-cells_3-markers.txt
+Workflow/input/4-dremi/Tests/merged_final_umap_test.txt
+Workflow/input/v1-emd_dremi_htmp/Tests/DREMI_test_bigdata.txt
+Workflow/input/v1-emd_dremi_htmp/dremi_info_newshort.txt
+Workflow/output/4-dremi/Tests/DREMI_test_default.txt
+Workflow/output/4-dremi/Tests/DREMI_test_outliers.txt
+Workflow/output/4-dremi/Tests/DREMI_test_plots.txt
+Workflow/output/4-dremi/Tests/plots/x=113In_CD326__EpCAM-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=113In_CD326__EpCAM-y=115In_Pan-CK.png
+Workflow/output/4-dremi/Tests/plots/x=113In_CD326__EpCAM-y=89Y_pHH3__S28/sample=dremi-test_1000-cells_3-markers-x=113In_CD326__EpCAM-y=89Y_pHH3__S28.png
+Workflow/output/4-dremi/Tests/plots/x=115In_Pan-CK-y=113In_CD326__EpCAM/sample=dremi-test_1000-cells_3-markers-x=115In_Pan-CK-y=113In_CD326__EpCAM.png
+Workflow/output/4-dremi/Tests/plots/x=115In_Pan-CK-y=89Y_pHH3__S28/sample=dremi-test_1000-cells_3-markers-x=115In_Pan-CK-y=89Y_pHH3__S28.png
+Workflow/output/4-dremi/Tests/plots/x=89Y_pHH3__S28-y=113In_CD326__EpCAM/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=113In_CD326__EpCAM.png
+Workflow/output/4-dremi/Tests/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=115In_Pan-CK.png
+Workflow/output/4-dremi/DREMI_test_bigdata.txt
