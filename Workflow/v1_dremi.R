@@ -8,27 +8,35 @@ library(forcats)
 library(RColorBrewer)
 library(shiny)
 
+#Make sure no_norm is like this and marker_marker, not marker-marker -> check dremi script for populatiog the column itself, although i don't think that will pose a problem here in R
+
 dremi_info <- read_tsv(args)
 minx <- min(dremi_info$with_outliers_arcsinh_DREMI_score)
 maxx <- max(dremi_info$with_outliers_arcsinh_DREMI_score)
-initial_emd <- emd_info %>% select(2,3,5) %>% ggplot(aes(x=fct_rev(compare_from), y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
+
+initial_dremi <- dremi_info %>% ggplot(aes(
+                        x=file, y=factor(marker_x_marker_y,
+                        levels=rev(unique(marker_x_marker_y))))) + 
+                    geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score))
+                    
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("EMD scores heatmap"),
+    titlePanel("DREMI scores heatmap"),
 
-    sidebarPanel(width=4,
+    sidebarPanel(width=2,
         sliderInput("range",
                     "Slider Range:",
                     step = 0.1,
-                    min = floor(minx) - 1,
+                    min = floor(minx),
                     max = ceiling(maxx) +1,
-                    value = c(floor(minx), ceiling(maxx))),
+                    value = c(minx, maxx)),
         downloadButton('foo', "Download plot as .pdf")
     ),
-    mainPanel(width=8,
+    mainPanel(width=10,
         plotlyOutput("trendPlot")
     )
 )
@@ -39,31 +47,27 @@ server <- function(input, output, session) {
     output$trendPlot <- renderPlotly({
         
         print(
-        ggplotly(initial_emd + scale_fill_distiller(
-            palette = "RdBu", limits=c(input$range[1], input$range[2]),
-            #breaks = c(floor(rng[1]), ceiling(rng[2])),
-            oob = scales::squish, guide = guide_colourbar(
-                nbin=100, draw.ulim = FALSE,
-                draw.llim = FALSE, ticks = FALSE)) +
+        ggplotly(initial_dremi + scale_fill_gradient(
+            low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
+            oob = scales::squish, breaks = c(input$range[1], input$range[2]), labels = c(paste('<',input$range[1]), paste('>',input$range[2])),
+            guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
             theme(legend.position="right", legend.direction="vertical", 
                     axis.text.x = element_text(angle = 45, hjust = 1)) + 
             xlab("Cell type") + ylab("Markers") +
             ggtitle("EMD scores heatmap")
-        ) %>% layout(height = 700, width = 700))
+        ) %>% layout(height = 1400, width = 1200))
     })
     output$foo <- downloadHandler(
         filename = "emd_heatmap.pdf",
         content = function(file) {
-            ggsave(file, plot = initial_emd + scale_fill_distiller(
-                                palette = "RdBu", limits=c(input$range[1], input$range[2]),
-                #breaks = c(floor(rng[1]), ceiling(rng[2])),
-                                oob = scales::squish, guide = guide_colourbar(
-                                    nbin=100, draw.ulim = FALSE,
-                                    draw.llim = FALSE, ticks = FALSE)) +
-                            theme(legend.position="right", legend.direction="vertical", 
-                                axis.text.x = element_text(angle = 45, hjust = 1), aspect.ratio = 1) + 
-                            xlab("Cell type") + ylab("Markers") +
-                    ggtitle("EMD scores heatmap")
+            ggsave(file, plot = initial_dremi + scale_fill_gradient(
+            low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
+            oob = scales::squish, breaks = c(input$range[1], input$range[2]), labels = c(paste('<',input$range[1]), paste('>',input$range[2])),
+            guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
+            theme(legend.position="right", legend.direction="vertical", 
+                    axis.text.x = element_text(angle = 45, hjust = 1)) + 
+            xlab("Cell type") + ylab("Markers") +
+            ggtitle("EMD scores heatmap")
             , device = "pdf")
         }
     )

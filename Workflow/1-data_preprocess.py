@@ -16,6 +16,7 @@ from aux1_data_preprocess import *
 folder_name = "1-data_preprocess"
 
 if os.path.isdir(f"./input/{folder_name}") == False:
+    sys.exit("ERROR: There is no input folder!")
     os.makedirs(f"./input/{folder_name}") 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")

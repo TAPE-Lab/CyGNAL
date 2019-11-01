@@ -18,6 +18,18 @@ def yes_or_NO(question):
         else:
             print ("Please answer Y or N")
 
+#Function to read a .csv file of the panel's markers with some to be selected
+def read_marker_csv(input_dir):
+    marker_files = [f for f in os.listdir(f"{input_dir}") if f.endswith(".csv")]
+    if len(marker_files) != 1: #Sanity check
+        sys.exit("ERROR: There should be ONE .csv file with the markers to use in the input folder!")
+    else: #Get markers flagged for use
+        marker_file = pd.read_csv(f"{input_dir}/{marker_files[0]}", header=None)
+        selected_markers = marker_file.loc[marker_file[1] == "Y", [0]].values.tolist()
+        selected_markers = [item for sublist in selected_markers for item in sublist]
+    return selected_markers
+
+
 #Function to concatenate all files
 def concatenate_fcs(folder_name):
     input_files = [f for f in os.listdir(folder_name) if f.endswith(".txt")]

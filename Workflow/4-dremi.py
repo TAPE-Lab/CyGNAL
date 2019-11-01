@@ -9,7 +9,7 @@ import scprep
 import sys
 import os
 from itertools import permutations
-from aux_functions import yes_or_NO, arcsinh_transf
+from aux_functions import yes_or_NO, arcsinh_transf, read_marker_csv
 from aux4_dremi import *
 
 import warnings
@@ -32,6 +32,7 @@ info_run =  input("Write DREMI info run (using no spaces!): ")
 folder_name = "4-dremi"
 
 if os.path.isdir(f"./input/{folder_name}") == False:
+    sys.exit("ERROR: There is no input folder")
     os.makedirs(f"./input/{folder_name}") 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")
@@ -58,6 +59,10 @@ print('Sample files:')
 print('\n'.join([f for f in dremi_files]))
 
 
+#Load .csv with the markers to use in the DREMI calculation -> Often only the PTMs are used
+selected_markers = read_marker_csv(input_dir)
+
+
 # create a dataframe to store the dremi result
 df_info = pd.DataFrame()
 dremi_params = {}
@@ -67,6 +72,8 @@ dremi_params = {}
 for f in dremi_files:
     filename = f.split(".txt")[0]
     data = pd.read_csv(f'{input_dir}/{f}', sep = '\t')
+    #Remove unwanted markers
+    data = data.loc[:, selected_markers]
     data_arc, markers = arcsinh_transf(cofactor, data)
 
     # generate the list of marker-marker pairs for dremi calculation 
@@ -76,7 +83,7 @@ for f in dremi_files:
         df_info_dict["file"] = filename
         df_info_dict["marker_x"] = marker_x
         df_info_dict["marker_y"] = marker_y
-        df_info_dict["marker_x-marker_y"] = marker_x + '-' + marker_y
+        df_info_dict["marker_x_marker_y"] = marker_x + '_' + marker_y
         df_info_dict["num_of_cells"] = data.shape[0]
 
         if plot == True:

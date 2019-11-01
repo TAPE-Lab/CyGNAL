@@ -188,3 +188,13 @@ Workflow/output/4-dremi/Tests/plots/x=115In_Pan-CK-y=89Y_pHH3__S28/sample=dremi-
 Workflow/output/4-dremi/Tests/plots/x=89Y_pHH3__S28-y=113In_CD326__EpCAM/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=113In_CD326__EpCAM.png
 Workflow/output/4-dremi/Tests/plots/x=89Y_pHH3__S28-y=115In_Pan-CK/sample=dremi-test_1000-cells_3-markers-x=89Y_pHH3__S28-y=115In_Pan-CK.png
 Workflow/output/4-dremi/DREMI_test_bigdata.txt
+Workflow/input/v1-emd_dremi_htmp/Tests/DREMI_final_syntax.txt
+Workflow/input/v1-emd_dremi_htmp/Tests/dremi_info_newshort.txt
+Workflow/input/v1-emd_dremi_htmp/Tests/emd_info_new.txt
+Workflow/input/4-dremi/3%-1.txt
+Workflow/input/4-dremi/3%-2.txt
+Workflow/input/4-dremi/4%-1.txt
+Workflow/input/4-dremi/4%-2.txt
+Workflow/output/3-emd/Tests/EMD_final_test.txt
+Workflow/output/4-dremi/Tests/DREMI_final_syntax.txt
+Workflow/output/4-dremi/Tests/DREMI_test_bigdata.txt
