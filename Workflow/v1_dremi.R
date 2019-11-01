@@ -53,12 +53,12 @@ server <- function(input, output, session) {
             guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
             theme(legend.position="right", legend.direction="vertical", 
                     axis.text.x = element_text(angle = 45, hjust = 1)) + 
-            xlab("Cell type") + ylab("Markers") +
-            ggtitle("EMD scores heatmap")
+            xlab("Condition") + ylab("Markers") +
+            ggtitle("DREMI scores heatmap")
         ) %>% layout(height = 1400, width = 1200))
     })
     output$foo <- downloadHandler(
-        filename = "emd_heatmap.pdf",
+        filename = "dremi_heatmap.pdf",
         content = function(file) {
             ggsave(file, plot = initial_dremi + scale_fill_gradient(
             low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
@@ -66,8 +66,8 @@ server <- function(input, output, session) {
             guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
             theme(legend.position="right", legend.direction="vertical", 
                     axis.text.x = element_text(angle = 45, hjust = 1)) + 
-            xlab("Cell type") + ylab("Markers") +
-            ggtitle("EMD scores heatmap")
+            xlab("Condition") + ylab("Markers") +
+            ggtitle("DREMI scores heatmap")
             , device = "pdf")
         }
     )

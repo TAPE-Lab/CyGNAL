@@ -7,6 +7,8 @@
 import pandas as pd
 import OpenSSL.version
 from aux1_data_preprocess import *
+import os
+import sys
 
 #FUTURE WORK: Once I have gone through all steps, implement the code as 
 # functions and write and overarching script to run everything as a 
@@ -15,11 +17,11 @@ from aux1_data_preprocess import *
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "1-data_preprocess"
 
-if os.path.isdir(f"./input/{folder_name}") == False:
-    sys.exit("ERROR: There is no input folder!")
-    os.makedirs(f"./input/{folder_name}") 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")
+if os.path.isdir(f"./input/{folder_name}") == False:
+    os.makedirs(f"./input/{folder_name}")
+    sys.exit("ERROR: There is no input folder") 
     
 input_dir = f"./input/{folder_name}"
 output_dir = f"./output/{folder_name}"

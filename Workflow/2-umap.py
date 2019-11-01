@@ -31,12 +31,12 @@ info_run =  input("Write UMAP info run (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "2-umap"
 
-if os.path.isdir(f"./input/{folder_name}") == False:
-    sys.exit("ERROR: There is no input folder!")
-    os.makedirs(f"./input/{folder_name}") 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")
-    
+if os.path.isdir(f"./input/{folder_name}") == False:
+    os.makedirs(f"./input/{folder_name}")
+    sys.exit("ERROR: There is no input folder") 
+
 input_dir = f"./input/{folder_name}"
 output_dir = f"./output/{folder_name}"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

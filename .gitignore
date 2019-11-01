@@ -198,3 +198,6 @@ Workflow/input/4-dremi/4%-2.txt
 Workflow/output/3-emd/Tests/EMD_final_test.txt
 Workflow/output/4-dremi/Tests/DREMI_final_syntax.txt
 Workflow/output/4-dremi/Tests/DREMI_test_bigdata.txt
+Workflow/Tests/iris.csv
+Workflow/Tests/server.R
+Workflow/Tests/ui.R
