@@ -206,3 +206,11 @@ Workflow/output/2-umap/4%-1_UMAP_mini_test.txt
 Workflow/output/2-umap/3%-2_UMAP_mini_test.txt
 Workflow/output/2-umap/3%-1_UMAP_mini_test.txt
 Workflow/output/2-umap/merged_UMAP_mini_test.txt
+Workflow/output/2-umap/3%-1_UMAP_merge_test.txt
+Workflow/output/2-umap/3%-2_UMAP_merge_test.txt
+Workflow/output/2-umap/4%-1_UMAP_merge_test.txt
+Workflow/output/2-umap/4%-2_UMAP_merge_test.txt
+Workflow/output/2-umap/merge_test_downsampled_IDs.csv
+Workflow/output/2-umap/merged_UMAP_merge_test.txt
+Workflow/output/3-emd/EMD_merge_test.txt
+Workflow/output/4-dremi/DREMI_merge_test.txt
