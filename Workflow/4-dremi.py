@@ -88,7 +88,7 @@ for f in dremi_files:
 
         if plot == True:
             os.makedirs(f'{output_dir}/plots/x={marker_x}-y={marker_y}')
-
+        
         # save dremi scores without outlier removal regardless of user input
         dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x],
                                     data_arc[marker_y], k=k, n_bins=n_bins,

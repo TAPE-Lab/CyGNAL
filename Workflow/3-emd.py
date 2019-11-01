@@ -9,7 +9,7 @@ import scprep
 import os
 import sys
 from aux3_emd import *
-from aux_functions import concatenate_fcs, arcsinh_transf
+from aux_functions import concatenate_fcs, arcsinh_transf, yes_or_NO
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5

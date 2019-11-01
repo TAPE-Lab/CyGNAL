@@ -49,7 +49,7 @@ def concatenate_fcs(folder_name):
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x))
         no_arc = no_arc.append(df, ignore_index=True)
-    return no_arc
+    return no_arc, input_files
 
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):
