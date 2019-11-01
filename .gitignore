@@ -201,3 +201,8 @@ Workflow/output/4-dremi/Tests/DREMI_test_bigdata.txt
 Workflow/Tests/iris.csv
 Workflow/Tests/server.R
 Workflow/Tests/ui.R
+Workflow/output/2-umap/4%-2_UMAP_mini_test.txt
+Workflow/output/2-umap/4%-1_UMAP_mini_test.txt
+Workflow/output/2-umap/3%-2_UMAP_mini_test.txt
+Workflow/output/2-umap/3%-1_UMAP_mini_test.txt
+Workflow/output/2-umap/merged_UMAP_mini_test.txt
