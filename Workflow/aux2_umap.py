@@ -52,7 +52,7 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files, output
                                 repulsion_strength=umap_params["rs"],
                                 negative_sample_rate=umap_params["nsr"]
                             ).fit_transform(all_together_vs_marks), 
-                            columns=["UMAP_D1","UMAP_D2"])
+                            columns=[f"{run_name}_D1",f"{run_name}_D2"])
     # append umap info columns into untransformed data
     # no_arc[run_name+"_D1"] = umap_emb[run_name+"_D1"]
     # no_arc[run_name+"_D2"] = umap_emb[run_name+"_D2"]
