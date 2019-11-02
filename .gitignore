@@ -333,3 +333,31 @@ Workflow/input/4-dremi/figure-1_goblet_revision.fcs_raw_events.txt
 Workflow/input/4-dremi/figure-1_enteroendocrine_revision.fcs_raw_events.txt
 Workflow/input/4-dremi/figure-1_enterocyte_revision.fcs_raw_events.txt
 Workflow/input/v1-emd_dremi_htmp/Tests/EMD_final_syntax.txt
+Workflow/input/6-cell_state_info/1_goblet_cCaspase3 hi_apoptosis.txt
+Workflow/input/6-cell_state_info/1_goblet_cCaspase3 low_G0.txt
+Workflow/input/6-cell_state_info/1_goblet_CyclinB1+_G2.txt
+Workflow/input/6-cell_state_info/1_goblet_IdU hi_S-phase.txt
+Workflow/input/6-cell_state_info/1_goblet_pHH3 hi_M-phase.txt
+Workflow/input/6-cell_state_info/1_goblet_Ungated.txt
+Workflow/input/6-cell_state_info/1_paneth_cCaspase3 hi_apoptosis.txt
+Workflow/input/6-cell_state_info/1_paneth_cCaspase3 low_G0.txt
+Workflow/input/6-cell_state_info/1_paneth_CyclinB1+_G2.txt
+Workflow/input/6-cell_state_info/1_paneth_IdU hi_S-phase.txt
+Workflow/input/6-cell_state_info/1_paneth_pHH3 hi_M-phase.txt
+Workflow/input/6-cell_state_info/1_paneth_Ungated.txt
+Workflow/input/6-cell_state_info/2_goblet_cCaspase3 hi_apoptosis.txt
+Workflow/input/6-cell_state_info/2_goblet_cCaspase3 low_G0.txt
+Workflow/input/6-cell_state_info/2_goblet_CyclinB1+_G2.txt
+Workflow/input/6-cell_state_info/2_goblet_IdU hi_S-phase.txt
+Workflow/input/6-cell_state_info/2_goblet_pHH3 hi_M-phase.txt
+Workflow/input/6-cell_state_info/2_goblet_Ungated.txt
+Workflow/input/6-cell_state_info/2_paneth_cCaspase3 hi_apoptosis.txt
+Workflow/input/6-cell_state_info/2_paneth_cCaspase3 low_G0.txt
+Workflow/input/6-cell_state_info/2_paneth_CyclinB1+_G2.txt
+Workflow/input/6-cell_state_info/2_paneth_IdU hi_S-phase.txt
+Workflow/input/6-cell_state_info/2_paneth_pHH3 hi_M-phase.txt
+Workflow/input/6-cell_state_info/2_paneth_Ungated.txt
+Workflow/output/6-cell_state_info/1_goblet_w-cell-state.txt
+Workflow/output/6-cell_state_info/1_paneth_w-cell-state.txt
+Workflow/output/6-cell_state_info/2_goblet_w-cell-state.txt
+Workflow/output/6-cell_state_info/2_paneth_w-cell-state.txt
