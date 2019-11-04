@@ -38,7 +38,7 @@ if emd==True and dremi==False:
     if len(emd_file) != 1:
             sys.exit("ERROR: Please have only ONE .txt file with 'emd' in its name!")
     emd_file = f"{input_dir}/{emd_file[0]}"
-    subprocess.call(["bash","v1_emd.sh", emd_file])
+    subprocess.call(["bash","5v2_pca.sh", emd_file])
 
 
 
