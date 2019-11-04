@@ -35,7 +35,7 @@ ui <- bootstrapPage(
     titlePanel("Interactive PCA Explorer"),
         
         tabsetPanel(
-          tabPanel("Inspect the data",
+            tabPanel("Inspect the data",
 
                 p("Here is the data from the input file after removing unnecessary columns and collapsing marker EMD scores for each condition:"),
                 DT::dataTableOutput('contents'),
@@ -43,47 +43,51 @@ ui <- bootstrapPage(
                 p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
                 plotOutput("tableplot")
         ), # end  tab
-          tabPanel("Correlation Plots",
+            tabPanel("Correlation Plots",
                 sidebarLayout(
-                  sidebarPanel(
-                    uiOutput("choose_columns_biplot")
-                  ),
-                  mainPanel(
+                    sidebarPanel(
+                        uiOutput("choose_columns_biplot")
+                    ),
+                    mainPanel(
+                    h2("Correlation plot"),
                     p("This plot may take a few moments to appear when analysing large datasets. You may want to exclude highly correlated variables from the PCA."),
                     plotOutput("corr_plot")
-                  )
+                    )
                 ),
                 tags$hr(),
                 p("Summary of correlations"),
                 tableOutput("corr_tables")
         ), # end  tab
-          tabPanel("Diagnostics",
+            tabPanel("Diagnostics",
+                h2("KMO test"),
                 p("Here is the output of the Kaiser-Meyer-Olkin (KMO) index test. The overall measure varies between 0 and 1, and values closer to 1 are better. A value of 0.6 is a suggested minimum. "),
                 p("This test provides some guidelines on the suitability of the data for a principal components analysis. However, it may be safely ignored in favour of common sense such as when working with very few conditions and markers (such as when studying cell types and the EMD scores for just the PTMs). Variables with zero variance are excluded."),
                 verbatimTextOutput("kmo")
         ), # end  tab
-          tabPanel("Compute PCA",
-                
-                p("Choose the columns of your data to include in the PCA."),
-                p("Only columns containing numeric data are shown here because PCA doesn't work with non-numeric data."),
+            tabPanel("Compute PCA",
+                p("Only columns containing numeric data are shown here because PCA doesn't work with non-numeric data and variables with zero variance have been automatically removed because they're not useful in a PCA."),
                 p("The PCA is automatically re-computed each time you change your selection."),
-                p("Observations (ie. rows) are automatically removed if they contain any missing values."),
-                p("Variables with zero variance have been automatically removed because they're not useful in a PCA."),
-                uiOutput("choose_columns_pca"),
                 tags$hr(),
-                p("Select options for the PCA computation (we are using the prcomp function here)"),
-                radioButtons(inputId = 'center',  
-                            label = 'Center',
-                            choices = c('Shift variables to be zero centered'='Yes',
-                                        'Do not shift variables'='No'), 
-                            selected = 'Yes'),
-                radioButtons('scale.', 'Scale',
-                            choices = c('Scale variables to have unit variance'='Yes',
-                                        'Do not scale variables'='No'), 
-                            selected = 'Yes')
+                sidebarLayout(
+                    sidebarPanel(
+                        p("Choose the columns of your data to include in the PCA."),
+                        uiOutput("choose_columns_pca")
+                    ),
+                    mainPanel(
+                        p("Select options for the PCA computation (we are using the prcomp function here)"),
+                        radioButtons(inputId = 'center',  
+                                    label = 'Center',
+                                    choices = c('Shift variables to be zero centered'='Yes',
+                                                'Do not shift variables'='No'), 
+                                    selected = 'Yes'),
+                        radioButtons('scale.', 'Scale',
+                                    choices = c('Scale variables to have unit variance'='Yes',
+                                                'Do not scale variables'='No'), 
+                                    selected = 'Yes')
+                    )
+                )
         ), # end  tab
-          tabPanel("PC Plots",
-                
+            tabPanel("PC Plots",
                 h2("Scree plot"),
                 p("The scree plot shows the variances of each PC, and the cumulative variance explained by each PC (in %) "),
                 plotOutput("plot2", height = "300px"),
@@ -113,12 +117,10 @@ ui <- bootstrapPage(
                             id = "plot_brush_after_zoom",
                             resetOnNew = TRUE))
         ), # end  tab 
-          tabPanel("PCA output",
-                
+            tabPanel("PCA output",    
                 verbatimTextOutput("pca_details")
         ), # end  tab 
-          tabPanel("Authorship",
-                
+            tabPanel("Authorship",
                 p("The code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer"), "Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick"),"."))
         ) # end  tab 
 
@@ -336,17 +338,19 @@ output$the_pcs_to_plot_y <- renderUI({
     var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
     labels <- rownames(pca_output$x)
     grouping <- input$the_grouping_variable
-
-    fviz_pca_biplot(pca_output, 
-      # Individuals
-      geom.ind = "point",
-      fill.ind = rownames(data4pca), col.ind = "black",
-      pointshape = 21, pointsize = 2,
-      palette = "jco",
-      # Variables
-      alpha.var ="contrib", col.var = "contrib",
-      gradient.cols = "RdYlBu",
-      legend.title = list(fill = "Condition or Group", color = "Contrib", alpha = "Contrib")
+    eixos = c(1,2)
+    eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
+    fviz_pca_biplot(pca_output,
+        axes = as.numeric(eixos),
+        # Individuals
+        geom.ind = "point",
+        fill.ind = rownames(data4pca), col.ind = "black",
+        pointshape = 21, pointsize = 2,
+        palette = "jco",
+        # Variables
+        alpha.var ="contrib", col.var = "contrib",
+        gradient.cols = "RdYlBu",
+        legend.title = list(fill = "Condition or Group", color = "Contrib", alpha = "Contrib")
     )
     
   })
