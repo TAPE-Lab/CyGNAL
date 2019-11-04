@@ -333,3 +333,10 @@ Workflow/input/4-dremi/figure-1_goblet_revision.fcs_raw_events.txt
 Workflow/input/4-dremi/figure-1_enteroendocrine_revision.fcs_raw_events.txt
 Workflow/input/4-dremi/figure-1_enterocyte_revision.fcs_raw_events.txt
 Workflow/input/v1-emd_dremi_htmp/Tests/EMD_final_syntax.txt
+Workflow/input/5v2-pca/Tests/DREMI_TEST_CELLTYPE.txt
+Workflow/input/5v2-pca/Tests/emd_info.txt
+Workflow/input/5v2-pca/Tests/iris.csv
+Workflow/input/v1-emd_dremi_htmp/Tests/DREMI_final_test.txt
+Workflow/input/5v2-pca/EMD_test_celltype.txt
+Workflow/input/v1-emd_dremi_htmp/DREMI_TEST_CELLTYPE.txt
+Workflow/output/4-dremi/DREMI_TEST_CELLTYPE.txt
