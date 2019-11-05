@@ -410,3 +410,15 @@ Workflow/output/4-dremi/Tests/DREMI_final_test.txt
 Workflow/output/4-dremi/Tests/DREMI_merge_test.txt
 Workflow/output/4-dremi/Tests/DREMI_mini_test.txt
 Workflow/output/4-dremi/Tests/DREMI_TEST_CELLTYPE.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_enterocyte_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_enteroendocrine_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh_TRUNCATED.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_full-gate_1st-cytobank-export_no-arcsinh.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_goblet_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_paneth_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_stem_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/figure-1_tuft_revision.fcs_raw_events.txt
+Workflow/input/1-data_preprocess/Tests/PFA/3%-1.txt
+Workflow/input/1-data_preprocess/Tests/PFA/3%-2.txt
+Workflow/input/1-data_preprocess/Tests/PFA/4%-1.txt
+Workflow/input/1-data_preprocess/Tests/PFA/4%-2.txt
