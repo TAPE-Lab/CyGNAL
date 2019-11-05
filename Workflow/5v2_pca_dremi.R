@@ -26,11 +26,13 @@ lapply(list.of.packages, require, character.only = TRUE)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-the_data <- read_tsv(args) 
+#the_data <- read_tsv(args) 
 
-exploratory_data <- the_data %>% select(-starts_with("denominator"))
+the_data <- read_tsv("input/5v2-pca/DREMI_TEST_CELLTYPE.txt")
 
-data4pca <- the_data %>% select(-starts_with("median")) %>% select(-starts_with("denominator")) %>% spread (marker, EMD_no_norm_arc) %>% column_to_rownames(., var = "file_origin")#read_tsv(args)
+exploratory_data <- the_data %>% select(-starts_with("arcsinh")) %>% select(-starts_with("num")) %>% select(-"marker_x") %>% select(-"marker_y")
+
+data4pca <- exploratory_data %>% select(-starts_with("wo")) %>% spread(marker_x_marker_y, with_outliers_arcsinh_DREMI_score) %>% column_to_rownames(., var = "file")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -45,26 +47,27 @@ ui <- bootstrapPage(
             tabPanel("Inspect the data",
 
                 p("Here is the data from the input file after removing unnecessary columns and collapsing marker EMD scores for each condition:"),
-                DT::dataTableOutput('contents'),
-                tags$hr(),
-                p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
-                plotOutput("tableplot")
+                DT::dataTableOutput('contents')
+                # tags$hr(),
+                # p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
+                # plotOutput("tableplot")
         ), # end  tab
             tabPanel("Correlation Plots",
                 sidebarLayout(
                     sidebarPanel(
-                        uiOutput("choose_columns_biplot")
+                        p("This tab isn't currently working with our DREMI datasets"),
+                        #uiOutput("choose_columns_biplot")
                     ),
                     mainPanel(
                         h2("Correlation plot"),
                         p("This plot may take a few moments to appear when analysing large datasets. You may want to exclude highly correlated variables from the PCA."),
-                        plotOutput("corr_plot"),
-                        downloadButton('dwn_corr', "Download plot as .pdf")
+                        #plotOutput("corr_plot"),
+                        #downloadButton('dwn_corr', "Download plot as .pdf")
                     )
                 ),
                 tags$hr(),
                 p("Summary of correlations"),
-                tableOutput("corr_tables")
+                #tableOutput("corr_tables")
         ), # end  tab
             tabPanel("Diagnostics",
                 h2("KMO test"),
@@ -147,9 +150,9 @@ ui <- bootstrapPage(
 server <- function(input, output, session) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Inspect the data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     # tableplot
-    output$tableplot <- renderPlot({
-        tabplot::tableplot(exploratory_data)
-    })
+    # output$tableplot <- renderPlot({
+    #     tabplot::tableplot(exploratory_data)
+    # })
     # display a table of the CSV contents
     output$contents <-  DT::renderDataTable({
         data4pca
@@ -157,44 +160,50 @@ server <- function(input, output, session) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Correlation plots~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
     # Check boxes to choose columns
-    output$choose_columns_biplot <- renderUI({
-        colnames <- names(data4pca)
-        # Create the checkboxes and select them all by default
-        checkboxGroupInput("columns_biplot", "Choose up to five columns to display on the scatterplot matrix", 
-                            choices  = colnames,
-                            selected = colnames[1:5])
-    })
-    # corr plot
-    output$corr_plot <- renderPlot({
-        # Keep the selected columns
-        columns_biplot <-    input$columns_biplot
-        the_data_subset_biplot <- data4pca[, columns_biplot, drop = FALSE]
-        ggpairs(the_data_subset_biplot)
-    })
-    # corr tables
-    output$corr_tables <- renderTable({
-        # we only want to show numeric cols
-        the_data_num <- data4pca[,sapply(data4pca,is.numeric)]
-        # exclude cols with zero variance
-        the_data_num <- the_data_num[,!apply(the_data_num, MARGIN = 2,
-                        function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
-        res <- Hmisc::rcorr(as.matrix(the_data_num))
-        cormat <- res$r
-        pmat <- res$P
-        ut <- upper.tri(cormat)
-        df <- data.frame(
-            row = rownames(cormat)[row(cormat)[ut]],
-            column = rownames(cormat)[col(cormat)[ut]],
-            cor  = (cormat)[ut],
-            p = pmat[ut])
-        with(df, df[order(-cor), ])
-    })
-    output$dwn_corr <- downloadHandler(
-        filename <- "correlation_plot.pdf",
-        content = function(file) {
-            ggsave(file, plot = ggpairs(data4pca[, input$columns_biplot, drop=FALSE]), device="pdf")
-        }
-    )
+    # output$choose_columns_biplot <- renderUI({
+    #     colnames <- names(data4pca)
+    #     print (colnames)
+    #     # Create the checkboxes and select them all by default
+    #     checkboxGroupInput("columns_biplot", "Choose up to five columns to display on the scatterplot matrix", 
+    #                         choices  = colnames,
+    #                         selected = colnames[1:5])
+    # })
+    # # corr plot
+    # output$corr_plot <- renderPlot({
+    #     # Keep the selected columns
+    #     if(length(input$columns_biplot)) {
+    #     columns_biplot <-  input$columns_biplot 
+    #     } else{
+    #         columns_biplot <- names(data4pca)[1:5]
+    #     }
+    #     print (columns_biplot)
+    #     the_data_subset_biplot <- data4pca[, columns_biplot, drop = FALSE]
+    #     ggpairs(the_data_subset_biplot)
+    # })
+    # # corr tables
+    # output$corr_tables <- renderTable({
+    #     # we only want to show numeric cols
+    #     the_data_num <- data4pca[,sapply(data4pca,is.numeric)]
+    #     # exclude cols with zero variance
+    #     the_data_num <- the_data_num[,!apply(the_data_num, MARGIN = 2,
+    #                     function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
+    #     res <- Hmisc::rcorr(as.matrix(the_data_num))
+    #     cormat <- res$r
+    #     pmat <- res$P
+    #     ut <- upper.tri(cormat)
+    #     df <- data.frame(
+    #         row = rownames(cormat)[row(cormat)[ut]],
+    #         column = rownames(cormat)[col(cormat)[ut]],
+    #         cor  = (cormat)[ut],
+    #         p = pmat[ut])
+    #     with(df, df[order(-cor), ])
+    # })
+    # output$dwn_corr <- downloadHandler(
+    #     filename <- "correlation_plot.pdf",
+    #     content = function(file) {
+    #         ggsave(file, plot = ggpairs(data4pca[, input$columns_biplot, drop=FALSE]), device="pdf")
+    #     }
+    # )
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Diagnostics~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     #KMO test
     output$kmo <- renderPrint({
@@ -373,8 +382,8 @@ server <- function(input, output, session) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PCA output~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#    
     output$pca_details <- renderPrint({
-        print(pca_objects()$pca_output$rotation)
         summary(pca_objects()$pca_output)
+        print(pca_objects()$pca_output$rotation)
     })
     output$dwn_pcainfo <- downloadHandler(
         filename = "pca_info.txt",
@@ -392,7 +401,7 @@ server <- function(input, output, session) {
     #         row.names = TRUE, col.names = NA)
     #     }
     # )
-    #session$onSessionEnded(stopApp)
+    session$onSessionEnded(stopApp)
 }
 
 

@@ -373,8 +373,8 @@ server <- function(input, output, session) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PCA output~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#    
     output$pca_details <- renderPrint({
-        print(pca_objects()$pca_output$rotation)
         summary(pca_objects()$pca_output)
+        print(pca_objects()$pca_output$rotation)
     })
     output$dwn_pcainfo <- downloadHandler(
         filename = "pca_info.txt",

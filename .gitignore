@@ -369,3 +369,4 @@ Workflow/output/6-cell_state_info/1_paneth_w-cell-state.txt
 Workflow/output/6-cell_state_info/2_goblet_w-cell-state.txt
 Workflow/output/6-cell_state_info/2_paneth_w-cell-state.txt
 Workflow/input/5v2-pca/FINAL_DF.rds
+Workflow/input/5v2-pca/DREMI_TEST_CELLTYPE.txt
