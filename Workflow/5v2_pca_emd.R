@@ -330,16 +330,19 @@ server <- function(input, output, session) {
                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
         fviz_pca_biplot(pca_output,
             axes = as.numeric(eixos),
-            # Individuals
-            geom.ind = "point",
-            fill.ind = rownames(data4pca), col.ind = "black",
-            pointshape = 21, pointsize = 2,
-            palette = "jco",
-            # Variables
-            alpha.var ="contrib", col.var = "contrib",
-            gradient.cols = "RdYlBu",
-            legend.title = list(fill = "Condition or Group", color = "Contrib", 
-                                alpha = "Contrib")
+            col.ind = rownames(data4pca),
+            alpha.var="contrib",
+            legend.title=list( alpha = "Contribution tp variance")
+            # # Individuals
+            # geom.ind = "point",
+            # fill.ind = rownames(data4pca), col.ind = "black",
+            # pointshape = 21, pointsize = 2,
+            # palette = "jco",
+            # # Variables
+            # alpha.var ="contrib", col.var = "contrib",
+            # gradient.cols = "RdYlBu",
+            # legend.title = list(fill = "Condition or Group", color = "Contrib", 
+            #                     alpha = "Contrib")
         )
     })
     # for zooming

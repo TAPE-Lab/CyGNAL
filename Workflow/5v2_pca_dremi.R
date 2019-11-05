@@ -26,9 +26,7 @@ lapply(list.of.packages, require, character.only = TRUE)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#the_data <- read_tsv(args) 
-
-the_data <- read_tsv("input/5v2-pca/DREMI_TEST_CELLTYPE.txt")
+the_data <- read_tsv(args) 
 
 exploratory_data <- the_data %>% select(-starts_with("arcsinh")) %>% select(-starts_with("num")) %>% select(-"marker_x") %>% select(-"marker_y")
 
@@ -338,17 +336,20 @@ server <- function(input, output, session) {
                 nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
         fviz_pca_biplot(pca_output,
-            axes = as.numeric(eixos),
-            # Individuals
-            geom.ind = "point",
-            fill.ind = rownames(data4pca), col.ind = "black",
-            pointshape = 21, pointsize = 2,
-            palette = "jco",
-            # Variables
-            alpha.var ="contrib", col.var = "contrib",
-            gradient.cols = "RdYlBu",
-            legend.title = list(fill = "Condition or Group", color = "Contrib", 
-                                alpha = "Contrib")
+                        axes = as.numeric(eixos),
+                        col.ind = rownames(data4pca),
+                        alpha.var="contrib",
+                        legend.title=list( alpha = "Contribution to variance")
+                        # # Individuals
+                        # geom.ind = "point",
+                        # fill.ind = rownames(data4pca), col.ind = "black",
+                        # pointshape = 21, pointsize = 2,
+                        # palette = "jco",
+                        # # Variables
+                        # alpha.var ="contrib", col.var = "contrib",
+                        # gradient.cols = "RdYlBu",
+                        # legend.title = list(fill = "Condition or Group", color = "Contrib", 
+                        #                     alpha = "Contrib")
         )
     })
     # for zooming
