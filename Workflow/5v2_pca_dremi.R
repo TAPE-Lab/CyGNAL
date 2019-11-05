@@ -41,7 +41,7 @@ data4pca <- exploratory_data %>% select(-starts_with("wo")) %>% spread(marker_x_
 ###############################################################################
 ui <- bootstrapPage(
     mainPanel(
-    titlePanel("Interactive PCA Explorer"),
+    titlePanel("DREMI: iPCA"),
         
         tabsetPanel(
             tabPanel("Inspect the data",

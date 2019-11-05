@@ -39,7 +39,7 @@ data4pca <- the_data %>% select(-starts_with("median")) %>% select(-starts_with(
 ###############################################################################
 ui <- bootstrapPage(
     mainPanel(
-    titlePanel("Interactive PCA Explorer"),
+    titlePanel("EMD: iPCA"),
         
         tabsetPanel(
             tabPanel("Inspect the data",
