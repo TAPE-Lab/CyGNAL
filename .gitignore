@@ -362,3 +362,5 @@ Workflow/output/6-cell_state_info/1_paneth_w-cell-state.txt
 Workflow/output/6-cell_state_info/2_goblet_w-cell-state.txt
 Workflow/output/6-cell_state_info/2_paneth_w-cell-state.txt
 Workflow/output/5v2-pca/pca_info.csv
+Workflow/input/5v2-pca/panel_markers.csv
+Workflow/input/5v2-pca/epithelial-cell-type_cond-tobis-01_to_16_dremi_info.txt
