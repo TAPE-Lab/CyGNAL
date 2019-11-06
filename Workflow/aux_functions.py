@@ -89,3 +89,11 @@ def concatenate_save(folder_name):
     print("Concatenating...")
     concat.to_csv(f'./output/opt1_concatenation/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")
+
+def write_panel(df):
+    all_markers = list(set(df['marker']))
+    counter_marker = []
+    for i in all_markers:
+        counter_marker.append("N")
+    markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
+    markers.to_csv(f"./panel_markers.csv", index=False, header=False)
