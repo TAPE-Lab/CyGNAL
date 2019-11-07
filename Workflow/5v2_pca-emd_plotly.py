@@ -25,8 +25,7 @@ output_dir = f"./output/{folder_name}"
 # dremi = yes_or_NO("Perform PCA on the DREMI scores?")
 marker_list = yes_or_NO("Markers for PCA selected?")
 
-# Input files should have either emd or dremi on their name
-# if emd==True:
+# Input file should have 'emd' its name
 emd_file = []
 
 for file in os.listdir(input_dir):
@@ -37,7 +36,10 @@ if len(emd_file) != 1:
         sys.exit("ERROR: Please have only ONE .txt file with 'emd' in its name!")
 emd_file = f"{input_dir}/{emd_file[0]}"
 df = pd.read_csv(emd_file, sep = '\t')
-#
+
+# create the marker_list csv file if it doesn't exist
+# the user needs to specify the markers used for PCA with 'Y' in the file
+
 if marker_list == False:
     write_panel_emd(df, input_dir)
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
@@ -45,6 +47,8 @@ if marker_list == False:
 # define the list of markers used for PCA
 marker_file = pd.read_csv(f"{input_dir}/panel_markers.csv", header = None)
 markers_pca = identify_markers(marker_file)
+
+info_run =  input("Write PCA info (using no spaces!): ")
 
 # reformat the data for PCA 
 df = df.sort_values(by = ["file_origin"]) 
@@ -97,13 +101,11 @@ principalDf = pd.DataFrame(data = principalComponents,
                                         f"PC_2 ({explained_variance_ratio[1]*100:.2f}% explained variance)"])
 principalDf["condition"] = list(df_standardized.index)
 
-principalDf.to_csv(f"{output_dir}/pca_info.csv", index = False)
+principalDf.to_csv(f"{output_dir}/emd-pca_{info_run}.csv", index = False)
 
 ######
 ### Interactive PCA with plotly
 ######
-
-principalDf.head()
 
 fig = px.scatter(principalDf, 
                 x=principalDf.columns[0], 

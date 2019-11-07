@@ -23,7 +23,7 @@ n = 15
 m = 0.1
 comp = 2
 d = "euclidean"
-info_run =  input("Write UMAP info run (using no spaces!): ")
+info_run =  input("Write UMAP info (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #include here the information that would be helpful to understand the umaps
 
