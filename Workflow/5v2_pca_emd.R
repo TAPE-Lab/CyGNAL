@@ -367,7 +367,7 @@ server <- function(input, output, session) {
         pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y) 
     })
     output$dwn_pcaplot <- downloadHandler(
-        filename <- "correlation_plot.pdf",
+        filename <- "pca_plot.pdf",
         content = function(file) {
             ggsave(file, plot = pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
         }

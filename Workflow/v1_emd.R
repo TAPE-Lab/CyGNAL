@@ -7,7 +7,7 @@ library(ggplot2)
 library(forcats)
 library(RColorBrewer)
 library(shiny)
-
+library(tidyverse)
 
 #Change selection to one based on col position (select from dplyr)
 
@@ -15,7 +15,7 @@ library(shiny)
 emd_info <- read_tsv(args)
 minx <- min(emd_info %>% select(1))
 maxx <- max(emd_info %>% select(1))
-initial_emd <- emd_info %>% ggplot(aes(x=fct_rev(file_origin), y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
+
 print(minx, maxx)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -30,6 +30,8 @@ ui <- fluidPage(
                     min = floor(minx) - 1,
                     max = ceiling(maxx) +1,
                     value = c(minx, maxx)),
+        selectInput('in6', 'Select markers', unique(emd_info$marker), multiple=TRUE, selectize=TRUE),
+        tags$hr(),
         downloadButton('foo', "Download plot as .pdf")
     ),
     mainPanel(width=8,
@@ -40,8 +42,15 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
 
+    output$out6 <- renderPrint(input$in6)
+    
     output$trendPlot <- renderPlotly({
+        if (!is.null(input$in6)) {
+            data_to_plot <- emd_info %>% filter(marker %in% input$in6)
+        }
+        else{data_to_plot <- emd_info}
         
+        initial_emd <- data_to_plot %>% ggplot(aes(x=fct_rev(file_origin), y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
         print(
         ggplotly(initial_emd + scale_fill_distiller(
             palette = "RdBu", limits=c(input$range[1], input$range[2]),
