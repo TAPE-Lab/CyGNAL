@@ -70,8 +70,8 @@ def downsample_df(df, n):
     return df_downsampled
 
 #Function to concatenate all files and save as txt 
-def concatenate_save(input_dir, output_dir):
-    input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
+def concatenate_save(folder_name):
+    input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
     concat = pd.DataFrame()
     #Add counter to keep track of the number of files in input -> 
     # -> cell ID will be a mix of these (Filenumber | filename.txt)
@@ -79,7 +79,7 @@ def concatenate_save(input_dir, output_dir):
     for file in input_files:
         name = file.split('.txt')[0]
         fcounter += 1
-        df = pd.read_csv(f"{input_dir}/{file}", sep = '\t')
+        df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
         df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
@@ -87,5 +87,21 @@ def concatenate_save(input_dir, output_dir):
         concat = concat.append(df, ignore_index=True)
 
     print("Concatenating...")
-    concat.to_csv(f'{output_dir}/concat_{name}.txt', index = False, sep = '\t')
+    concat.to_csv(f'./output/opt1_concatenation/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")
+
+def write_panel_emd(df, input_dir):
+    all_markers = list(set(df['marker']))
+    counter_marker = []
+    for i in all_markers:
+        counter_marker.append("Y")
+    markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
+    markers.to_csv(f"{input_dir}/panel_markers.csv", index=False, header=False)
+
+def write_panel_dremi(df, input_dir):
+    all_markers = list(set(df['marker_x']))
+    counter_marker = []
+    for i in all_markers:
+        counter_marker.append("Y")
+    markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
+    markers.to_csv(f"{input_dir}/panel_markers.csv", index=False, header=False)
