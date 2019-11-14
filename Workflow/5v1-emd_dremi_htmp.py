@@ -8,7 +8,7 @@ from aux_functions import yes_or_NO
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-folder_name = "v1-emd_dremi_htmp"
+folder_name = "5v1-emd_dremi_htmp"
 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")
@@ -33,7 +33,7 @@ if emd==True and dremi==False:
     if len(emd_file) != 1:
             sys.exit("ERROR: Please have only ONE .txt file with 'emd' in its name!")
     emd_file = f"{input_dir}/{emd_file[0]}"
-    subprocess.call(["bash","v1_emd.sh", emd_file])
+    subprocess.call(["bash","5v1_emd.sh", emd_file])
 
 if emd==True and dremi==True:
     emd_file = []
@@ -50,7 +50,7 @@ if emd==True and dremi==True:
         sys.exit("ERROR: Please have only ONE .txt file with 'dremi' in its name!")
     emd_file = f"{input_dir}/{emd_file[0]}"
     dremi_file = f"{input_dir}/{dremi_file[0]}"
-    subprocess.call(["bash","v1_emd_dremi.sh", emd_file, dremi_file])
+    subprocess.call(["bash","5v1_emd_dremi.sh", emd_file, dremi_file])
 
 if emd==False and dremi==True:
     dremi_file = []
@@ -61,7 +61,7 @@ if emd==False and dremi==True:
     if len(dremi_file) != 1:
         sys.exit("ERROR: Please have only ONE .txt file with 'dremi' in its name!")
     dremi_file = f"{input_dir}/{dremi_file[0]}"
-    subprocess.call(["bash","v1_dremi.sh", dremi_file])
+    subprocess.call(["bash","5v1_dremi.sh", dremi_file])
 
 if emd==False and dremi==False:
     sys.exit("THEN THERE'S NOTHING TO DO!")
