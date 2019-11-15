@@ -69,9 +69,30 @@ def downsample_df(df, n):
     df_downsampled = df.sample(n)
     return df_downsampled
 
+def downsample_data(no_arc, info_run, output_dir):
+    downsampled_dframe = no_arc.copy()
+    #Defiine downsampling size (N) per file:
+    downsample_size = downsampled_dframe["file_origin"].value_counts().min() #at least N cells in all input files
+    print ("Working with ", downsample_size, " cells per file_origin")
+    #Group by file+origin and sample without replacement -> 
+    # thus we can sample file for which len(file)=N without -tive consequences
+    
+    reduced_df = downsampled_dframe.groupby("file_origin").apply(lambda x:
+                                                    x.sample(downsample_size))
+    
+    #Create new file to store downsampling status for all cell IDs
+    new_df = pd.DataFrame()
+    new_df["Sample_ID-Cell_Index"] = no_arc["Sample_ID-Cell_Index"]
+    new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(
+                                        reduced_df["Sample_ID-Cell_Index"])
+    new_df.to_csv(f"{output_dir}/{info_run}_downsampled_IDs.csv", 
+                    index = False)
+    no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])]
+    return reduced_df
+
 #Function to concatenate all files and save as txt 
-def concatenate_save(folder_name):
-    input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
+def concatenate_save(input_dir, output_dir):
+    input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     concat = pd.DataFrame()
     #Add counter to keep track of the number of files in input -> 
     # -> cell ID will be a mix of these (Filenumber | filename.txt)
@@ -79,7 +100,7 @@ def concatenate_save(folder_name):
     for file in input_files:
         name = file.split('.txt')[0]
         fcounter += 1
-        df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
+        df = pd.read_csv(f"{input_dir}/{file}", sep = '\t')
         df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
@@ -87,7 +108,7 @@ def concatenate_save(folder_name):
         concat = concat.append(df, ignore_index=True)
 
     print("Concatenating...")
-    concat.to_csv(f'./output/opt1_concatenation/concat_{name}.txt', index = False, sep = '\t')
+    concat.to_csv(f'{output_dir}/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")
 
 def write_panel_emd(df, input_dir):
