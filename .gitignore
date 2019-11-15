@@ -665,6 +665,7 @@ Workflow/output/2-umap/4%-2_UMAP_JS_pfa.txt
 Workflow/output/2-umap/merged_UMAP_JS_pfa.txt
 Workflow/output/3-emd/EMD_JS_pfa_emd.txt
 Workflow/output/4-dremi/DREMI_JS_pfa_dremi.txt
+Workflow/input/5v1-emd_dremi_htmp/emd_info_new.txt
 Workflow/input/3-emd/Tests/JS_pfa_markers.csv
 Workflow/input/4-dremi/Tests/3%-1.txt
 Workflow/input/4-dremi/Tests/3%-2.txt
