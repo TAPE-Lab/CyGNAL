@@ -23,7 +23,7 @@ from aux_functions import yes_or_NO
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Sanity Check~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 file_name_format = yes_or_NO("Are all the files names in the 'sample-name_cell-type_..._cell-state' format?")
 if file_name_format == False:
-    sys.exit(f"Please rename the files to the 'sample_cell-type_..._cell-state' format\n Accepted cell-states (literal): Ungated, apoptosis, G0, S-phase, G2, and M-phase") 
+    sys.exit(f"Please rename the files to the 'sample_cell-type_cell-state' format\n Accepted cell-states (literal): Ungated, apoptosis, G0, S-phase, G2, and M-phase") 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "6-cell_state_info"
 
@@ -37,7 +37,7 @@ filelist = [f for f in os.listdir(f"./input/{folder_name}") if f.endswith(".txt"
 sample_id = [f.split('_')[0] for f in filelist]
 sample_id= list(set(sample_id))
 print("Samples:")
-print([s for s in sample_id])
+print('\n'.join([s for s in sample_id]))
 
 cell_type = [f.split('_')[1] for f in filelist]
 cell_type = list(set(cell_type))
