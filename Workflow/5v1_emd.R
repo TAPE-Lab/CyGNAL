@@ -67,6 +67,12 @@ server <- function(input, output, session) {
     output$foo <- downloadHandler(
         filename = "emd_heatmap.pdf",
         content = function(file) {
+            if (!is.null(input$in6)) {
+            data_to_plot <- emd_info %>% filter(marker %in% input$in6)
+            }
+            else{data_to_plot <- emd_info}
+            initial_emd <- data_to_plot %>% ggplot(aes(x=fct_rev(file_origin), y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
+            
             ggsave(file, plot = initial_emd + scale_fill_distiller(
                                 palette = "RdBu", limits=c(input$range[1], input$range[2]),
                 #breaks = c(floor(rng[1]), ceiling(rng[2])),
