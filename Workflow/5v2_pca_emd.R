@@ -15,7 +15,8 @@ list.of.packages <- c("ggplot2",
                         "shiny",
                         "tidyverse",
                         "FactoMineR",
-                        "factoextra"
+                        "factoextra",
+                        "matrixStats"
                         )
 # check if pkgs are installed already, if not, install automatically:
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -31,6 +32,9 @@ the_data <- read_tsv(args)
 exploratory_data <- the_data %>% select(-starts_with("denominator"))
 
 data4pca <- the_data %>% select(-starts_with("median")) %>% select(-starts_with("denominator")) %>% spread (marker, EMD_no_norm_arc) %>% column_to_rownames(., var = "file_origin")#read_tsv(args)
+#Calculate row SD for later use in PCA plots
+data4pca$SD <- rowSds(as.matrix.data.frame(data4pca))
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -331,23 +335,14 @@ server <- function(input, output, session) {
         fviz_pca_biplot(pca_output,
             axes = as.numeric(eixos),
             col.ind = rownames(data4pca),
-            alpha.var="contrib",
-            legend.title=list( alpha = "Contribution tp variance")
-            # # Individuals
-            # geom.ind = "point",
-            # fill.ind = rownames(data4pca), col.ind = "black",
-            # pointshape = 21, pointsize = 2,
-            # palette = "jco",
-            # # Variables
-            # alpha.var ="contrib", col.var = "contrib",
-            # gradient.cols = "RdYlBu",
-            # legend.title = list(fill = "Condition or Group", color = "Contrib", 
-            #                     alpha = "Contrib")
-        )
+            alpha.var="contrib" ) + 
+            geom_point(aes(color = rownames(data4pca),size=(data4pca$SD))) +
+            guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
+        
     })
     # for zooming
     output$z_plot1 <- renderPlot({
-        pca_biplot() 
+        pca_biplot()
     })
     # zoom ranges
     zooming <- reactiveValues(x = NULL, y = NULL)
