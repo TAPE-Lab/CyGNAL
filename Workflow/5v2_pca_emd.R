@@ -33,7 +33,7 @@ exploratory_data <- the_data %>% select(-starts_with("denominator"))
 
 data4pca <- the_data %>% select(-starts_with("median")) %>% select(-starts_with("denominator")) %>% spread (marker, EMD_no_norm_arc) %>% column_to_rownames(., var = "file_origin")#read_tsv(args)
 #Calculate row SD for later use in PCA plots
-data4pca$SD <- rowSds(as.matrix.data.frame(data4pca))
+calculated_sd <- rowSds(as.matrix.data.frame(data4pca))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
@@ -336,7 +336,7 @@ server <- function(input, output, session) {
             axes = as.numeric(eixos),
             col.ind = rownames(data4pca),
             alpha.var="contrib" ) + 
-            geom_point(aes(color = rownames(data4pca),size=(data4pca$SD))) +
+            geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
             guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
         
     })
