@@ -33,6 +33,8 @@ folder_name = "2-umap"
 
 if os.path.isdir(f"./output/{folder_name}") == False:
     os.makedirs(f"./output/{folder_name}")
+if os.path.isdir(f"./output/{folder_name}/{info_run}") == False:
+    os.makedirs(f"./output/{folder_name}/{info_run}")
 if os.path.isdir(f"./input/{folder_name}") == False:
     os.makedirs(f"./input/{folder_name}")
     sys.exit("ERROR: There is no input folder") 
@@ -88,6 +90,9 @@ all_markers_cols = cols.copy()
 not_these = [] # columns to be excluded for umap calculation
 vs_markers_cols = identify_markers(marker_file)
 print (vs_markers_cols)
+df_vs_markers_cols = pd.DataFrame(vs_markers_cols, columns=['marker'])
+df_vs_markers_cols.index = np.arange(1, len(df_vs_markers_cols)+1)
+df_vs_markers_cols.to_csv(f"./output/{folder_name}/{info_run}/markers_for_{info_run}.csv") # save markers used for UMAP in output folder
 no_vs_markers_cols = [column for column in all_markers_cols if 
                         column not in vs_markers_cols]
 
@@ -117,4 +122,4 @@ umap_params = {"nn":nn, "rs":rs, "nsr":nsr, "n":n, "m":m, "comp":comp, "d":d,
                 "info":info_run}
 
 #Actually perform the UMAP with arc tranf data and save to original untransformed matrix
-perform_umap(umap_params, all_together_vs_marks, no_arc, input_files, output_dir)
+perform_umap(umap_params, all_together_vs_marks, no_arc, input_files, output_dir, info_run)
