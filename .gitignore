@@ -796,3 +796,9 @@ Workflow/output/3-emd/EMD_Genotype_macrofibro.txt
 Workflow/output/3-emd/EMD_Genotype_wt.txt
 Workflow/output/3-emd/EMD_mega_TMEgeno_16cond.txt
 Workflow/output/3-emd/EMD_WT_tme.txt
+Workflow/input/3-emd/data_mega_woUMAP_2.txt
+Workflow/input/5v2-pca/Tests/EMD_states_dwns.txt
+Workflow/input/5v2-pca/EMD_states_test.txt
+Workflow/input/opt2_downsample/EMD_mega_TMEgeno_16cond.txt
+Workflow/output/2-umap/testing_umap_bug_downsampled_IDs.csv
+Workflow/output/3-emd/EMD_ptm_state_all.txt
