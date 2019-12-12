@@ -24,12 +24,19 @@ concatenated_df, imput_files = concatenate_fcs(input_dir)
 
 downsampled_conc_df = downsample_data(concatenated_df, info_run, output_dir)
 
-#Divide concatenated into separate files
-state_group = downsampled_conc_df.groupby("cell-state")
-print (downsampled_conc_df.groupby("cell-state").size())
+#Cell state sepration -> Interactive queastion, defaul file origin
+# #Divide concatenated into separate files
+# state_group = downsampled_conc_df.groupby("cell-state")
+# print (downsampled_conc_df.groupby("cell-state").size())
 
-for name, group in state_group:
-    print(name)
-    print(group)
+# for name, group in state_group:
+#     print(name)
+#     print(group)
+#     group.to_csv(f"{output_dir}/{name}_downsample_{info_run}.txt",
+#                     index = False, sep = '\t')
+
+
+for name, group in downsampled_conc_df.groupby("file_origin"):
     group.to_csv(f"{output_dir}/{name}_downsample_{info_run}.txt",
                     index = False, sep = '\t')
+
