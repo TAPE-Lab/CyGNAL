@@ -347,12 +347,6 @@ server <- function(input, output, session) {
             geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
             guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
         
-        # ggplotly(fviz_pca_biplot(pca_output,
-        #                          axes = as.numeric(eixos),
-        #                          col.ind = rownames(data4pca)) + 
-        #              geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
-        #              guides(alpha="none", shape="none", size=guide_legend(title = "SD")))
-        
     })
     # for zooming
     output$z_plot1 <- renderPlot({
