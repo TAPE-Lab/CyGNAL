@@ -20,7 +20,7 @@ output_dir = f"./output/{folder_name}"
 
 info_run =  input("Write downsampling info run (using no spaces!): ")
 
-concatenated_df, imput_files = concatenate_fcs(input_dir)
+concatenated_df = concatenate_fcs(input_dir)[0]
 
 downsampled_conc_df = downsample_data(concatenated_df, info_run, output_dir)
 
@@ -36,7 +36,10 @@ downsampled_conc_df = downsample_data(concatenated_df, info_run, output_dir)
 #                     index = False, sep = '\t')
 
 
-for name, group in downsampled_conc_df.groupby("file_origin"):
+#Since after downsampling file_origin is also an index, drop index from dataframe
+for name, group in downsampled_conc_df.reset_index(drop=True).groupby("file_origin"):
+    print (name)
+    print (group)
     group.to_csv(f"{output_dir}/{name}_downsample_{info_run}.txt",
                     index = False, sep = '\t')
 

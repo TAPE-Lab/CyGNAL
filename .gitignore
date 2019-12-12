@@ -802,3 +802,12 @@ Workflow/input/5v2-pca/EMD_states_test.txt
 Workflow/input/opt2_downsample/EMD_mega_TMEgeno_16cond.txt
 Workflow/output/2-umap/testing_umap_bug_downsampled_IDs.csv
 Workflow/output/3-emd/EMD_ptm_state_all.txt
+Workflow/output/opt2_downsample/_downsampled_IDs.csv
+Workflow/output/opt2_downsample//_downsampled_IDs.csv
+Workflow/output/opt2_downsample/1 | M-phase_nonarctrans_downsample_.txt
+Workflow/output/opt2_downsample/2 | G2_nonarctrans_downsample_.txt
+Workflow/output/opt2_downsample/3 | apoptosis_nonarctrans_downsample_.txt
+Workflow/output/opt2_downsample/4 | G1_nonarctrans_downsample_.txt
+Workflow/output/opt2_downsample/6 | S-phase_nonarctrans_downsample_.txt
+Workflow/output/opt2_downsample/5 | G0_nonarctrans_downsample_.txt
+Workflow/input/opt2_downsample/Tests/EMD_mega_TMEgeno_16cond.txt

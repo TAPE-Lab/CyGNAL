@@ -41,10 +41,11 @@ def concatenate_fcs(folder_name):
     # -> cell ID will be a mix of these (Filenumber | filename.txt)
     fcounter = 0
     for file in input_files:
+        name = file.split('.txt')[0]
         fcounter += 1
         df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
         # add a new column of 'file_origin' that will be used to separate each file after umap calculation
-        df["file_origin"] = str(fcounter)+" | "+ file 
+        df["file_origin"] = str(fcounter)+" | "+ name 
         #File+ID #This way the cell-index will be preserved after Cytobank upload
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x))
@@ -101,7 +102,7 @@ def concatenate_save(input_dir, output_dir):
         name = file.split('.txt')[0]
         fcounter += 1
         df = pd.read_csv(f"{input_dir}/{file}", sep = '\t')
-        df["file_origin"] = str(fcounter)+" | "+ file # add a new column of 'file_origin' that will be used to separate each file after umap calculation
+        df["file_origin"] = str(fcounter)+" | "+ name # add a new column of 'file_origin' that will be used to separate each file after umap calculation
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
         # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
