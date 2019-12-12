@@ -16,7 +16,8 @@ list.of.packages <- c("ggplot2",
                         "tidyverse",
                         "FactoMineR",
                         "factoextra",
-                        "matrixStats"
+                        "matrixStats",
+                        "plotly"
                         )
 # check if pkgs are installed already, if not, install automatically:
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -27,7 +28,7 @@ lapply(list.of.packages, require, character.only = TRUE)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-the_data <- read_tsv(args) 
+the_data <- read_tsv(args)
 
 exploratory_data <- the_data %>% select(-starts_with("denominator"))
 
@@ -50,9 +51,9 @@ ui <- bootstrapPage(
 
                 p("Here is the data from the input file after removing unnecessary columns and collapsing marker EMD scores for each condition:"),
                 DT::dataTableOutput('contents'),
-                tags$hr(),
-                p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
-                plotOutput("tableplot")
+                # tags$hr(),
+                # p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
+                # plotOutput("tableplot")
         ), # end  tab
             tabPanel("Correlation Plots",
                 sidebarLayout(
@@ -122,13 +123,20 @@ ui <- bootstrapPage(
                             id = "z_plot1Brush",
                             resetOnNew = TRUE)),
                 tags$hr(),
-                
-                p("Click and drag on the plot below to select points, and inspect the table of selected points below"),
-                plotOutput("z_plot2",
-                            brush = brushOpts(
-                            id = "plot_brush_after_zoom",
-                            resetOnNew = TRUE)),
-                downloadButton('dwn_pcaplot', "Download plot as .pdf")
+                sidebarLayout(
+                    sidebarPanel(
+                        p("Click and drag on the plot below to select points, and inspect the table of selected points below"),
+                        plotOutput("z_plot2",
+                                   brush = brushOpts(
+                                       id = "plot_brush_after_zoom",
+                                       resetOnNew = TRUE)),
+                        downloadButton('dwn_pcaplot', "Download plot as .pdf")
+                    ),
+                    mainPanel(
+                        p("Interactive PCA plot from Plotly. Useful for inspecting coordinates and SD values"),
+                        plotlyOutput ("plotly_pca")
+                    )
+                )
         ), # end  tab 
             tabPanel("PCA output",
                 downloadButton("dwn_pcainfo", "Download pca information"),
@@ -327,11 +335,11 @@ server <- function(input, output, session) {
         var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                         input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
         labels <- rownames(pca_output$x)
-        grouping <- input$the_grouping_variable
         eixos = c(1,2)
         eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
                 nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
+        
         fviz_pca_biplot(pca_output,
             axes = as.numeric(eixos),
             col.ind = rownames(data4pca),
@@ -339,11 +347,37 @@ server <- function(input, output, session) {
             geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
             guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
         
+        # ggplotly(fviz_pca_biplot(pca_output,
+        #                          axes = as.numeric(eixos),
+        #                          col.ind = rownames(data4pca)) + 
+        #              geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
+        #              guides(alpha="none", shape="none", size=guide_legend(title = "SD")))
+        
     })
     # for zooming
     output$z_plot1 <- renderPlot({
         pca_biplot()
     })
+    
+    output$plotly_pca <- renderPlotly({
+        pcs_df <- pca_objects()$pcs_df
+        pca_output <-  pca_objects()$pca_output
+        var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
+                                                                  input$the_pcs_to_plot_x))]^2/sum(pca_output$sdev^2), 1)
+        var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
+                                                                  input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
+        labels <- rownames(pca_output$x)
+        eixos = c(1,2)
+        eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
+                         nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
+                         nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
+        
+        print (ggplotly(fviz_pca_biplot(pca_output,
+                                 axes = as.numeric(eixos)) + 
+                     geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
+                     guides(shape="none", size=guide_legend(title = "SD"))))
+    })
+    
     # zoom ranges
     zooming <- reactiveValues(x = NULL, y = NULL)
     observe({
@@ -371,13 +405,12 @@ server <- function(input, output, session) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PCA output~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#    
     output$pca_details <- renderPrint({
-        summary(pca_objects()$pca_output)
-        print(pca_objects()$pca_output$rotation)
+        print(get_pca_ind(pca_objects()$pca_output)$coord)
     })
     output$dwn_pcainfo <- downloadHandler(
         filename = "pca_info.txt",
         content = function(file) {
-            write.table(pca_objects()$pca_output$rotation, file, sep = "\t",
+            write.table(get_pca_ind(pca_objects()$pca_output)$coord, file, sep = "\t",
             row.names = TRUE, col.names = NA)
         }
     )
