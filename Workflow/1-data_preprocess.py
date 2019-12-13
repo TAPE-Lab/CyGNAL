@@ -31,10 +31,13 @@ output_dir = f"./output/{folder_name}"
 # IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
 filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 
-#Check the files found in the directory:
-print ("Input files:")
-for i in filelist:
-    print (i)
+if len(filelist) == 0:
+    sys.exit(f"ERROR: There are no files in {input_dir}!")
+else:
+    #Check the files found in the directory:
+    print ("Input files:")
+    for i in filelist:
+        print (i)
 
 #FCR 14/10/19: Automated column name editing with regex
 #Idea is to rename all columns and then filter non-relevant ones (less optimal,
