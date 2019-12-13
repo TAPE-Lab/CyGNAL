@@ -9,7 +9,7 @@ import umap
 import sys
 import os
 from aux2_umap import *
-from aux_functions import concatenate_fcs, arcsinh_transf
+from aux_functions import concatenate_fcs, arcsinh_transf, read_marker_csv, downsample_data
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -74,13 +74,6 @@ arc, cols = arcsinh_transf(cofactor, no_arc)
 
 # ### Step 2: Make umaps
 #~~~~~~~~~~~~~~~Define the markers used for UMAP calculation~~~~~~~~~~~~~~~~~~#
-#Read them from a .csv file in ./input
-#Sanity check
-marker_files = [f for f in os.listdir(f"{input_dir}") if f.endswith(".csv")]
-if len(marker_files) != 1:
-    sys.exit("ERROR: There should be ONE .csv file with the markers to use in the input folder!")
-
-marker_file = pd.read_csv(f"{input_dir}/{marker_files[0]}", header=None)
 
 #Group columns of the dataframe based on the type of measurement
 not_markers_cols = [column for column in arc.columns if column not in cols]
@@ -88,7 +81,7 @@ all_markers_cols = cols.copy()
 
 # define the v's for umap calculation (vs_markers_cols)
 not_these = [] # columns to be excluded for umap calculation
-vs_markers_cols = identify_markers(marker_file)
+vs_markers_cols = read_marker_csv(input_dir) #Read them from a .csv file in ./input
 print (vs_markers_cols)
 df_vs_markers_cols = pd.DataFrame(vs_markers_cols, columns=['marker'])
 df_vs_markers_cols.index = np.arange(1, len(df_vs_markers_cols)+1)

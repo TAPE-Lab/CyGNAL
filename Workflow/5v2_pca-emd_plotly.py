@@ -90,7 +90,9 @@ df_all_cond = df_all_cond[cols_to_keep].iloc[:,:]
 ######
  
 df = df_all_cond.iloc[:,:].copy() # make a copy of the dataframe on with PCA is going to be performed
-df_standardized = pd.DataFrame(StandardScaler().fit_transform(df), columns = df.columns, index = df.index) # Standardize features by removing the mean and scaling to unit variance, i.e. z-score
+df_standardized = pd.DataFrame(StandardScaler().fit_transform(df), 
+                    columns = df.columns, index = df.index) 
+    # Standardize features by removing the mean and scaling to unit variance, i.e. z-score
 
 # PCA, z-score
 pca = PCA(n_components = 2)

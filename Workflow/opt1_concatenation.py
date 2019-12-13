@@ -10,7 +10,7 @@ from aux_functions import *
 
 # prepare file list
 # The user needs to manually move the files to be concatenated (possibly in batches) to the 'opt1_concatenation' folder
-# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
+# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME PANEL
 # The concatenated file will be saved in the 'output/opt1_concatenation' folder
 # The user will need to change the name of the concatenate file and move it to the input folder for the next step
 

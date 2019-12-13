@@ -94,7 +94,7 @@ for f in dremi_files:
                                     data_arc[marker_y], k=k, n_bins=n_bins,
                                     n_mesh=n_mesh, plot=plot,
                                     return_drevi=return_drevi,
-                                    filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
+            filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
         df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc
 
         if outliers_removal == True:
@@ -111,7 +111,7 @@ for f in dremi_files:
                                             df_wo_outliers[marker_y], k=k,
                                             n_bins=n_bins, n_mesh=n_mesh,
                                             plot=plot, return_drevi=return_drevi,
-                                            filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}-cutoff={cutoff}.png")
+                    filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}-cutoff={cutoff}.png")
                     df_info_dict[colname_arc] = dremi_wo_outliers_arc
                 if num_outliers_total == 0:
                     df_info_dict[colname_arc] = "-" # this is a placeholder

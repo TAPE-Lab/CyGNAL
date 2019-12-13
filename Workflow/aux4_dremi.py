@@ -21,8 +21,13 @@ def outlier_removal(df, cutoff, marker_x, marker_y, df_info_dict):
     num_outliers_x += df_outliers_x.shape[0]
     num_outliers_y += df_outliers_y.shape[0]
     
-    df_wo_outliers = df[(np.abs(df[marker_x]-df[marker_x].mean()) <= (cutoff*df[marker_x].std())) & (np.abs(df[marker_y]-df[marker_y].mean()) <= (cutoff*df[marker_y].std()))]
-    df_only_outliers_xy = df[(np.abs(df[marker_x]-df[marker_x].mean()) > (cutoff*df[marker_x].std())) | (np.abs(df[marker_y]-df[marker_y].mean()) > (cutoff*df[marker_y].std()))]
+    df_wo_outliers = df[(np.abs(df[marker_x]-df[marker_x].mean()) <= (cutoff*df[marker_x].std())
+                            ) & (np.abs(df[marker_y]-df[marker_y].mean()
+                            ) <= (cutoff*df[marker_y].std()))]
+    df_only_outliers_xy = df[(np.abs(df[marker_x]-df[marker_x].mean()) > (
+                                cutoff*df[marker_x].std())) | (np.abs(
+                                    df[marker_y]-df[marker_y].mean()) > (
+                                        cutoff*df[marker_y].std()))]
     num_outliers_total += df_only_outliers_xy.shape[0]
 
     # Update the df_info_dict dictionary with outlier info
