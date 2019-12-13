@@ -1,22 +1,39 @@
 args <- commandArgs(trailingOnly = TRUE)
 
-library(plotly)
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(forcats)
-library(RColorBrewer)
-library(shiny)
-library(tidyverse)
+# library(plotly)
+# library(readr)
+# library(dplyr)
+# library(ggplot2)
+# library(forcats)
+# library(RColorBrewer)
+# library(shiny)
+# library(tidyverse)
 
+#Packages to use:
+list.of.packages <- c("tidyverse", 
+                        "RColorBrewer",
+                        "shiny",
+                        "plotly"
+                        )
+# check if pkgs are installed already, if not, install automatically:
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.r-project.org")
+#Load packages
+lapply(list.of.packages, require, character.only = TRUE)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Change selection to one based on col position (select from dplyr)
-
-
 emd_info <- read_tsv(args)
 minx <- min(emd_info %>% select(1))
 maxx <- max(emd_info %>% select(1))
 
 print(minx, maxx)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -39,6 +56,9 @@ ui <- fluidPage(
     )
 )
 
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Server~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
 

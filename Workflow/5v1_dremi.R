@@ -1,16 +1,19 @@
 args <- commandArgs(trailingOnly = TRUE)
 
-library(plotly)
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(forcats)
-library(RColorBrewer)
-library(shiny)
-library(tidyverse)
+#Packages to use:
+list.of.packages <- c("tidyverse", 
+                        "RColorBrewer",
+                        "shiny",
+                        "plotly"
+                        )
+# check if pkgs are installed already, if not, install automatically:
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.r-project.org")
+#Load packages
+lapply(list.of.packages, require, character.only = TRUE)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Make sure no_norm is like this and marker_marker, not marker-marker -> check dremi script for populatiog the column itself, although i don't think that will pose a problem here in R
-
 dremi_info <- read_tsv(args)
 minx <- min(dremi_info$with_outliers_arcsinh_DREMI_score)
 maxx <- max(dremi_info$with_outliers_arcsinh_DREMI_score)
@@ -22,8 +25,12 @@ initial_dremi <- dremi_info %>% ggplot(aes(
                         levels=rev(unique(marker_x_marker_y))))) + 
                     geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score))
                     
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -46,6 +53,9 @@ ui <- fluidPage(
     )
 )
 
+###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Server~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###############################################################################
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
 

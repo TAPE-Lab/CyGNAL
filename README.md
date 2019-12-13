@@ -23,7 +23,7 @@ Provisional flowchart of the current workflow:
 
 ## Dependencies
 
-* Python: Tested with Python v3.6 and v3.7. Use in the bakcbone of the workflow and most computational steps.
+* Python: Tested with Python v3.6 and v3.7. Used in the bakcbone of the workflow and most computational steps.
     * `numpy`
     * `pandas`
     * `plotly`
@@ -32,7 +32,22 @@ Provisional flowchart of the current workflow:
     * `umap-learn`
 
 * R: Tested with R v3.6.1 and RStudio v1.2.5001. Mostly used for visualisation, but also for computing the PCA
-    * `packages`
+    * `DT`
+    * `factoextra`
+    * `FactoMineR`
+    * `Ggally`
+    * `Hmisc`
+    * `MASS`
+    * `matrixStats`
+    * `plotly`
+    * `psych`
+    * `RColorBrewer`
+    * `shiny`
+    * `tabplot`
+    * `tidyverse`
+
+* Bourne shell:
+    * `Rscript`
 
 ## Authors
 

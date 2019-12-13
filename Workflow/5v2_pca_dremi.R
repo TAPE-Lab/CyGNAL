@@ -1,16 +1,12 @@
 args <- commandArgs(trailingOnly = TRUE)
 
 #Packages to use:
-list.of.packages <- c("ggplot2", 
-                        "DT", 
+list.of.packages <- c("DT", 
                         "GGally",
                         "psych",
                         "Hmisc",
                         "MASS",
                         "tabplot",
-                        "readr",
-                        "dplyr",
-                        "forcats",
                         "RColorBrewer",
                         "shiny",
                         "tidyverse",
@@ -22,7 +18,6 @@ list.of.packages <- c("ggplot2",
 # check if pkgs are installed already, if not, install automatically:
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.r-project.org")
-
 #Load packages
 lapply(list.of.packages, require, character.only = TRUE)
 
