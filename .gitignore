@@ -68,5 +68,5 @@ Workflow/input/opt1_concatenation/Tests/
 Workflow/input/opt2_downsample/Tests/
 
 #   Ignore the whole output folder
-Workflow/output/
+Workflow/output/*/
 

@@ -10,13 +10,10 @@ from aux_functions import yes_or_NO
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "5v1-emd_dremi_htmp"
 
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
 if os.path.isdir(f"./input/{folder_name}") == False:
     os.makedirs(f"./input/{folder_name}")
     sys.exit("ERROR: There is no input folder") 
 input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
 
 ### User Input ### 
 emd = yes_or_NO("Plot EMD scores on a heatmap?")

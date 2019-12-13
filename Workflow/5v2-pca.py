@@ -15,13 +15,10 @@ from aux_functions import yes_or_NO
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "5v2-pca"
 
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
 if os.path.isdir(f"./input/{folder_name}") == False:
     os.makedirs(f"./input/{folder_name}")
     sys.exit("ERROR: There was no input folder!") 
 input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
 
 ### User Input ### 
 emd = yes_or_NO("Perform PCA on the EMD scores?")
