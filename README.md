@@ -11,7 +11,7 @@ Provisional flowchart of the current workflow:
 
 ## How to use
 
-*NOTE*: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [pre-print](https://www.biorxiv.org/content/10.1101/659896v2). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are welcome to clone the experiments and explore the data in further details.
+*NOTE*: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [pre-print](https://www.biorxiv.org/content/10.1101/659896v2). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.
 
 ### A Brief Step-by-Step Tutorial
 
