@@ -79,7 +79,7 @@ for f in dremi_files:
     marker_pairs = [comb for comb in list(permutations(markers, 2))]
     for marker_x, marker_y in marker_pairs:
         df_info_dict = {}   
-        df_info_dict["file"] = filename
+        df_info_dict["file_origin"] = filename
         df_info_dict["marker_x"] = marker_x
         df_info_dict["marker_y"] = marker_y
         df_info_dict["marker_x_marker_y"] = marker_x + '_' + marker_y
