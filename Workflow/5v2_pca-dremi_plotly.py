@@ -2,8 +2,7 @@ import pandas as pd
 import numpy as np
 import os, sys
 from aux_functions import yes_or_NO
-from aux_functions import write_panel_dremi
-from aux2_umap import identify_markers
+from aux_functions import write_panel_emd, read_marker_csv
 import plotly.express as px
 
 from sklearn.preprocessing import StandardScaler
@@ -45,13 +44,12 @@ if marker_list == False:
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
 
 # define the list of markers used for PCA
-marker_file = pd.read_csv(f"{input_dir}/panel_markers.csv", header = None)
-markers_pca = identify_markers(marker_file)
+markers_pca = read_marker_csv(input_dir)
 
 info_run =  input("Write PCA info (using no spaces!): ")
 
 # reformat the data for PCA 
-df = df.sort_values(by = ["file_origin"]) 
+df = df.sort_values(by = ["file"]) 
 
 df_one_cond = pd.DataFrame()
 df_all_cond = pd.DataFrame()
@@ -66,15 +64,15 @@ for row in df.iterrows():
     df['x_y'] = df['marker_x'] + '_' + df['marker_y']  
 
 # extract and reformat dremi info
-cols_to_keep = ['with_outliers_arcsinh_DREMI_score', 'x_y', 'file_origin']
+cols_to_keep = ['with_outliers_arcsinh_DREMI_score', 'x_y', 'file']
 df = df[cols_to_keep].iloc[:,:].copy()
 df = df.rename(columns = {'with_outliers_arcsinh_DREMI_score' : 'DREMI_score'}) 
 
 i = 0 # counter for conditions
-conditions = list(df["file_origin"].unique())
+conditions = list(df["file"].unique())
 for c in conditions:
     name = c
-    df_1 = df[df['file_origin'] == c].iloc[:,:].copy()
+    df_1 = df[df['file'] == c].iloc[:,:].copy()
     df_1 = df_1.rename(columns = {'DREMI_score': f"{name}"}) # use condition names for dremi score column
     keep_cols = ['x_y', f"{name}"]
     df_1 = df_1[keep_cols].iloc[:,:]
