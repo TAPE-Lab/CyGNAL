@@ -40,7 +40,6 @@ df = pd.read_csv(emd_file, sep = '\t')
 # the user needs to specify the markers used for PCA with 'Y' in the file
 
 if marker_list == False:
-    write_panel_emd(df, input_dir)
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
 
 # define the list of markers used for PCA

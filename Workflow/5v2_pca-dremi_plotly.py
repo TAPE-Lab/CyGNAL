@@ -40,7 +40,6 @@ df = pd.read_csv(dremi_file, sep = '\t')
 # the user needs to specify the markers used for PCA with 'Y' in the file
 
 if marker_list == False:
-    write_panel_dremi(df, input_dir)
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
 
 # define the list of markers used for PCA
@@ -49,7 +48,7 @@ markers_pca = read_marker_csv(input_dir)
 info_run =  input("Write PCA info (using no spaces!): ")
 
 # reformat the data for PCA 
-df = df.sort_values(by = ["file"]) 
+df = df.sort_values(by = ["file_origin"]) 
 
 df_one_cond = pd.DataFrame()
 df_all_cond = pd.DataFrame()
@@ -64,15 +63,15 @@ for row in df.iterrows():
     df['x_y'] = df['marker_x'] + '_' + df['marker_y']  
 
 # extract and reformat dremi info
-cols_to_keep = ['with_outliers_arcsinh_DREMI_score', 'x_y', 'file']
+cols_to_keep = ['with_outliers_arcsinh_DREMI_score', 'x_y', 'file_origin']
 df = df[cols_to_keep].iloc[:,:].copy()
 df = df.rename(columns = {'with_outliers_arcsinh_DREMI_score' : 'DREMI_score'}) 
 
 i = 0 # counter for conditions
-conditions = list(df["file"].unique())
+conditions = list(df["file_origin"].unique())
 for c in conditions:
     name = c
-    df_1 = df[df['file'] == c].iloc[:,:].copy()
+    df_1 = df[df['file_origin'] == c].iloc[:,:].copy()
     df_1 = df_1.rename(columns = {'DREMI_score': f"{name}"}) # use condition names for dremi score column
     keep_cols = ['x_y', f"{name}"]
     df_1 = df_1[keep_cols].iloc[:,:]
