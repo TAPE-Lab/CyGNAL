@@ -74,7 +74,7 @@ def downsample_data(no_arc, info_run, output_dir):
     new_df["Sample_ID-Cell_Index"] = no_arc["Sample_ID-Cell_Index"]
     new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(
                                         reduced_df["Sample_ID-Cell_Index"])
-    new_df.to_csv(f"{output_dir}/{info_run}_downsampled_IDs.csv", 
+    new_df.to_csv(f"{output_dir}/{info_run}/{info_run}_downsampled_IDs.csv", 
                     index = False)
     no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])]
     return reduced_df

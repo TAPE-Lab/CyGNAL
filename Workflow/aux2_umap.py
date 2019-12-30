@@ -8,7 +8,6 @@ import os
 # import warnings
 # warnings.filterwarnings('ignore')
 
-
 # UMAP function
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
@@ -45,12 +44,12 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files, output
 
     if len(set(no_arc["file_origin"])) > 1: # more than one file
         whole_file = "merged_" + run_name
-        no_arc.to_csv(f"{output_dir}/{info_run}/{whole_file}.txt", index = False,
-                        sep = '\t')
+        no_arc.to_csv(f"{output_dir}/{info_run}/{whole_file}.txt", index = False, sep = '\t')
 
     for i in input_files:
+        file_origin = i.split('.txt')[0]
         partial_file = i.split('.txt')[0] + "_" + run_name
-        no_arc.loc[no_arc["file_origin"].str.endswith(i),:].to_csv(
+        no_arc.loc[no_arc["file_origin"].str.endswith(file_origin),:].to_csv(
             f"{output_dir}/{info_run}/{partial_file}.txt", index = False, sep = '\t')
 
             
