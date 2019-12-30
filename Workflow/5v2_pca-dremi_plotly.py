@@ -2,8 +2,7 @@ import pandas as pd
 import numpy as np
 import os, sys
 from aux_functions import yes_or_NO
-from aux_functions import write_panel_dremi
-from aux2_umap import identify_markers
+from aux_functions import write_panel_emd, read_marker_csv
 import plotly.express as px
 
 from sklearn.preprocessing import StandardScaler
@@ -41,12 +40,10 @@ df = pd.read_csv(dremi_file, sep = '\t')
 # the user needs to specify the markers used for PCA with 'Y' in the file
 
 if marker_list == False:
-    write_panel_dremi(df, input_dir)
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
 
 # define the list of markers used for PCA
-marker_file = pd.read_csv(f"{input_dir}/panel_markers.csv", header = None)
-markers_pca = identify_markers(marker_file)
+markers_pca = read_marker_csv(input_dir)
 
 info_run =  input("Write PCA info (using no spaces!): ")
 

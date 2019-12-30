@@ -46,8 +46,11 @@ outliers_removal = yes_or_NO("Perform std-based outlier removal?")
 if plot == True:
     if os.path.isdir(f'{output_dir}/plots') == False:
         os.makedirs(f'{output_dir}/plots')
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
+#Check if user wants to filter the markers based on a .csv marker file
+filter_markers = yes_or_NO("Dow you want to filter out markers from the panel? (If so please provide .csv file)")
 
 # create the list of txt files to be analysed (all txt files in the input folder)
 
@@ -58,11 +61,6 @@ if len(dremi_files) == 0:
 print('Sample files:')
 print('\n'.join([f for f in dremi_files]))
 
-
-#Load .csv with the markers to use in the DREMI calculation -> Often only the PTMs are used
-selected_markers = read_marker_csv(input_dir)
-
-
 # create a dataframe to store the dremi result
 df_info = pd.DataFrame()
 dremi_params = {}
@@ -72,30 +70,31 @@ dremi_params = {}
 for f in dremi_files:
     filename = f.split(".txt")[0]
     data = pd.read_csv(f'{input_dir}/{f}', sep = '\t')
-    #Remove unwanted markers
-    data = data.loc[:, selected_markers]
+    if filter_markers:
+        selected_markers = read_marker_csv(input_dir) #Load .csv with the markers to use in the DREMI calculation -> Often only the PTMs are used
+        data = data.loc[:, selected_markers] # Remove unwanted markers
     data_arc, markers = arcsinh_transf(cofactor, data)
 
     # generate the list of marker-marker pairs for dremi calculation 
     marker_pairs = [comb for comb in list(permutations(markers, 2))]
     for marker_x, marker_y in marker_pairs:
         df_info_dict = {}   
-        df_info_dict["file"] = filename
+        df_info_dict["file_origin"] = filename
         df_info_dict["marker_x"] = marker_x
         df_info_dict["marker_y"] = marker_y
         df_info_dict["marker_x_marker_y"] = marker_x + '_' + marker_y
         df_info_dict["num_of_cells"] = data.shape[0]
 
         if plot == True:
-            os.makedirs(f'{output_dir}/plots/x={marker_x}-y={marker_y}')
-
-        # save dremi scores without outlier removal regardless of user input
-        dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x],
-                                    data_arc[marker_y], k=k, n_bins=n_bins,
-                                    n_mesh=n_mesh, plot=plot,
-                                    return_drevi=return_drevi,
-            filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
-        df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc
+            if os.path.isdir(f'{output_dir}/plots/x={marker_x}-y={marker_y}') == False:
+                os.makedirs(f'{output_dir}/plots/x={marker_x}-y={marker_y}')
+            dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x], data_arc[marker_y], 
+                                                            k=k, n_bins=n_bins, 
+                                                            n_mesh=n_mesh, 
+                                                            plot=plot, 
+                                                            return_drevi=return_drevi,
+                                                            filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
+        df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc # save dremi scores without outlier removal regardless of user input
 
         if outliers_removal == True:
             for cutoff in std_cutoff:

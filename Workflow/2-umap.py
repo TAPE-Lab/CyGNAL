@@ -67,7 +67,6 @@ else:
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform transformation~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Literature recommends cofactor of 5 for cytof data
 cofactor = 5
-
 arc, cols = arcsinh_transf(cofactor, no_arc)
 #Storing marker columns for later use below
 
