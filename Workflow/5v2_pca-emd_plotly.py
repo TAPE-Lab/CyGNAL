@@ -44,7 +44,6 @@ if marker_list == False:
     sys.exit("ERROR: Please select markers for PCA in the panel_markers.csv file!")
 
 # define the list of markers used for PCA
-# marker_file = pd.read_csv(f"{input_dir}/panel_markers.csv", header = None)
 markers_pca = read_marker_csv(input_dir)
 
 info_run =  input("Write PCA info (using no spaces!): ")
