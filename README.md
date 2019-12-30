@@ -19,7 +19,7 @@ Provisional flowchart of the current workflow:
 
    *Optional (if exporting data from Cytobank):* Go to the working illustration page (Illustrations - My working illustration), highlight the population(s) of interest, and export events as untransformed text files (Actions - Export - Export events, with *'Include header with FCS filename'* unchecked).
 
-[2. Copy all the data files to the folder 'Workflow/input/1-data_preprocess'. Run 1-data_preprocess.py, and the output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the 'Workflow/output/1-data_preprocess' folder, together with a 'panel_markers.csv' file listing all the markers measured in the give experiment.
+2. Copy all the data files to the folder 'Workflow/input/1-data_preprocess'. Run 1-data_preprocess.py, and the output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the 'Workflow/output/1-data_preprocess' folder, together with a 'panel_markers.csv' file listing all the markers measured in the give experiment.
 
     *Note:* This step is essential for getting the dataset compatible with downstream analysis and has to be performed as the first step in our workflow.
 
