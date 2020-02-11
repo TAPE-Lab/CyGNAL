@@ -33,6 +33,7 @@ def concatenate_fcs(folder_name):
         fcounter += 1
         df = pd.read_csv(f"{folder_name}/{file}", sep = '\t')
         # add a new column of 'file_origin' that will be used to separate each file after umap calculation
+        df["file_identifier"] = name
         df["file_origin"] = str(fcounter)+" | "+ name 
         #File+ID #This way the cell-index will be preserved after Cytobank upload
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
