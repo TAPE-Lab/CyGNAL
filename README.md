@@ -4,7 +4,7 @@ Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer
 
 In this repo we present a workflow for analysing mass cytometry data similar to that used in our pre-print: [Single-Cell Signalling Analysis of Heterocellular Organoids](https://www.biorxiv.org/content/10.1101/659896v2). With code in both Python and R, the workflow assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
 
-Provisional flowchart of the current workflow:
+Overview of the current workflow:
 ![alt text][Overview]
 
 [Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/flowchart_v1.png "Overview of cell identification"
