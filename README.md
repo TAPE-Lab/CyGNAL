@@ -7,7 +7,7 @@ In this repo we present a workflow for analysing mass cytometry data similar to 
 Provisional flowchart of the current workflow:
 ![alt text][Overview]
 
-[Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/provisional_Flowchart.png "Overview of cell identification"
+[Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/flowchart_v1.png "Overview of cell identification"
 
 ## How to use
 
