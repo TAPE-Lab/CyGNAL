@@ -30,7 +30,7 @@ for name, group in downsampled_conc_df.reset_index(drop=True).groupby("file_iden
     print (group)
     group.reset_index()
     # group['post-downsample_cell-index'] = group.index
-    group.to_csv(f"{output_dir}/{info_run}/{name}_downsample_{info_run}.txt", index = True, sep = '\t')
+    group.to_csv(f"{output_dir}/{info_run}/{name}_downsample_{info_run}.txt", index = False, sep = '\t')
 
 #Cell state sepration -> Interactive queastion, defaul file origin
 # #Divide concatenated into separate files
@@ -42,6 +42,3 @@ for name, group in downsampled_conc_df.reset_index(drop=True).groupby("file_iden
 #     print(group)
 #     group.to_csv(f"{output_dir}/{name}_downsample_{info_run}.txt",
 #                     index = False, sep = '\t')
-
-
-
