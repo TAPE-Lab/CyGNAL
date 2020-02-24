@@ -135,6 +135,6 @@ def yes_or_NO(question, default="NO"):
             elif reply[:1] == 'n':
                 return False
             elif reply[:1] == "":
-                return False
+                return True
             else:
                 print ("Please answer Y or N")

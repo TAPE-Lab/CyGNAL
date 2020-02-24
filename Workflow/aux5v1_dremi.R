@@ -12,6 +12,7 @@ if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.
 #Load packages
 lapply(list.of.packages, require, character.only = TRUE)
 
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Make sure no_norm is like this and marker_marker, not marker-marker -> check dremi script for populatiog the column itself, although i don't think that will pose a problem here in R
 dremi_info <- read_tsv(args)
@@ -45,6 +46,7 @@ ui <- fluidPage(
                     max = ceiling(maxx) +1,
                     value = c(minx, maxx)),
         selectInput('in6', 'Select markers', unique(dremi_info$marker_x), multiple=TRUE, selectize=TRUE),
+        selectInput('in12', 'Select and reorder conditions', unique(dremi_info$file), multiple=TRUE, selectize=TRUE),
         tags$hr(),
         downloadButton('foo', "Download plot as .pdf")
     ),
@@ -62,20 +64,24 @@ server <- function(input, output, session) {
     output$out6 <- renderPrint(input$in6)
     
     output$trendPlot <- renderPlotly({
-        if (!is.null(input$in6)) {
-            print (summary(dremi_info))
+        if (!is.null(input$in6) & !is.null(input$in12)) {
+            data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file %in% input$in12)
+            data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+        }
+        else if (!is.null(input$in6) & is.null(input$in12)) {
             data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6))
-            # data_to_plot <- dremi_info %>% filter(marker_x_marker_y %in% input$in6)
-            print (data_to_plot)
+        }
+        else if (is.null(input$in6) & !is.null(input$in12)) {
+            data_to_plot <- dremi_info %>% filter(file %in% input$in12)
+            data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
         }
         else{data_to_plot <- dremi_info}
         
         initial_dremi <- data_to_plot %>% ggplot(aes(
-            x=file, y=factor(marker_x_marker_y,
-                             levels=rev(unique(marker_x_marker_y))))) + 
-            geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score)) +
-            labs(fill = "DREMI score")
-        
+                                x=file, y=factor(marker_x_marker_y,
+                                levels=rev(unique(marker_x_marker_y))))) + 
+                                geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score)) +
+                                labs(fill = "DREMI score")
         print(
         ggplotly(initial_dremi + scale_fill_gradient(
             low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
@@ -91,18 +97,36 @@ server <- function(input, output, session) {
     output$foo <- downloadHandler(
         filename = "dremi_heatmap.pdf",
         content = function(file) {
+            if (!is.null(input$in6) & !is.null(input$in12)) {
+                data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file %in% input$in12)
+                data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+            }
+            else if (!is.null(input$in6) & is.null(input$in12)) {
+                data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6))
+            }
+            else if (is.null(input$in6) & !is.null(input$in12)) {
+                data_to_plot <- dremi_info %>% filter(file %in% input$in12)
+                data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+            }
+            else{data_to_plot <- dremi_info}
+            
+            initial_dremi <- data_to_plot %>% ggplot(aes(
+                                    x=file, y=factor(marker_x_marker_y,
+                                    levels=rev(unique(marker_x_marker_y))))) + 
+                                    geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score)) +
+                                    labs(fill = "DREMI score")
+            
             ggsave(file, plot = initial_dremi + scale_fill_gradient(
-            low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
-            oob = scales::squish, breaks = c(input$range[1], input$range[2]), labels = c(paste('<',input$range[1]), paste('>',input$range[2])),
-            guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
-            theme(legend.position="right", legend.direction="vertical", 
+                        low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
+                        oob = scales::squish, breaks = c(input$range[1], input$range[2]), labels = c(paste('<',input$range[1]), paste('>',input$range[2])),
+                    guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +
+                    theme(legend.position="right", legend.direction="vertical", 
                     axis.text.x = element_text(angle = 45, hjust = 1)) + 
-            xlab("Condition") + ylab("Markers") +
-            ggtitle("DREMI scores heatmap")
+                    xlab("Condition") + ylab("Markers") +
+                    ggtitle("DREMI scores heatmap")
             , device = "pdf")
         }
     )
-    session$onSessionEnded(stopApp)
 }
 
 # Run the application 
