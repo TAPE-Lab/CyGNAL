@@ -45,33 +45,36 @@ output_dir = f"./output/{folder_name}"
 # Input: Output from step 1, originally cytobank non-transformed .txt exports
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform concatenation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
+#~~~~~~~~~~~~~~~~~~~Preliminary steps and transformation~~~~~~~~~~~~~~~~~~~~~~#
+#Concatenate#
 no_arc, input_files = concatenate_fcs(input_dir)
 # input_files = [f for f in os.listdir(f"./{folder_name}") if f.endswith(".txt")]
 # no_arc = concatenate_fcs(folder_name)
 
-#~~~~~~~~~~~~~~~~~~~~Downsampling if using multiple files~~~~~~~~~~~~~~~~~~~~~#
+#Downsampling#
 #Test lenght of input files -> Go with minimun denominator -> select, at random,
 # that number of cells from other files
-
-#Using sample()
 if no_arc["file_origin"].value_counts().size > 1:
-    print ("Downsampling taking place. Check output folder for more info")
-    print (no_arc["file_origin"].value_counts())
-    no_arc = downsample_data(no_arc, info_run, output_dir)
-    print (no_arc["file_origin"].value_counts())
+    downs_inputs = yes_or_NO(
+        "Multiple input files detected. Would you like to donwsample the number of cells?",
+        default="YES")
+    if downs_inputs:
+        print ("Downsampling taking place. Check output folder for more info")
+        print (no_arc["file_origin"].value_counts())
+        no_arc = downsample_data(no_arc, info_run, output_dir)
+        print (no_arc["file_origin"].value_counts())
+    else:
+        print ("Multiple input files; no downsampling")
 else:
     print ("Only one input file detected; no downsampling")
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform transformation~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#Transformation#
 #Literature recommends cofactor of 5 for cytof data
 cofactor = 5
 arc, cols = arcsinh_transf(cofactor, no_arc)
 #Storing marker columns for later use below
 
 
-# ### Step 2: Make umaps
 #~~~~~~~~~~~~~~~Define the markers used for UMAP calculation~~~~~~~~~~~~~~~~~~#
 
 #Group columns of the dataframe based on the type of measurement
@@ -99,7 +102,6 @@ print(f"\n Number of markers used: {len(all_together_vs_marks.columns)}")
 
 
 #~~~~~~~~~~~~~~~~~~~Optional: z-score transformation~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
 # Z-SCORE: Not used now, interactive inplementation on later stages of the pipeline
 # z-score transformation (for the Organoid Methods Paper, only applied to supplementary figure 1)
 # all_together_vs_marks.head()

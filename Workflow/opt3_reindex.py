@@ -2,6 +2,8 @@
 import os
 import pandas as pd
 
+#WIP -> Update format!
+
 filelist = [f for f in os.listdir(f"./input/opt3_reindex") if f.endswith(".csv") or f.endswith(".txt")]
 
 for f in filelist:

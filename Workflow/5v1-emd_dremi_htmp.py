@@ -16,7 +16,7 @@ if os.path.isdir(f"./input/{folder_name}") == False:
 input_dir = f"./input/{folder_name}"
 
 ### User Input ### 
-emd = yes_or_NO("Plot EMD scores on a heatmap?")
+emd = yes_or_NO("Plot EMD scores on a heatmap?", default="YES")
 dremi = yes_or_NO("Plot DREMI scores on a heatmap?")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Input files should have either emd or dremi on their name

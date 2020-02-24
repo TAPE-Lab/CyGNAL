@@ -115,14 +115,26 @@ def write_panel_dremi(df, input_dir):
     markers.to_csv(f"{input_dir}/panel_markers.csv", index=False, header=False)
 
 #Simple yes or no input function (default NO)
-def yes_or_NO(question):
-    while True:
-        reply = str(input(question+' (y/[n]): ')).lower().strip()
-        if reply[:1] == 'y':
-            return True
-        elif reply[:1] == 'n':
-            return False
-        elif reply[:1] == "":
-            return False
-        else:
-            print ("Please answer Y or N")
+def yes_or_NO(question, default="NO"):
+    if default.lower() == "no":
+        while True:
+            reply = str(input(question+' (y/[N]): ')).lower().strip()
+            if reply[:1] == 'y':
+                return True
+            elif reply[:1] == 'n':
+                return False
+            elif reply[:1] == "":
+                return False
+            else:
+                print ("Please answer Y or N")
+    elif default.lower() == "yes":
+        while True:
+            reply = str(input(question+' ([Y]/n): ')).lower().strip()
+            if reply[:1] == 'y':
+                return True
+            elif reply[:1] == 'n':
+                return False
+            elif reply[:1] == "":
+                return False
+            else:
+                print ("Please answer Y or N")

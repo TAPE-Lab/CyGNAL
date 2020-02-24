@@ -21,7 +21,7 @@ if os.path.isdir(f"./input/{folder_name}") == False:
 input_dir = f"./input/{folder_name}"
 
 ### User Input ### 
-emd = yes_or_NO("Perform PCA on the EMD scores?")
+emd = yes_or_NO("Perform PCA on the EMD scores?", default="YES")
 dremi = yes_or_NO("Perform PCA on the DREMI scores?")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Input files should have either emd or dremi on their name
