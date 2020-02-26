@@ -21,7 +21,7 @@ import numpy as np
 from aux_functions import yes_or_NO
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Sanity Check~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-file_name_format = yes_or_NO("Are all the files names in the 'sample-name_cell-type_..._cell-state' format?")
+file_name_format = yes_or_NO("Are all the files named in the 'sample-name_cell-type_..._cell-state' format?")
 if file_name_format == False:
     sys.exit(f"Please rename the files to the 'sample_cell-type_cell-state' format\n Accepted cell-states (literal): Ungated, apoptosis, G0, S-phase, G2, and M-phase") 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -143,6 +143,6 @@ for k, v in dfs_sub_copy.items():
             if c_state != 'Ungated':
                 data = pd.concat([data, v1])
         
-        data.to_csv(f"./output/{folder_name}/{s_id}_{c_type}_w-cell-state.txt", index = False, sep = '\t')
+        data.sort_values(by='Cell_Index').to_csv(f"./output/{folder_name}/{s_id}_{c_type}_w-cell-state.txt", index = False, sep = '\t')
 
 print(f"Output files saved in the folder './output/{folder_name}'")
