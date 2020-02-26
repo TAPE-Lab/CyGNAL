@@ -24,7 +24,9 @@ from aux_functions import yes_or_NO
 file_name_format = yes_or_NO("Are all the files named in the 'sample-name_cell-type_..._cell-state' format?")
 if file_name_format == False:
     sys.exit(f"Please rename the files to the 'sample_cell-type_cell-state' format\n Accepted cell-states (literal): Ungated, apoptosis, G0, S-phase, G2, and M-phase") 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Preparatory steps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "6-cell_state_info"
 
 # prepare files
@@ -68,7 +70,8 @@ dfs_sub = {}
 for s_id in sample_id:
     dfs_sub[s_id] = {}
     for c_type in cell_type:
-        dfs_sub[s_id][c_type] = {k:v for k,v in dfs.items() if k.split('_')[0] == s_id and k.split('_')[1] == c_type}
+        dfs_sub[s_id][c_type] = {k:v for k,v in dfs.items() if k.split('_')[0] 
+            == s_id and k.split('_')[1] == c_type}
 
 # for s_id in sample_id:
 #     print(f'{s_id}: {dfs_sub[s_id].keys()}')
@@ -76,6 +79,8 @@ for s_id in sample_id:
 # make a copy of the dfs_sub dictionary for cell-state annotation later
 dfs_sub_copy = copy.deepcopy(dfs_sub)
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cell state ID~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # keep only the 'Cell_Index' column to compare each cell-state population against the 'Ungated'
 # this overwrites the dfs_sub dictionary and replaces the dataframes with Series...
 # may not be the best solution
@@ -85,8 +90,10 @@ for k, v in dfs_sub.items():
             v1[k2] = v2.loc[:,'Cell_Index'].copy()
 
 # for each sample, perform the following steps:
-# for each cell-type, concatenate all the gated cell-states (apoptosis, G0, S, G2, and M) with the 'Ungated' population and then remove duplicates
-# so all the gated cell-states will be removed from the ungated population -- leaving the indices of cells in G1
+# for each cell-type, concatenate all the gated cell-states (apoptosis, G0, S, 
+# G2, and M) with the 'Ungated' population and then remove duplicates so all 
+# the gated cell-states will be removed from the ungated population 
+#  --> leaving the indices of cells in G1
 # now the values of the dfs_sub dictionary are the indices of cells of all the six cell-states
 for k, v in dfs_sub.items(): 
     for k1, v1 in v.items():
@@ -101,13 +108,15 @@ for k, v in dfs_sub.items():
         df_tmp = df_tmp.drop_duplicates(keep = False).copy()
         v1[g1] = df_tmp.iloc[:, 0] # save the indices of G1 cells as a pandas Series
 
-# use the indices of G1 cells stored in dfs_sub to subset the dfs_sub_copy and get the G1 population of each cell-type
+# use the indices of G1 cells stored in dfs_sub to subset the dfs_sub_copy and 
+# get the G1 population of each cell-type
 for s_id in sample_id:
     for c_type in cell_type:
         df_ungated = dfs_sub_copy[s_id][c_type][s_id + '_' + c_type + '_Ungated'].copy()
         g1 = s_id + '_' + c_type + '_G1'
         g1_idx = list(dfs_sub[s_id][c_type][g1])
-        dfs_sub_copy[s_id][c_type][g1] = df_ungated.loc[df_ungated['Cell_Index'].isin(g1_idx)].copy()
+        dfs_sub_copy[s_id][c_type][g1] = df_ungated.loc[
+                                            df_ungated['Cell_Index'].isin(g1_idx)].copy()
 
 # add the cell-state information (text & numerical) to the dataframes
 for k, v in dfs_sub_copy.items(): 
@@ -131,6 +140,8 @@ for k, v in dfs_sub_copy.items():
             if c_state == 'M-phase':
                 v2['cell-state_num'] = 5
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # concatenate all the cell-state dataframes within each cell-type and save as txt files
 for k, v in dfs_sub_copy.items(): 
     s_id = k

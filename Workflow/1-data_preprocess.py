@@ -68,6 +68,6 @@ for i in filelist:
 
 #Add also the generation of a .csv file with the markers in the panel.
 if not all(x==cols[0] for x in cols):
-    print ("Check your input files: The panels don't match!")
+    sys.exit("ERROR: Check your input files; THE PANELS DON'T MATCH!") 
 else:
     write_panel_markers(cols, output_dir)

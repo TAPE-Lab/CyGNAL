@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import sys
 
+#WIP -> Update format!
+
 filelist = [f for f in os.listdir(f"./input/opt3_reindex") if f.endswith(".csv") or f.endswith(".txt")]
 
 folder_name = 'opt3_reindex'

@@ -2,16 +2,16 @@
 
 Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. The Cell Communication Lab studies how oncogenic mutations communicate with stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer.
 
-In this repo we present a workflow for analysing mass cytometry data similar to that used in our pre-print: [Single-Cell Signalling Analysis of Heterocellular Organoids](https://www.biorxiv.org/content/10.1101/659896v2). With code in both Python and R, the workflow assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
+In this repo we present a workflow for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, the workflow assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
 
-Provisional flowchart of the current workflow:
+Overview of the current workflow:
 ![alt text][Overview]
 
 [Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/flowchart_v1.png "Overview of cell identification"
 
 ## How to use
 
-*NOTE*: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [pre-print](https://www.biorxiv.org/content/10.1101/659896v2). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.
+*NOTE*: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [paper](https://www.nature.com/articles/s41592-020-0737-8). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.
 
 ### A Brief Step-by-Step Tutorial
 

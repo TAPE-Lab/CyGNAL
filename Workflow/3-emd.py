@@ -29,16 +29,21 @@ if os.path.isdir(f"./input/{folder_name}") == False:
     
 input_dir = f"./input/{folder_name}"
 output_dir = f"./output/{folder_name}"
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
+### User Input ###
 #Check if user wants to filter the markers based on a .csv marker file
-filter_markers = yes_or_NO("Dow you want to filter out markers from the panel? (If so please provide .csv file)")
+filter_markers = yes_or_NO(
+    "Do you want to filter out markers from the panel? (If so please provide .csv file)",
+    default="YES")
 
 #Check if user wants to upload the UMAP info to Cytobank
-#If yes, generate a 
-user_defined_denominator = yes_or_NO("User-defined denominator")
+print ("By default concatenated input files will be used as the denominator")
+user_defined_denominator = yes_or_NO("User-defined denominator?")
 
-#~~~~~~~~~~~~~~~~~Perform transformation and concatenation~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+
+#~~~~~~~~~~~~~~~~~~~~~Preparatory steps and transformation~~~~~~~~~~~~~~~~~~~~#
 # set up the files to be analysed (compare_from and compare_to)
 # denominator can be concatenated input files or the user-defined txt file
 
@@ -104,8 +109,9 @@ for compare_from_file in input_files:
     emd_df = calculate_emd(marker_list, emd_infodict, compare_from_arc,
                             compare_to_arc, normalisation, emd_df)
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 whole_file = "EMD_" + info_run
 emd_df.to_csv(f"{output_dir}/{whole_file}.txt", index = False,
                     sep = '\t')
-
 

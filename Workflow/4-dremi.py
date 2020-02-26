@@ -42,16 +42,19 @@ output_dir = f"./output/{folder_name}"
 ### User Input ### 
 plot = yes_or_NO("Generate plots?")
 outliers_removal = yes_or_NO("Perform std-based outlier removal?")
-
 if plot == True:
     if os.path.isdir(f'{output_dir}/plots') == False:
         os.makedirs(f'{output_dir}/plots')
 
+#Check if user wants to filter the markers based on a .csv marker file
+filter_markers = yes_or_NO(
+    "Do you want to filter out markers from the panel? (If so please provide .csv file)",
+    default="YES")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-#Check if user wants to filter the markers based on a .csv marker file
-filter_markers = yes_or_NO("Dow you want to filter out markers from the panel? (If so please provide .csv file)")
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Preparatory steps ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # create the list of txt files to be analysed (all txt files in the input folder)
 
 dremi_files = [file for file in os.listdir(input_dir) if file.endswith(".txt")]
@@ -64,6 +67,9 @@ print('\n'.join([f for f in dremi_files]))
 # create a dataframe to store the dremi result
 df_info = pd.DataFrame()
 dremi_params = {}
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform DREMI~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # this block of code compiles the info of the sample, e.g. cell-type, cell-state, condition, etc.
 # but the most important information is the filename
 # the subset of the data can be done downstream when all the dremi scores have been calculated
@@ -96,7 +102,7 @@ for f in dremi_files:
                                                             filename=f"{output_dir}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
         df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc # save dremi scores without outlier removal regardless of user input
 
-        if outliers_removal == True:
+        if outliers_removal == True: #EXPERIMENTAL, not fully tested
             for cutoff in std_cutoff:
                 colname_arc = f"wo_outliers_arcsinh_cutoff={cutoff}_std_DREMI_score"
                 #Using outlier_removal auxiliary function
@@ -117,5 +123,7 @@ for f in dremi_files:
         # Store the info for each marker pair in df_info      
         df_info = df_info.append(df_info_dict, ignore_index=True)    
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # save df_info to file
 df_info.to_csv(f"{output_dir}/DREMI_{info_run}.txt", sep = '\t', index=False) 
