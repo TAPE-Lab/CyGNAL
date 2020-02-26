@@ -58,6 +58,7 @@ Data/Umap/
 Workflow/__pycache__/
 
 #   #Inputs
+Workflow/input/*/
 Workflow/input/1-data_preprocess/Tests/
 Workflow/input/2-umap/Tests/
 Workflow/input/3-emd/Tests/
