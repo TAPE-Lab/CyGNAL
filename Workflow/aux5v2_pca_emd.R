@@ -44,12 +44,13 @@ ui <- bootstrapPage(
         
         tabsetPanel(
             tabPanel("Inspect the data",
-
+                h4("Input data"),
                 p("Here is the data from the input file after removing unnecessary columns and collapsing marker EMD scores for each condition:"),
                 DT::dataTableOutput('contents'),
-                # tags$hr(),
-                # p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
-                # plotOutput("tableplot")
+                tags$hr(),
+                h4("Tableplot"),
+                p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
+                plotOutput("tableplot")
         ), # end  tab
             tabPanel("Correlation Plots",
                 sidebarLayout(
@@ -58,14 +59,14 @@ ui <- bootstrapPage(
                     ),
                     mainPanel(
                         h2("Correlation plot"),
-                        p("This plot may take a few moments to appear when analysing large datasets. You may want to exclude highly correlated variables from the PCA."),
+                        p("This plot may take a few moments to appear when analysing large datasets. You may want to exclude highly correlated variables from the PCA and can be useful when comparing new antibodies against well-known ones."),
                         plotOutput("corr_plot"),
                         downloadButton('dwn_corr', "Download plot as .pdf")
                     )
                 ),
                 tags$hr(),
-                p("Summary of correlations"),
-                tableOutput("corr_tables")
+                h4("Summary of correlations"),
+                DT::dataTableOutput("corr_tables")
         ), # end  tab
             tabPanel("Diagnostics",
                 h2("KMO test"),
@@ -74,6 +75,7 @@ ui <- bootstrapPage(
                 verbatimTextOutput("kmo")
         ), # end  tab
             tabPanel("Compute PCA",
+                h2("PCA settings and options"),
                 p("Only columns containing numeric data are shown here because PCA doesn't work with non-numeric data and variables with zero variance have been automatically removed because they're not useful in a PCA."),
                 p("The PCA is automatically re-computed each time you change your selection."),
                 tags$hr(),
@@ -98,46 +100,54 @@ ui <- bootstrapPage(
         ), # end  tab
             tabPanel("PC Plots",
                 h2("Scree plot"),
-                p("The scree plot shows the variances of each PC, and the cumulative variance explained by each PC (in %) "),
+                p("The scree plot shows the variances of each PC adn can be useful to identify elbows."),
                 plotOutput("plot2", height = "300px"),
                 tags$hr(),
-                h2("PC plot: zoom and select points"),
+                h2("PCA plot"),
                 # p("Select the grouping variable."),
                 # p("Only variables where the number of unique values is less than 10% of the total number of observations are shown here (because seeing groups with 1-2 observations is usually not very useful)."),
                 # uiOutput("the_grouping_variable"),
                 # tags$hr(),
-                p("Select the PCs to plot"),
+                h4("Select the PCs to plot"),
                 uiOutput("the_pcs_to_plot_x"),
                 uiOutput("the_pcs_to_plot_y"),
                 tags$hr(),
-                
-                p("Click and drag on the first plot below to zoom into a region on the plot. Or you can go directly to the second plot below to select points to get more information about them."),
-                p("Then select points on zoomed plot below to get more information about the points."),
+                p("Click and drag on the first plot below to zoom into a region on the plot."),
                 p("You can click on the 'Compute PCA' tab at any time to change the variables included in the PCA, and then come back to this tab and the plots will automatically update."),
                 plotOutput ("z_plot1",
                             brush = brushOpts(
                             id = "z_plot1Brush",
                             resetOnNew = TRUE)),
                 tags$hr(),
-                sidebarLayout(
-                    sidebarPanel(
-                        p("Click and drag on the plot below to select points, and inspect the table of selected points below"),
+                # sidebarLayout(
+                #     mainPanel(
                         plotOutput("z_plot2",
-                                   brush = brushOpts(
+                                    click = "plot_click_after_zoom",
+                                    brush = brushOpts(
                                        id = "plot_brush_after_zoom",
                                        resetOnNew = TRUE)),
-                        downloadButton('dwn_pcaplot', "Download plot as .pdf")
-                    ),
-                    mainPanel(
-                        p("Interactive PCA plot from Plotly. Useful for inspecting coordinates and SD values"),
-                        plotlyOutput ("plotly_pca")
-                    )
-                )
+                        downloadButton('dwn_pcaplot', "Download plot with arrows (.pdf)"),
+                        downloadButton('dwn_pcaplot_n', "Download plot without arrows (.pdf)")
+                #     ),
+                #     sidebarPanel(
+                #         p("Points near click"),
+                #         verbatimTextOutput("click_info"),
+                #         p("Selected points"),
+                #         verbatimTextOutput("brush_info")
+                #     )
+                # )
+                
         ), # end  tab 
+            tabPanel("PCA Plotly",
+                 h2("Interactive plotly plot"),
+                 p("Hover over the points to get the specific coordinates and a measure of the SD of the selected panel markers within the condition."),
+                 plotlyOutput ("plotly_pca")
+        ),    
             tabPanel("PCA output",
-                downloadButton("dwn_pcainfo", "Download pca information"),
+
                 # downloadButton("dwn_pcasummary", "Download pca summary information"),     
-                verbatimTextOutput("pca_details")
+                verbatimTextOutput("pca_details"),
+                downloadButton("dwn_pcainfo", "Download pca information")
         )#, # end  tab 
             # tabPanel("Authorship",
             #     p("The code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer"), "Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick"),".")
@@ -180,23 +190,41 @@ server <- function(input, output, session) {
         ggpairs(the_data_subset_biplot)
     })
     # corr tables
-    output$corr_tables <- renderTable({
-        # we only want to show numeric cols
         the_data_num <- data4pca[,sapply(data4pca,is.numeric)]
         # exclude cols with zero variance
         the_data_num <- the_data_num[,!apply(the_data_num, MARGIN = 2,
-                        function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
+                                             function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
         res <- Hmisc::rcorr(as.matrix(the_data_num))
         cormat <- res$r
         pmat <- res$P
         ut <- upper.tri(cormat)
         df <- data.frame(
-            row = rownames(cormat)[row(cormat)[ut]],
-            column = rownames(cormat)[col(cormat)[ut]],
-            cor  = (cormat)[ut],
+            MarkerX = rownames(cormat)[row(cormat)[ut]],
+            MarkerY = rownames(cormat)[col(cormat)[ut]],
+            Correlation  = (cormat)[ut],
             p = pmat[ut])
-        with(df, df[order(-cor), ])
+    output$corr_tables <- DT::renderDataTable({
+        df
     })
+    
+    # output$corr_tables <- renderTable({
+    #     # we only want to show numeric cols
+    #     the_data_num <- data4pca[,sapply(data4pca,is.numeric)]
+    #     # exclude cols with zero variance
+    #     the_data_num <- the_data_num[,!apply(the_data_num, MARGIN = 2,
+    #                     function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
+    #     res <- Hmisc::rcorr(as.matrix(the_data_num))
+    #     cormat <- res$r
+    #     pmat <- res$P
+    #     ut <- upper.tri(cormat)
+    #     df <- data.frame(
+    #         row = rownames(cormat)[row(cormat)[ut]],
+    #         column = rownames(cormat)[col(cormat)[ut]],
+    #         cor  = (cormat)[ut],
+    #         p = pmat[ut])
+    #     with(df, df[order(-cor), ])
+    # })
+    
     output$dwn_corr <- downloadHandler(
         filename <- "correlation_plot.pdf",
         content = function(file) {
@@ -342,14 +370,8 @@ server <- function(input, output, session) {
             alpha.var="contrib" ) + 
             geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
             guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
-        
     })
-    # for zooming
-    output$z_plot1 <- renderPlot({
-        pca_biplot()
-    })
-    
-    output$plotly_pca <- renderPlotly({
+    pca_indplot <- reactive({
         pcs_df <- pca_objects()$pcs_df
         pca_output <-  pca_objects()$pca_output
         var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
@@ -360,15 +382,20 @@ server <- function(input, output, session) {
         eixos = c(1,2)
         eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
                          nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
-                         nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
+                                                                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
         
-        print (ggplotly(fviz_pca_biplot(pca_output,
-                                 axes = as.numeric(eixos)) + 
-                     geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
-                     guides(shape="none", size=guide_legend(title = "SD"))))
+        fviz_pca_ind(pca_output,
+                        axes = as.numeric(eixos),
+                        col.ind = rownames(data4pca)) + 
+            geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
+            guides(shape="none", size=guide_legend(title = "SD"))
     })
     
-    # zoom ranges
+    # zoomed out
+    output$z_plot1 <- renderPlot({
+        pca_biplot()
+    })
+        # zoom ranges
     zooming <- reactiveValues(x = NULL, y = NULL)
     observe({
         brush <- input$z_plot1Brush
@@ -383,37 +410,66 @@ server <- function(input, output, session) {
     })
     # for zooming
     output$z_plot2 <- renderPlot({
-        pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y) 
+        pca_indplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y) 
     })
+    
+    # #CLicks and brushes:
+    # output$click_info <- renderPrint({
+    #     nearPoints(dplyr::rename(as_tibble(pca_objects$pca_output$x), x=PC1, y=PC2), input$plot_click_after_zoom, addDist = TRUE)
+    # })
+    # output$brush_info <- renderPrint({
+    #     brushedPoints(dplyr::rename(as_tibble(pca_objects$pca_output$x), x=PC1, y=PC2), input$plot_brush_after_zoom)
+    # })
+    
+    #Downloads
     output$dwn_pcaplot <- downloadHandler(
         filename <- "pca_plot.pdf",
         content = function(file) {
             ggsave(file, plot = pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
-        }
-    )
+    })
+    output$dwn_pcaplot_n <- downloadHandler(
+        filename <- "pca_plot_n.pdf",
+        content = function(file) {
+            ggsave(file, plot = pca_indplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
+    })
     
-
+    #Plotly:
+    output$plotly_pca <- renderPlotly({
+        pcs_df <- pca_objects()$pcs_df
+        pca_output <-  pca_objects()$pca_output
+        var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
+                                                                  input$the_pcs_to_plot_x))]^2/sum(pca_output$sdev^2), 1)
+        var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
+                                                                  input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
+        labels <- rownames(pca_output$x)
+        eixos = c(1,2)
+        eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
+                         nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
+                                                                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
+        
+        print (ggplotly(fviz_pca_ind(pca_output,
+                                     axes = as.numeric(eixos),
+                                     col.ind = rownames(data4pca)) + 
+                            geom_point(aes(color = rownames(data4pca),size=(calculated_sd)))+ theme(legend.position="none")))
+    })
+    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PCA output~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#    
     output$pca_details <- renderPrint({
+        print(paste(unlist(rownames(get_pca(pca_objects()$pca_output)$coord)), collapse=", "))
+        print(get_eig(pca_objects()$pca_output)[2])
         print(get_pca_ind(pca_objects()$pca_output)$coord)
     })
     output$dwn_pcainfo <- downloadHandler(
         filename = "pca_info.txt",
         content = function(file) {
-            write.table(get_pca_ind(pca_objects()$pca_output)$coord, file, sep = "\t",
-            row.names = TRUE, col.names = NA)
-        }
-    )
-    # output$dwn_pcasummary <- downloadHandler(
-    #     filename = "pca_summary.txt",
-    #     sum_info <- summary(pca_objects()$pca_output),
-    #     content = function(file) {
-    #         print(class(sum_info))
-    #         write.table(sum_info, file, sep = "\t",
-    #         row.names = TRUE, col.names = NA)
-    #     }
-    # )
-    #session$onSessionEnded(stopApp)
+            write.table(paste(unlist(rownames(get_pca(pca_objects()$pca_output)$coord)), collapse=", "), file, sep = "\t", append = TRUE,
+                        row.names = TRUE, col.names = NA)
+            write.table(get_eig(pca_objects()$pca_output)[2], file, sep = "\t", append = TRUE,
+                        row.names = TRUE, col.names = NA)
+            write.table(get_pca_ind(pca_objects()$pca_output)$coord, file, sep = "\t", append = TRUE,
+                        row.names = TRUE, col.names = NA)
+    })
+
 }
 
 
@@ -422,3 +478,4 @@ server <- function(input, output, session) {
 ###############################################################################
 # Run the application 
 shinyApp(ui = ui, server = server)
+
