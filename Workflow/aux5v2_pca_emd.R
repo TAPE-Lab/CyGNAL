@@ -101,56 +101,48 @@ ui <- bootstrapPage(
             tabPanel("PC Plots",
                 h2("Scree plot"),
                 p("The scree plot shows the variances of each PC adn can be useful to identify elbows."),
+                
                 plotOutput("plot2", height = "300px"),
                 tags$hr(),
+                
                 h2("PCA plot"),
-                # p("Select the grouping variable."),
-                # p("Only variables where the number of unique values is less than 10% of the total number of observations are shown here (because seeing groups with 1-2 observations is usually not very useful)."),
-                # uiOutput("the_grouping_variable"),
-                # tags$hr(),
                 h4("Select the PCs to plot"),
+                
                 uiOutput("the_pcs_to_plot_x"),
                 uiOutput("the_pcs_to_plot_y"),
                 tags$hr(),
+                
                 p("Click and drag on the first plot below to zoom into a region on the plot."),
-                p("You can click on the 'Compute PCA' tab at any time to change the variables included in the PCA, and then come back to this tab and the plots will automatically update."),
+                p("You can click on the 'Compute PCA' tab at any time to change the variables included in the PCA,
+                    and then come back to this tab and the plots will automatically update."),
+                
                 plotOutput ("z_plot1",
                             brush = brushOpts(
                             id = "z_plot1Brush",
                             resetOnNew = TRUE)),
                 tags$hr(),
-                # sidebarLayout(
-                #     mainPanel(
-                        plotOutput("z_plot2",
-                                    click = "plot_click_after_zoom",
-                                    brush = brushOpts(
-                                       id = "plot_brush_after_zoom",
-                                       resetOnNew = TRUE)),
-                        downloadButton('dwn_pcaplot', "Download plot with arrows (.pdf)"),
-                        downloadButton('dwn_pcaplot_n', "Download plot without arrows (.pdf)")
-                #     ),
-                #     sidebarPanel(
-                #         p("Points near click"),
-                #         verbatimTextOutput("click_info"),
-                #         p("Selected points"),
-                #         verbatimTextOutput("brush_info")
-                #     )
-                # )
+                
+                plotOutput("z_plot2",
+                            click = "plot_click_after_zoom",
+                            brush = brushOpts(
+                            id = "plot_brush_after_zoom",
+                            resetOnNew = TRUE)),
+                downloadButton('dwn_pcaplot', "Download plot with arrows (.pdf)"),
+                downloadButton('dwn_pcaplot_n', "Download plot without arrows (.pdf)")
                 
         ), # end  tab 
             tabPanel("PCA Plotly",
                  h2("Interactive plotly plot"),
                  p("Hover over the points to get the specific coordinates and a measure of the SD of the selected panel markers within the condition."),
                  plotlyOutput ("plotly_pca")
-        ),    
+        
+        ), #end tab   
             tabPanel("PCA output",
-
-                # downloadButton("dwn_pcasummary", "Download pca summary information"),     
                 verbatimTextOutput("pca_details"),
                 downloadButton("dwn_pcainfo", "Download pca information")
         )#, # end  tab 
             # tabPanel("Authorship",
-            #     p("The code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer"), "Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick"),".")
+            #     p("Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick"),".")
         #)
         ) 
 
@@ -470,8 +462,8 @@ server <- function(input, output, session) {
                         row.names = TRUE, col.names = NA)
     })
 
-}
 
+}
 
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Run PCA~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
