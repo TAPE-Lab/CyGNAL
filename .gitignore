@@ -66,6 +66,7 @@ Workflow/input/5v1-emd_dremi_htmp/Tests/
 Workflow/input/5v2-pca/Tests/
 Workflow/input/opt1_concatenation/Tests/
 Workflow/input/opt2_downsample/Tests/
+Workflow/input/*/
 
 #   Ignore the whole output folder
 Workflow/output/*/
