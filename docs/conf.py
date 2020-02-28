@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'CyTOF_DataAnalysis'
+project = 'CAllioPe'
 copyright = '2020, Ferran Cardoso'
 author = 'Ferran Cardoso'
 
