@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'CAllioPe'
+project = 'Calliope'
 copyright = '2020, Ferran Cardoso'
 author = 'Ferran Cardoso'
 

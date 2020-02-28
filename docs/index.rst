@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-CAllioPe: **C**yTOF Data **A**na**l**ysis and Visua**li**sati**o**n **P**ipelin**e**
+\ **Calliope**\: \ **C**\yTOF data \ **A**\na\ **l**\ysis and Visua\ **li**\sati\ **o**\n \ **P**\ipelin\ **e**\
 ==============================================
 ==============================================
 
