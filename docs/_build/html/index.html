@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to CyTOF_DataAnalysis’s documentation! &#8212; CyTOF_DataAnalysis 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="$project" href="usage/test.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-cytof-dataanalysis-s-documentation">
+<h1>Welcome to CyTOF_DataAnalysis’s documentation!<a class="headerlink" href="#welcome-to-cytof-dataanalysis-s-documentation" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<p>Repository of the [Cell Communication Lab](<a class="reference external" href="http://tape-lab.com/">http://tape-lab.com/</a>) at UCL’s Cancer Institute.
+The Cell Communication Lab studies how oncogenic mutations communicate with stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME).
+By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer.</p>
+<p>In this repo we present a workflow for analysing mass cytometry data similar to that used in our <em>Nature Methods</em> paper: [Cell-type-specific signaling networks in heterocellular organoids](<a class="reference external" href="https://www.nature.com/articles/s41592-020-0737-8">https://www.nature.com/articles/s41592-020-0737-8</a>).
+With code in both Python and R, the workflow assumes some preliminary and inter-step processing through the platform [Cytobank](<a class="reference external" href="https://cytobank.org/">https://cytobank.org/</a>)
+(although the user could in theory use any other solution for this and the gating steps).</p>
+<p>Overview of the current workflow:</p>
+<blockquote>
+<div><p>import project</p>
+<p># Some comment?</p>
+<p>project.do_stuff()</p>
+</div></blockquote>
+<p>Default index.rst content:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/test.html">$project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/test.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/test.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/test.html#contribute">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/test.html#support">Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/test.html#license">License</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+<p>END of default content</p>
+</div>
+<div class="section" id="how-to-use">
+<h1>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
+<p><em>NOTE</em>: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [paper](<a class="reference external" href="https://www.nature.com/articles/s41592-020-0737-8">https://www.nature.com/articles/s41592-020-0737-8</a>).
+The full dataset is available through [Cytobank Community](<a class="reference external" href="https://community.cytobank.org/cytobank/experiments/81059">https://community.cytobank.org/cytobank/experiments/81059</a>).
+The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.</p>
+<div class="section" id="brief-tutorial">
+<h2>Brief tutorial<a class="headerlink" href="#brief-tutorial" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Clone the ‘Workflow’ and ‘Data’ folder to a local drive.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>Optional (if exporting data from Cytobank):</em> Go to the working illustration page (Illustrations - My working illustration), highlight the population(s) of interest, and export events as untransformed text files (Actions - Export - Export events, with <em>‘Include header with FCS filename’</em> unchecked).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Copy all the data files to the folder ‘Workflow/input/1-data_preprocess’. Run 1-data_preprocess.py, and the output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the ‘Workflow/output/1-data_preprocess’ folder, together with a ‘panel_markers.csv’ file listing all the markers measured in the give experiment.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>Note:</em> This step is essential for getting the dataset compatible with downstream analysis and has to be performed as the first step in our workflow.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>UMAP:</strong> Move the processed data file(s) and panel_marker.csv to ‘Workflow/input/2-umap’, edit panel_marker.csv to set all the markers used for UMAP analysis from ‘N’ to ‘Y’. Run 2-umap.py, and the output files will be saved in a subfolder named by the ‘umap_info’ provided by the user in the ‘Workflow/output/2-umap’ folder. The markers and the indices of the cells used in the analysis will also be saved in the new folder.</p>
+<ul class="simple">
+<li><p><em>Note:</em> When there is more than one data file used as input of the analysis, each data file will be downsampled to the lowest number of the input (i.e. ‘equal’ sampling) and concatenated prior to UMAP calculation. After the calculation is complete, the concatenated dataset as well as each individual condition are saved with their UMAP coordinates attached.</p></li>
+<li><p><em>Optional (skipped in this tutorial):</em> The data files can be uploaded to Cytobank and visualised and gated in the UMAP space for cell-type and cell-state analysis.</p></li>
+</ul>
+</li>
+<li><p><strong>EMD:</strong> To perform EMD calculation (using the tools available in the [scprep](<a class="reference external" href="https://github.com/KrishnaswamyLab/scprep">https://github.com/KrishnaswamyLab/scprep</a>) library), copy the input data files (in this case all the pre-processed 5,000 cells per time-point in the tutorial dataset prior to cell-type identification) to ‘Workflow/input/3-emd’. Run 3-emd.py and follow the instructions. By default, the denominator of the EMD calculation will be the concatenation of all the input data files, but the user is given the option to provide a specific denominator data file. In addition, EMD scores of all channels will be calculated by default, but the user can choose to provide a csv file specifying markers of interest to be calculated (we recommend modifying the ‘panel_markers.csv’ file generated by step 1 to ensure channel name consistency). The calculated EMD scores will be saved in ‘Workflow/output/3-emd’, and column ‘EMD_arc_no_norm’ is of interest.</p></li>
+<li><p><strong>DREMI:</strong> To perform DREMI calculation (using the tools available in the [scprep](<a class="reference external" href="https://github.com/KrishnaswamyLab/scprep">https://github.com/KrishnaswamyLab/scprep</a>) library) copy the input data files (in this case all the pre-processed 5,000 cells per time-point in the tutorial dataset prior to cell-type identification) to ‘Workflow/input/4-dremi’. Run 4-dremi.py and follow the instructions. As with EMD, DREMI scores of all permutations of marker combinations will be calculated by default, but the user can specify markers of interest by modifying the ‘panel_markers.csv’ file. The user is given the option to save the density-resampled plots for data inspection and to perform a standard deviation-based outlier removal step prior to DREMI calculation. The calculated DREMI scores will be saved in ‘Workflow/output/4-dremi’.</p></li>
+<li><p><strong>Heatmap:</strong> To visualise EMD/DREMI scores in heatmaps, copy the EMD/DREMI calculation outputs to the ‘Workflow/input/5v1-emd_dremi_htmp’ folder. Run 5v1-emd_dremi_htmp.py and follow the instructions in the GUI. The current version of the script accepts one EMD data file and one DREMI data file (with ‘EMD’ and ‘DREMI’ in their file names respectively) to be visualised in the heatmaps generated.</p></li>
+<li><p><strong>Principal component analysis (PCA):</strong> To perform PCA and visualise the results, copy the EMD/DREMI calculation outputs to the ‘Workflow/input/5v2-pca’ folder. Run 5v2-pca.py and follow the instructions in the GUI.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h1>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Python: Tested with Python v3.6 and v3.7. Used in the backbone of the workflow and most computational steps.</dt><dd><ul>
+<li><p><cite>numpy</cite></p></li>
+<li><p><cite>pandas</cite></p></li>
+<li><p><cite>plotly</cite></p></li>
+<li><p><cite>scprep</cite></p></li>
+<li><p><cite>sklearn</cite></p></li>
+<li><p><cite>umap-learn</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>R: Tested with R v3.6.1 and RStudio v1.2.5001. Mostly used for visualisation, but also for computing the PCA.</dt><dd><ul>
+<li><p><cite>DT</cite></p></li>
+<li><p><cite>factoextra</cite></p></li>
+<li><p><cite>FactoMineR</cite></p></li>
+<li><p><cite>Ggally</cite></p></li>
+<li><p><cite>Hmisc</cite></p></li>
+<li><p><cite>MASS</cite></p></li>
+<li><p><cite>matrixStats</cite></p></li>
+<li><p><cite>plotly</cite></p></li>
+<li><p><cite>psych</cite></p></li>
+<li><p><cite>RColorBrewer</cite></p></li>
+<li><p><cite>shiny</cite></p></li>
+<li><p><cite>tabplot</cite></p></li>
+<li><p><cite>tidyverse</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Bourne shell:</dt><dd><ul>
+<li><p><cite>Rscript</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="authors">
+<h1>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h1>
+<p>The work here is actively being developed by Ferran Cardoso ([&#64;FerranC96](<a class="reference external" href="https://github.com/FerranC96">https://github.com/FerranC96</a>)) and Dr. Xiao Qin ([&#64;qinxiao1990](<a class="reference external" href="https://github.com/qinxiao1990">https://github.com/qinxiao1990</a>)).
+Based on the original work of Pelagia Kyriakidou.</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">CyTOF_DataAnalysis</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/test.html">$project</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="usage/test.html" title="next chapter">$project</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Ferran Cardoso.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
