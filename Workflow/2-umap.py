@@ -9,7 +9,7 @@ import umap
 import sys
 import os
 from aux2_umap import *
-from aux_functions import concatenate_fcs, arcsinh_transf, read_marker_csv, downsample_data
+from aux_functions import *
 
 import warnings
 warnings.filterwarnings('ignore')
