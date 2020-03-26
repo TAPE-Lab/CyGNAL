@@ -41,13 +41,6 @@ user_cofactor = yes_or_NO(
     "Using alpha=5 for the transformation. Would you like to change this value?")
 if user_cofactor:
     cofactor = int(input("Enter the new alpha to use (5=default): "))
-
-#Load file.
-    #Sanity check
-
-#User config:
-    #Alpha =5 default.
-    #User given alpha
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Perform transformation~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -65,11 +58,3 @@ for input_file in filelist:
     print("Finished transform")
     print("Start writing results to file (might take some time with larger datasets)")
     normalised_dataset.to_csv(f"{output_dir}/arcsinhTRANSF_{input_file}", index=False, sep = '\t')
-
-#Function:
-    #id MARKERS 
-        #Report which markers were Ided
-    #Transform and overwrite the values
-    #Return dataset
-
-#Write resulting file
