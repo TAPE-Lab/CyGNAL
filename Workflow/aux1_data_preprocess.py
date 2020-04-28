@@ -56,11 +56,11 @@ def rename_columns(df_file_cols):
 #Add also the generation of a .csv file with the markers in the panel.
 #It should be ok to do it here b4 concatenation in the next step because if 
 # they are to be concatenaded they shpould already have the same panel of markers
-def write_panel_markers(cols, output_dir):
+def write_panel_markers(cols, output_dir, info_run):
     all_markers = cols[0]
     counter_marker = []
     for i in all_markers:
         counter_marker.append("N")
     markers = pd.DataFrame(list(zip(all_markers, counter_marker)))
-    markers.to_csv(f"{output_dir}/panel_markers.csv", index=False, header=False)
+    markers.to_csv(f"{output_dir}/{info_run}_panel_markers.csv", index=False, header=False)
 
