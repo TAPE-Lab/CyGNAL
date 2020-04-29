@@ -29,24 +29,11 @@ output_dir = f"./output/{folder_name}"
 # IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
 txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
+filelist = txt_filelist+fcs_filelist
 
 if len(txt_filelist) == 0 and len(fcs_filelist)==0:
     sys.exit(f"ERROR: There are no files in {input_dir}!")
-else:
-    #Check the files found in the directory:
-    print ("Input files:")
-    if len(txt_filelist) == 0:
-        for i in fcs_filelist:
-            print (i)
-        format_filelist = "fcs"
-        filelist = fcs_filelist
-    elif len(fcs_filelist) == 0:
-        for i in txt_filelist:
-            print (i)
-        format_filelist = "txt"
-        filelist = txt_filelist
-    else:
-        sys.exit(f"ERROR: Please have EITHER .txt files OR .fcs files, but not both!")
+
 
 #FCR 14/10/19: Automated column name editing with regex
 #Idea is to rename all columns and then filter non-relevant ones (less optimal,
@@ -58,22 +45,49 @@ info_run =  input("Write info run (using no spaces!): ")
 cols = []
 for i in filelist:
     file = f"{input_dir}/{i}"
-    if format_filelist=="txt":
+    if i in txt_filelist:
+    # if format_filelist=="txt":
         df_file = pd.read_csv(file, sep = '\t')
-        print(df_file)
+        print(i,df_file)
     else: #Use fcsparser to read the fcs data files (no meta support)
         print("test fcs: detected, should be reading them now")
-        print(file)
+        print(i)
         try:
             df_file = fcsparser.parse(file, meta_data_only=False)[1]
+            print ("FCSPARSER TO THE RESCUE!:", i, df_file)
         except fcsparser.api.ParserFeatureNotImplementedError:
-            print("Yep, Cytobank's fcs are utter and complete shit")
-            print("So I guess I'll have to try and hijack an R package for this")
-            #Since Flowcytometry ALSO uses fcsparser under the hood...
-            #So options are: -Use R to load .fcs if formatted shity (thanks cytobank..)
-            #                  -Write our own fcs parser (lol, that's certainly too much effort)
-            #                  -Complain to Cytobank or try and get fcsparser fixed to support cytobank's shity fcss..)
-        print (df_file)
+            print("Yep, Cytobank's fcs are utter and complete shit:", i)
+            #read.FCS from flocore IS WORKING!!!!!!
+
+                                                                               #Since Flowcytometry ALSO uses fcsparser under the hood...
+                                                                                #So options are: -Use R to load .fcs if formatted shity (thanks cytobank..)
+                                                                                #                  -Write our own fcs parser (lol, that's certainly too much effort)
+                                                                                #                  -Complain to Cytobank or try and get fcsparser fixed to support cytobank's shity fcss..)
+                                                                               
+                                                                               #FLOWKIT AND FLOIO generate proper fcs files but the intensities in them aren't the right numbers
+                                                                                # df_file = flowkit.Sample(file)
+                                                                                # print(df_file)
+                                                                                # print(df_file.channels)
+                                                                                # if os.path.isdir(f"{input_dir}/Reformatted_FCSs") == False:
+                                                                                #     os.makedirs(f"{input_dir}/Reformatted_FCSs")
+                                                                                # print(df_file.export("test.fcs", source="raw"))
+
+                                                                                # df_file_channels = []
+                                                                                # df_file=flowio.FlowData(file)
+                                                                                # print("File", df_file)
+                                                                                # print("Evenets",df_file.events)
+                                                                                # # print("Text is useless", df_file.text)
+                                                                                # print("Channels", df_file.channels)
+                                                                                # for key in sorted(df_file.channels.keys()):
+                                                                                #     print(df_file.channels[key])
+                                                                                #     try:
+                                                                                #         df_file_channels.append(df_file.channels[key]["PnN"])
+                                                                                #     except:
+                                                                                #         print ("PnN short names weren't found. Trying instead with PnS names")
+                                                                                #         df_file_channels.append(df_file_channels[key]["PnS"])
+                                                                                # print (df_file_channels)
+            
+        
 sys.exit("Bye!")
 #     shape_before = df_file.shape
 #     df_file_cols = list(df_file.columns)
