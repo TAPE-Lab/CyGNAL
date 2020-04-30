@@ -6,6 +6,38 @@ import sys
 import os
 
 
+#Read broken FCS through r.flowCore
+def read_rFCS(file_path):
+    from rpy2.robjects import r, pandas2ri, globalenv
+    from rpy2.robjects.packages import importr
+    pandas2ri.activate()
+    flowcore = importr("flowCore")
+    base = importr("base")
+    raw_FCS = flowcore.read_FCS(str(file_path))
+    r('''
+        FF2dframe<-function(FF){
+        if(class(FF) == "flowFrame"){
+            return(as.data.frame(exprs(FF)))}
+        if(class(FF) == "list"){
+            frameList<-list()
+            length(frameList)<-length(FF)
+            for(i in 1:length(FF)){
+            if(class(FF[[i]]) == "flowFrame"){
+                frameList[[i]]<-as.data.frame(flowCore::exprs(FF[[i]]))
+                names(frameList)[[i]]<-names(FF)[[i]]}
+            else{
+                warning(paste("Object at index",i,"not of type flowFrame"))}
+            }
+            return(frameList)
+        }
+        else {
+            stop("Object is not of type flowFrame")}
+        }    
+    ''')
+    FF2dframe = globalenv["FF2dframe"]
+    df_file = FF2dframe(raw_FCS)
+    return df_file
+
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):
     #Select only the columns containing the markers (as they start with a number for the isotope)

@@ -8,6 +8,7 @@ import OpenSSL.version
 import fcswrite
 import fcsparser
 from aux1_data_preprocess import *
+from aux_functions import yes_or_NO
 import os
 import sys
 
@@ -44,20 +45,73 @@ info_run =  input("Write info run (using no spaces!): ")
 # def preprocess_files (filelist, format_filelist, input_dir, output_dir):
 cols = []
 for i in filelist:
-    file = f"{input_dir}/{i}"
+    file_path = f"{input_dir}/{i}"
     if i in txt_filelist:
     # if format_filelist=="txt":
-        df_file = pd.read_csv(file, sep = '\t')
-        print(i,df_file)
-    else: #Use fcsparser to read the fcs data files (no meta support)
-        print("test fcs: detected, should be reading them now")
+        df_file = pd.read_csv(file_path, sep = '\t')
         print(i)
-        try:
-            df_file = fcsparser.parse(file, meta_data_only=False)[1]
-            print ("FCSPARSER TO THE RESCUE!:", i, df_file)
+    else: 
+        try: #Use fcsparser to read the fcs data files
+            print (i)
+            df_file = fcsparser.parse(file_path, meta_data_only=False)[1]
+            nonstandard_FCS = "NO"
         except fcsparser.api.ParserFeatureNotImplementedError:
-            print("Yep, Cytobank's fcs are utter and complete shit:", i)
-            #read.FCS from flocore IS WORKING!!!!!!
+            print("Non-standard .fcs file detected: ", i)
+            from aux_functions import read_rFCS
+            #use rpy2 to read the files and load into python
+            df_file = read_rFCS(file_path)
+            nonstandard_FCS ="YES"
+    
+    shape_before = df_file.shape
+    df_file_cols = list(df_file.columns)
+    
+    #%% Perform renaming and filtering
+    renamed_columns = rename_columns(df_file_cols)
+    columns_to_keep, filtered_columns = filter_columns(renamed_columns)
+    df_file.columns = renamed_columns
+    f_reduced = df_file[columns_to_keep].iloc[:].copy()
+    print ("Removed the following columns: ", filtered_columns)
+    
+    #Store columns present in each of the input files
+    cols.append([x for x in f_reduced.columns if x[0].isdigit()])
+    
+    shape_after = f_reduced.shape
+    print (
+        f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+    
+    #Saving files:
+    if i in txt_filelist:
+        yes_or_NO("File is a .txt. Would you like to also save it as an .fcs?")
+        f_reduced.to_csv(f"{output_dir}/{info_run}_{i}", index = False, sep = '\t') 
+        # index = False to be compatible with Cytobank
+        if yes_or_NO:
+            #SAVE AS FCS
+            print(list(f_reduced.columns), type(list(f_reduced.columns)))
+            print(f_reduced.to_numpy())
+            fcswrite.write_fcs(f"{output_dir}/{info_run}_{i}.fcs", 
+                                chn_names=list(f_reduced.columns), 
+                                data=f_reduced.to_numpy())
+            
+    else:
+        yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
+                    default=nonstandard_FCS)
+        #SAVE AS FCS
+        fcswrite.write_fcs(f"{output_dir}/{info_run}_{i}", 
+                            chn_names=list(f_reduced.columns), 
+                            data=f_reduced.to_numpy())
+        if yes_or_NO:
+            f_reduced.to_csv(f"{output_dir}/{info_run}_{i}.txt", index = True, sep = '\t') 
+
+#Add also the generation of a .csv file with the markers in the panel.
+if not all(x==cols[0] for x in cols):
+    sys.exit("ERROR: Check your input files; THE PANELS DON'T MATCH!") 
+else:
+    write_panel_markers(cols, output_dir, info_run)
+
+
+#RELIC CODE#
+#Saving fcs should be done at the end ina  simialr check as the one above for .txt and fcs.
+        #   If fcs, ask user which format to save results as: .txt, .fcs, both
 
                                                                                #Since Flowcytometry ALSO uses fcsparser under the hood...
                                                                                 #So options are: -Use R to load .fcs if formatted shity (thanks cytobank..)
@@ -86,30 +140,3 @@ for i in filelist:
                                                                                 #         print ("PnN short names weren't found. Trying instead with PnS names")
                                                                                 #         df_file_channels.append(df_file_channels[key]["PnS"])
                                                                                 # print (df_file_channels)
-            
-        
-sys.exit("Bye!")
-#     shape_before = df_file.shape
-#     df_file_cols = list(df_file.columns)
-    
-#     #%% Perform renaming and filtering
-#     renamed_columns = rename_columns(df_file_cols)
-#     columns_to_keep, filtered_columns = filter_columns(renamed_columns)
-#     df_file.columns = renamed_columns
-#     f_reduced = df_file[columns_to_keep].iloc[:].copy()
-#     print ("Removed the following columns: ", filtered_columns)
-    
-#     #Store columns present in each of the input files
-#     cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-#     f_reduced.to_csv(f"{output_dir}/{i}", index = False, sep = '\t') 
-#         # index = False to be compatible with Cytobank    
-#     shape_after = f_reduced.shape
-#     print (
-#         f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
-# #Add also the generation of a .csv file with the markers in the panel.
-# if not all(x==cols[0] for x in cols):
-#     sys.exit("ERROR: Check your input files; THE PANELS DON'T MATCH!") 
-# else:
-#     write_panel_markers(cols, output_dir, info_run)
-
-
