@@ -1,0 +1,17 @@
+name: cytofdataanalysis
+channels:
+  - bioconda
+dependencies:
+  - python=3.7   
+  - r-essentials
+  - r-base
+  - numpy
+  - pandas
+  - plotly
+  - scprep
+  - r-rcolorbrewer
+  - r-plotly
+
+  - pip:
+    - sklearn
+    - umap-learn
