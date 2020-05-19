@@ -21,7 +21,7 @@ from aux_functions import yes_or_NO
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Sanity Check~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 file_name_format = yes_or_NO("Are all the files named in the 'sample-name_cell-type_..._cell-state' format?")
 if file_name_format == False:
-    sys.exit(f"Please rename the files to the 'sample_cell-type_cell-state' format\n Accepted cell-states (literal): Ungated, apoptosis, G0, S-phase, G2, and M-phase") 
+    sys.exit(f"Please rename the files to the 'sample_cell-type_cell-state' format\n Accepted cell-states (literal): Apoptosis, G0, S-phase, G2, and M-phase") 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Preparatory steps~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "6-cell_state_info"
@@ -55,17 +55,17 @@ for s_id in sample_id:
             df = pd.read_csv(f'./input/{folder_name}/{file}', sep = '\t', index_col = 0)
             c_state = file.split('.txt')[0].split('_')[-1]
             df['cell-state'] = c_state
-            if c_state.tolower() == 'apoptosis':
+            if c_state.lower() == 'apoptosis':
                 df['cell-state_num'] = 0
-            elif c_state.tolower() == 'g0':
+            elif c_state.lower() == 'g0':
                 df['cell-state_num'] = 1
-            elif c_state.tolower() == 'g1':
+            elif c_state.lower() == 'g1':
                 df['cell-state_num'] = 2
-            elif c_state.tolower() == 's-phase':
+            elif c_state.lower() == 's-phase':
                 df['cell-state_num'] = 3
-            elif c_state.tolower() == 'g2':
+            elif c_state.lower() == 'g2':
                 df['cell-state_num'] = 4
-            elif c_state.tolower() == 'm-phase':
+            elif c_state.lower() == 'm-phase':
                 df['cell-state_num'] = 5 
             else:
                 df['cell-state_num'] = -1 # for mislabelled cell-states
