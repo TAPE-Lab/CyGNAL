@@ -53,58 +53,70 @@ for i in filelist:
     else: 
         try: #Use fcsparser to read the fcs data files
             print (i)
-            df_file = fcsparser.parse(file_path, meta_data_only=False)[1]
+            metafcs,df_file = fcsparser.parse(file_path, meta_data_only=False)
             nonstandard_FCS = "NO"
+            print ("remove:\n", metafcs)
         except fcsparser.api.ParserFeatureNotImplementedError:
             print("Non-standard .fcs file detected: ", i)
+            print("Metadata will be droppped and file will be saved as .txt by default")
             from aux_functions import read_rFCS
             #use rpy2 to read the files and load into python
             df_file = read_rFCS(file_path)
-            nonstandard_FCS ="YES"
+            print ("remove:\n", df_file)
+            nonstandard_FCS ="YES" #Offer to save as .txt by default
     
     shape_before = df_file.shape
     df_file_cols = list(df_file.columns)
     
     #%% Perform renaming and filtering
-    renamed_columns = rename_columns(df_file_cols)
-    columns_to_keep, filtered_columns = filter_columns(renamed_columns)
-    df_file.columns = renamed_columns
-    f_reduced = df_file[columns_to_keep].iloc[:].copy()
-    print ("Removed the following columns: ", filtered_columns)
-    
-    #Store columns present in each of the input files
-    cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-    
-    shape_after = f_reduced.shape
-    print (
-        f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
-    
+    try:
+        renamed_columns = rename_columns(df_file_cols)
+        columns_to_keep, filtered_columns = filter_columns(renamed_columns)
+        df_file.columns = renamed_columns
+        f_reduced = df_file[columns_to_keep].iloc[:].copy()
+        print ("Removed the following columns: ", filtered_columns)
+        
+        #Store columns present in each of the input files
+        cols.append([x for x in f_reduced.columns if x[0].isdigit()])
+        
+        shape_after = f_reduced.shape
+        print (
+            f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+    except:
+        print("Column names processing and filtering failed. Check the format!",
+                "Using original unchanged panel")
+        f_reduced = df_file
+
     #Saving files:
     if i in txt_filelist:
-        yes_or_NO("File is a .txt. Would you like to also save it as an .fcs?")
+        answ = yes_or_NO("File is a .txt. Would you like to also save it as an .fcs?")
         f_reduced.to_csv(f"{output_dir}/{info_run}_{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank
-        if yes_or_NO:
+        if answ:
             #SAVE AS FCS
-            print(list(f_reduced.columns), type(list(f_reduced.columns)))
+            print(list(f_reduced.columns))
             print(f_reduced.to_numpy())
             fcswrite.write_fcs(f"{output_dir}/{info_run}_{i}.fcs", 
-                                chn_names=list(f_reduced.columns), 
+                                chn_names=list(f_reduced.columns),
+                                compat_chn_names=False, 
                                 data=f_reduced.to_numpy())
             
     else:
-        yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
+        answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
                     default=nonstandard_FCS)
         #SAVE AS FCS
         fcswrite.write_fcs(f"{output_dir}/{info_run}_{i}", 
-                            chn_names=list(f_reduced.columns), 
+                            chn_names=list(f_reduced.columns),
+                            compat_chn_names=False, 
                             data=f_reduced.to_numpy())
-        if yes_or_NO:
+        print(answ==True)
+        if answ:
+            print("Converting .fcs to .txt")
             f_reduced.to_csv(f"{output_dir}/{info_run}_{i}.txt", index = True, sep = '\t') 
 
 #Add also the generation of a .csv file with the markers in the panel.
 if not all(x==cols[0] for x in cols):
-    sys.exit("ERROR: Check your input files; THE PANELS DON'T MATCH!") 
+    sys.exit("ERROR when generating shared marker panel:\nCheck your input files as THE PANELS DON'T MATCH!") 
 else:
     write_panel_markers(cols, output_dir, info_run)
 
