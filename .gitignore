@@ -50,26 +50,21 @@ CyTOF_DataAnalysis.Rproj
 #Directories to ignore:
 
 #   #Data directory:
-Data/Raw/
-Data/Tests/
-Data/Umap/
+Raw_Data/Raw/
+Raw_Data/Tests/
+Raw_Data/Umap/
 
 #   #Pycache
-Workflow/__pycache__/
-
+code/aux/__pycache__/
 #   #Inputs
-Workflow/input/*/
-Workflow/input/1-data_preprocess/Tests/
-Workflow/input/2-umap/Tests/
-Workflow/input/3-emd/Tests/
-Workflow/input/4-dremi/Tests/
-Workflow/input/5v1-emd_dremi_htmp/Tests/
-Workflow/input/5v2-pca/Tests/
-Workflow/input/opt1_concatenation/Tests/
-Workflow/input/opt2_downsample/Tests/
-Workflow/input/*/
 
-#   Ignore the whole output folder
-Workflow/output/*/
 
-Workflow/opt2_downsample_set-number.py
+#   Ignore the output folders:
+Analysis/UMAP_output/test0
+
+Analysis/UMAP_input/Day-1_downsample_5000.txt
+Analysis/UMAP_input/Day-2_downsample_5000.txt.fcs
+Analysis/UMAP_input/Day-3_downsample_5000.txt
+Analysis/UMAP_input/test0_panel_markers.csv
+
+Preprocessed_Data/Tests/
