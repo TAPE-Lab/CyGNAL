@@ -12,6 +12,7 @@ from aux.aux_functions import yes_or_NO
 import os
 import sys
 
+#Future WIP: Add support for sequential hands off -> if flag use set of seq i/o
 sequential_mode = vars(sys.modules[__name__])['__package__']
 print(sequential_mode) #Will populate if run from superior script
 

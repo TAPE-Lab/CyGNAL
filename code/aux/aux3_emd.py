@@ -1,7 +1,7 @@
 
 import pandas as pd
 import numpy as np
-from aux_functions import arcsinh_transf
+from aux.aux_functions import arcsinh_transf
 import scprep
 import sys
 import os

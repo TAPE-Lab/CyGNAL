@@ -68,3 +68,8 @@ Analysis/UMAP_input/Day-3_downsample_5000.txt
 Analysis/UMAP_input/test0_panel_markers.csv
 
 Preprocessed_Data/Tests/
+
+Analysis/EMD_input/Day-1_downsample_5000.txt
+Analysis/EMD_input/Day-2_downsample_5000.txt.fcs
+Analysis/EMD_input/Day-3_downsample_5000.txt
+Analysis/EMD_input/test0_panel_markers.csv

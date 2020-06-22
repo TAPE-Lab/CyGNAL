@@ -6,6 +6,7 @@
 import numpy as np
 import pandas as pd
 import scprep
+import fcsparser
 import os
 import sys
 from aux.aux3_emd import *
@@ -13,22 +14,26 @@ from aux.aux_functions import *
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5
+
 normalisation = 'no_norm'
-info_run =  input("Write EMD info run (using no spaces!): ")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-folder_name = "3-emd"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+input_dir = f"../Analysis/EMD_input"
+output_dir = f"../Analysis/EMD_output"
 
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
-if os.path.isdir(f"./input/{folder_name}") == False:
-    os.makedirs(f"./input/{folder_name}")
-    sys.exit("ERROR: There is no input folder") 
-    
-input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
+info_run =  input("Write EMD info run (using no spaces!): ")
+if len(info_run) == 0:
+    print("No info run given. Saving results in UNNAMED")
+    info_run = "UNNAMED"
+
+if os.path.isdir(f"{output_dir}/{info_run}") == False:
+    os.makedirs(f"{output_dir}/{info_run}")
+else:
+    if info_run !="UNNAMED":
+        sys.exit("ERROR: You already used this name for a previous run. \nUse a different name!")
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 ### User Input ###
 #Check if user wants to filter the markers based on a .csv marker file
@@ -47,12 +52,30 @@ user_defined_denominator = yes_or_NO("User-defined denominator?")
 # set up the files to be analysed (compare_from and compare_to)
 # denominator can be concatenated input files or the user-defined txt file
 
+
 if user_defined_denominator:
-    denominator = input("Define denominator (without the '.txt' extension, e.g. sampleA): ")
-    compare_to = pd.read_csv(f"{input_dir}/{denominator}.txt", sep = '\t')
-    input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
-    if len(input_files) ==0:
+    txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
+    fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
+    filelist = txt_filelist+fcs_filelist
+    if len(filelist)==0:
         sys.exit (f"ERROR: There are no files in {input_dir}!")
+    
+    denominator = input("Specify file from the list above to be used as denominator (including extension): ")
+    denom_path = f"{input_dir}/{denominator}"
+    
+    if denominator in txt_filelist:
+        compare_to = pd.read_csv(denom_path, sep = '\t')
+    elif denominator in fcs_filelist:
+        try:
+            print(denominator)
+            compare_to = fcsparser.parse(denom_path, meta_data_only=False)[1]
+        except fcsparser.api.ParserFeatureNotImplementedError:
+            print("WARNING: Non-standard .fcs file detected: ", denominator)
+            #use rpy2 to read the files and load into python
+            compare_to = read_rFCS(denom_path)
+    else:
+        sys.exit("ERROR: Denominator not recognised.\nPlease state exact and full name of file to be used as denominator!")
+    input_files = filelist
 else: 
     denominator = 'concatenated-inputs'
     print('Concatenated input files will be used as the denominator')
@@ -84,13 +107,24 @@ print('\n'.join([m for m in marker_list]))
 #Calculate EMD and save to the output folder (with denominator info run):
 # calculate emd and sign the emd score by the difference of median between compare_from and compare_to
 
-emd_df = pd.DataFrame()
+emd_df = pd.DataFrame() 
 emd_infodict = {}
 
 emd_infodict["denominator"]=denominator
 for compare_from_file in input_files:
     emd_infodict["file_origin"] = compare_from_file
-    compare_from = pd.read_csv(f"{input_dir}/{compare_from_file}", sep = '\t')
+    file_path = f"{input_dir}/{compare_from_file}"
+    
+    if compare_from_file.endswith(".txt"):
+        compare_from = pd.read_csv(file_path, sep = '\t')
+    else:
+        try:
+            print(compare_from_file)
+            compare_from = fcsparser.parse(file_path, meta_data_only=False)[1]
+        except fcsparser.api.ParserFeatureNotImplementedError:
+            print("WARNING: Non-standard .fcs file detected: ", compare_from_file)
+            #use rpy2 to read the files and load into python
+            compare_from = read_rFCS(file_path)
     
     if filter_markers:
         print (compare_from.columns)
@@ -112,6 +146,6 @@ for compare_from_file in input_files:
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 whole_file = "EMD_" + info_run
-emd_df.to_csv(f"{output_dir}/{whole_file}.txt", index = False,
+emd_df.to_csv(f"{output_dir}/{info_run}/{whole_file}.txt", index = False,
                     sep = '\t')
 

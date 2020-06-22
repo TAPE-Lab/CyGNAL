@@ -15,7 +15,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~UMAP PARAMETERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 nn = "no-norm"
 rs = 2.0
 nsr = 8
@@ -23,6 +23,8 @@ n = 15
 m = 0.1
 comp = 2
 d = "euclidean"
+
+cofactor = 5
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #include here the information that would be helpful to understand the umaps
 
@@ -70,7 +72,6 @@ else:
 
 #Transformation#
 #Literature recommends cofactor of 5 for cytof data
-cofactor = 5
 arc, cols = arcsinh_transf(cofactor, no_arc)
 #Storing marker columns for later use below
 
