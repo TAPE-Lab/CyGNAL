@@ -1,17 +1,28 @@
 name: cytofdataanalysis
 channels:
   - bioconda
+  - conda-forge
 dependencies:
-  - python=3.7   
+  - python=3.7
+  - pip=20   
   - r-essentials
   - r-base
   - numpy
   - pandas
   - plotly
   - scprep
+  - rpy2
   - r-rcolorbrewer
   - r-plotly
+  - r-dt
+  - r-ggally
+  - r-psych
+  - r-hmisc
+  - r-mass
 
   - pip:
+    - fcsparser
+    - fcswrite
     - sklearn
+    - rpy2 #Better installed through pip than conda
     - umap-learn
