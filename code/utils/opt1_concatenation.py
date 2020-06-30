@@ -5,8 +5,12 @@
 #downstream analysis, e.g. concatenate technical replicates
 #Jupyter/IP no longer supported here
 
+import os, sys #Fix importing from diff. directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 import pandas as pd
-from aux_functions import *
+
+from aux.aux_functions import *
 
 # prepare file list
 # The user needs to manually move the files to be concatenated (possibly in batches) to the 'opt1_concatenation' folder

@@ -18,7 +18,7 @@ import os
 import copy
 import pandas as pd
 import numpy as np
-from aux_functions import yes_or_NO
+from code.aux.aux_functions import yes_or_NO
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Sanity Check~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 file_name_format = yes_or_NO("Are all the files named in the 'sample-name_cell-type_..._cell-state' format?")

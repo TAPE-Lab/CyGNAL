@@ -1,19 +1,17 @@
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UMAP~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# No support for IP/Jupyter notebooks or vs in files (vsNE from Cytobank)
-
+#Perfom UMAP on pre-processed datasets
+import sys
+import os
+import warnings
+warnings.filterwarnings('ignore')
 import pandas as pd
 import numpy as np
 import umap
-import sys
-import os
+
 from aux.aux2_umap import *
 from aux.aux_functions import *
-
-import warnings
-warnings.filterwarnings('ignore')
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 nn = "no-norm"
@@ -31,8 +29,8 @@ cofactor = 5
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Future WIP: Add support for sequential hands off -> if flag use set of seq i/o
-input_dir = f"../Analysis/UMAP_input"
-output_dir = f"../Analysis/UMAP_output"
+input_dir = f"./Analysis/UMAP_input"
+output_dir = f"./Analysis/UMAP_output"
 
 info_run =  input("Write UMAP info run (using no spaces!): ")
 if len(info_run) == 0:

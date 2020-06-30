@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import os, sys
-from aux.aux_functions import yes_or_NO
+from code.aux.aux_functions import yes_or_NO
 from aux.aux_functions import write_panel_emd, read_marker_csv
 import plotly.express as px
 

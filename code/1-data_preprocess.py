@@ -2,26 +2,26 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Panel editing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #FIRST STEP: Data and pranel preprocessing. Marker list generation.
-
+import os
+import sys
 import pandas as pd
 import OpenSSL.version
 import fcswrite
 import fcsparser
+
 from aux.aux1_data_preprocess import *
 from aux.aux_functions import yes_or_NO
-import os
-import sys
 
 #Future WIP: Add support for sequential hands off -> if flag use set of seq i/o
-sequential_mode = vars(sys.modules[__name__])['__package__']
-print(sequential_mode) #Will populate if run from superior script
+# sequential_mode = vars(sys.modules[__name__])['__package__']
+# print(sequential_mode) #Will populate if run from superior script
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
-input_dir = f"../Raw_Data"
-output_dir = f"../Preprocessed_Data"
+input_dir = f"./Raw_Data"
+output_dir = f"./Preprocessed_Data"
 
 # prepare file list; put the data files to be processed in the 'input' folder
-# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME MARKER
+# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME panel
 txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
 filelist = txt_filelist+fcs_filelist

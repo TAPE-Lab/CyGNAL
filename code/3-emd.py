@@ -1,49 +1,42 @@
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~EMD~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# No support for IP/Jupyter notebooks or vs in files (vsNE from Cytobank)
-
+#Calculate marker EMD scores per dataset
+import os
+import sys
 import numpy as np
 import pandas as pd
 import scprep
 import fcsparser
-import os
-import sys
+
 from aux.aux3_emd import *
 from aux.aux_functions import *
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5
-
 normalisation = 'no_norm'
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-input_dir = f"../Analysis/EMD_input"
-output_dir = f"../Analysis/EMD_output"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+input_dir = f"./Analysis/EMD_input"
+output_dir = f"./Analysis/EMD_output"
 
 info_run =  input("Write EMD info run (using no spaces!): ")
 if len(info_run) == 0:
     print("No info run given. Saving results in UNNAMED")
     info_run = "UNNAMED"
-
 if os.path.isdir(f"{output_dir}/{info_run}") == False:
     os.makedirs(f"{output_dir}/{info_run}")
 else:
     if info_run !="UNNAMED":
         sys.exit("ERROR: You already used this name for a previous run. \nUse a different name!")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-### User Input ###
-#Check if user wants to filter the markers based on a .csv marker file
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~User Input~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 filter_markers = yes_or_NO(
     "Do you want to filter out markers from the panel? (If so please provide .csv file)",
     default="YES")
 
-#Check if user wants to upload the UMAP info to Cytobank
-print ("By default concatenated input files will be used as the denominator")
-user_defined_denominator = yes_or_NO("User-defined denominator?")
+print ("By default concatenated input files will be used as the denominator.")
+user_defined_denominator = yes_or_NO("Would you like to define your own denominator instead?")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
@@ -51,7 +44,6 @@ user_defined_denominator = yes_or_NO("User-defined denominator?")
 #~~~~~~~~~~~~~~~~~~~~~Preparatory steps and transformation~~~~~~~~~~~~~~~~~~~~#
 # set up the files to be analysed (compare_from and compare_to)
 # denominator can be concatenated input files or the user-defined txt file
-
 
 if user_defined_denominator:
     txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
