@@ -24,13 +24,11 @@ d = "euclidean"
 
 cofactor = 5
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#include here the information that would be helpful to understand the umaps
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Future WIP: Add support for sequential hands off -> if flag use set of seq i/o
-input_dir = f"./Analysis/UMAP_input"
-output_dir = f"./Analysis/UMAP_output"
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_dir = f"{base_dir}/Analysis/UMAP_input"
+output_dir = f"{base_dir}/Analysis/UMAP_output"
 
 info_run =  input("Write UMAP info run (using no spaces!): ")
 if len(info_run) == 0:
@@ -45,11 +43,9 @@ else:
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
-
 #~~~~~~~~~~~~~~~~~~~Preliminary steps and transformation~~~~~~~~~~~~~~~~~~~~~~#
 #Concatenate#
 no_arc, input_files = concatenate_fcs(input_dir) #Does sanity check of files in input
-
 
 #Downsampling#
 #Test lenght of input files -> Go with minimun denominator -> select, at random,

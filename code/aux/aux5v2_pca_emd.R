@@ -6,7 +6,7 @@ list.of.packages <- c("DT",
                         "psych",
                         "Hmisc",
                         "MASS",
-                        "tabplot",
+                        #"tabplot",
                         "RColorBrewer",
                         "shiny",
                         "tidyverse",
@@ -46,11 +46,11 @@ ui <- bootstrapPage(
             tabPanel("Inspect the data",
                 h4("Input data"),
                 p("Here is the data from the input file after removing unnecessary columns and collapsing marker EMD scores for each condition:"),
-                DT::dataTableOutput('contents'),
-                tags$hr(),
-                h4("Tableplot"),
-                p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
-                plotOutput("tableplot")
+                DT::dataTableOutput('contents')#,
+                # tags$hr(),
+                # h4("Tableplot"),
+                # p("The tableplot below (it will take a few seconds to appear) may be useful to explore the relationships between the variables, to discover strange data patterns, and to check the occurrence and selectivity of missing values."),
+                # plotOutput("tableplot")
         ), # end  tab
             tabPanel("Correlation Plots",
                 sidebarLayout(
@@ -156,10 +156,10 @@ ui <- bootstrapPage(
 
 server <- function(input, output, session) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Inspect the data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-    # tableplot
-    output$tableplot <- renderPlot({
-        tabplot::tableplot(exploratory_data)
-    })
+    # # tableplot
+    # output$tableplot <- renderPlot({
+    #     tabplot::tableplot(exploratory_data)
+    # })
     # display a table of the CSV contents
     output$contents <-  DT::renderDataTable({
         data4pca

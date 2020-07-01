@@ -17,8 +17,9 @@ from aux.aux_functions import yes_or_NO
 # print(sequential_mode) #Will populate if run from superior script
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
-input_dir = f"./Raw_Data"
-output_dir = f"./Preprocessed_Data"
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_dir = f"{base_dir}/Raw_Data"
+output_dir = f"{base_dir}/Preprocessed_Data"
 
 # prepare file list; put the data files to be processed in the 'input' folder
 # IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME panel
@@ -41,11 +42,8 @@ else:
         sys.exit("ERROR: You already used this name for a previous run. \nUse a different name!")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-#FCR 14/10/19: Automated column name editing with regex
-#Idea is to rename all columns and then filter non-relevant ones (less optimal,
-# easier and more compatible with writing new reduced file in the last step)
 
-# def preprocess_files (filelist, format_filelist, input_dir, output_dir):
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pre-processing~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 cols = []
 for i in filelist:
     file_path = f"{input_dir}/{i}"
@@ -90,7 +88,7 @@ for i in filelist:
                 "Using original unchanged panel")
         f_reduced = df_file
 
-    #Saving files:
+#Saving files#:
     if i in txt_filelist:
         answ = yes_or_NO("File is a .txt. Would you like to also save it as an .fcs?")
         f_reduced.to_csv(f"{output_dir}/{info_run}/{i}", index = False, sep = '\t') 
@@ -107,7 +105,6 @@ for i in filelist:
     else:
         answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
                     default=nonstandard_FCS)
-        #SAVE AS FCS
         fcswrite.write_fcs(f"{output_dir}/{info_run}/{i}", 
                             chn_names=list(f_reduced.columns),
                             compat_chn_names=False, 
@@ -117,7 +114,8 @@ for i in filelist:
             print("Converting .fcs to .txt")
             f_reduced.to_csv(f"{output_dir}/{info_run}/{i}.txt", index = True, sep = '\t') 
 
-#Add also the generation of a .csv file with the markers in the panel.
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Panel markers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 if not all(x==cols[0] for x in cols):
     sys.exit("ERROR when generating shared marker panel:\nCheck your input files as THE PANELS DON'T MATCH!") 
 else:

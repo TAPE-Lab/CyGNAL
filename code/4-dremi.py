@@ -1,6 +1,7 @@
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~DREMI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
+#Calculate marker DREMI scores per pair of markers in each dataset
 import os
 import sys
 import pandas as pd
@@ -24,8 +25,9 @@ folder_name = "input/4-dremi"
 std_cutoff = [3,4,5]
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-input_dir = f"./Analysis/DREMI_input"
-output_dir = f"./Analysis/DREMI_output"
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_dir = f"{base_dir}/Analysis/DREMI_input"
+output_dir = f"{base_dir}/Analysis/DREMI_output"
 
 info_run =  input("Write DREMI info run (using no spaces!): ")
 if len(info_run) == 0:
@@ -49,9 +51,6 @@ print("For each combination of 2 markers, intensity, density and probability plo
 plot = yes_or_NO("By default no plots will be generated.\nGenerate plots?")
 if plot == True:
     os.makedirs(f'{output_dir}/{info_run}/plots')
-
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -89,8 +88,8 @@ for f in dremi_files:
                 print("WARNING: Non-standard .fcs file detected: ", f)
                 #use rpy2 to read the files and load into python
                 data = read_rFCS(file_path)
-    if filter_markers:
-        selected_markers = read_marker_csv(input_dir) #Load .csv with the markers to use in the DREMI calculation -> Often only the PTMs are used
+    if filter_markers: #Load .csv with the markers to use -> Often PTMs
+        selected_markers = read_marker_csv(input_dir) 
         data = data.loc[:, selected_markers] # Remove unwanted markers
     data_arc, markers = arcsinh_transf(cofactor, data)
 
@@ -108,13 +107,13 @@ for f in dremi_files:
             if os.path.isdir(f'{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}') == False:
                 os.makedirs(f'{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}')
                 
-        dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x], data_arc[marker_y], 
-                                                        k=k, n_bins=n_bins, 
-                                                        n_mesh=n_mesh, 
-                                                        plot=plot, 
-                                                        return_drevi=return_drevi,
-                                                        filename=f"{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
-        df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc # save dremi scores without outlier removal regardless of user input
+        dremi_with_outliers_arc = scprep.stats.knnDREMI(data_arc[marker_x], 
+                                    data_arc[marker_y], k=k, n_bins=n_bins, 
+                                    n_mesh=n_mesh, plot=plot, 
+                                    return_drevi=return_drevi,
+                                    filename=f"{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}.png")
+        df_info_dict["with_outliers_arcsinh_DREMI_score"] = dremi_with_outliers_arc 
+            # save dremi scores without outlier removal regardless of user input
 
         if outliers_removal == True: #EXPERIMENTAL, not fully tested
             for cutoff in std_cutoff:
@@ -130,7 +129,7 @@ for f in dremi_files:
                                             df_wo_outliers[marker_y], k=k,
                                             n_bins=n_bins, n_mesh=n_mesh,
                                             plot=plot, return_drevi=return_drevi,
-                    filename=f"{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}-cutoff={cutoff}.png")
+                                            filename=f"{output_dir}/{info_run}/plots/x={marker_x}-y={marker_y}/sample={filename}-x={marker_x}-y={marker_y}-cutoff={cutoff}.png")
                     df_info_dict[colname_arc] = dremi_wo_outliers_arc
                 if num_outliers_total == 0:
                     df_info_dict[colname_arc] = "-" # this is a placeholder

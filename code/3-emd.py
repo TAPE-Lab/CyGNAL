@@ -17,8 +17,9 @@ cofactor = 5
 normalisation = 'no_norm'
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-input_dir = f"./Analysis/EMD_input"
-output_dir = f"./Analysis/EMD_output"
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_dir = f"{base_dir}/Analysis/EMD_input"
+output_dir = f"{base_dir}/Analysis/EMD_output"
 
 info_run =  input("Write EMD info run (using no spaces!): ")
 if len(info_run) == 0:
@@ -36,8 +37,8 @@ filter_markers = yes_or_NO(
     default="YES")
 
 print ("By default concatenated input files will be used as the denominator.")
-user_defined_denominator = yes_or_NO("Would you like to define your own denominator instead?")
-
+user_defined_denominator = yes_or_NO(
+                    "Would you like to define your own denominator instead?")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -140,4 +141,3 @@ for compare_from_file in input_files:
 whole_file = "EMD_" + info_run
 emd_df.to_csv(f"{output_dir}/{info_run}/{whole_file}.txt", index = False,
                     sep = '\t')
-
