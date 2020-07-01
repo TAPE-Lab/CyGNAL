@@ -60,7 +60,6 @@ Overview of the current workflow:
     * `psych`
     * `RColorBrewer`
     * `shiny`
-    * `tabplot`
     * `tidyverse`
 
 * Bourne shell:
