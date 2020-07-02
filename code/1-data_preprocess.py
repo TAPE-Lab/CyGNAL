@@ -5,7 +5,6 @@
 import os
 import sys
 import pandas as pd
-import OpenSSL.version
 import fcswrite
 import fcsparser
 
