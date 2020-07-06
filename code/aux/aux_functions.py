@@ -14,29 +14,24 @@ def read_rFCS(file_path):
     pandas2ri.activate()
     flowcore = importr("flowCore")
     base = importr("base")
+    arg_transf = "transformation=FALSE"
     raw_FCS = flowcore.read_FCS(str(file_path))
     r('''
+        marker_names<-function(FF){
+            return(flowCore::markernames(FF))
+        }
         FF2dframe<-function(FF){
         if(class(FF) == "flowFrame"){
             return(as.data.frame(exprs(FF)))}
-        if(class(FF) == "list"){
-            frameList<-list()
-            length(frameList)<-length(FF)
-            for(i in 1:length(FF)){
-            if(class(FF[[i]]) == "flowFrame"){
-                frameList[[i]]<-as.data.frame(flowCore::exprs(FF[[i]]))
-                names(frameList)[[i]]<-names(FF)[[i]]}
-            else{
-                warning(paste("Object at index",i,"not of type flowFrame"))}
-            }
-            return(frameList)
-        }
         else {
             stop("Object is not of type flowFrame")}
         }    
     ''')
-    FF2dframe = globalenv["FF2dframe"]
-    df_file = FF2dframe(raw_FCS)
+    fcs_columns = globalenv["marker_names"](raw_FCS)
+    df_file = globalenv["FF2dframe"](raw_FCS)
+    fcs_columns = ['Time']+fcs_columns.tolist()
+    df_file.columns = fcs_columns
+
     return df_file
 
 #Arcsinh transform the data

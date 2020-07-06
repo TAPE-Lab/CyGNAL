@@ -55,7 +55,7 @@ for i in filelist:
             print (i)
             metafcs,df_file = fcsparser.parse(file_path, meta_data_only=False)
             nonstandard_FCS = "NO"
-            #print ("remove:\n", metafcs)
+            print ("remove:\n", metafcs)
         except fcsparser.api.ParserFeatureNotImplementedError:
             print("Non-standard .fcs file detected: ", i)
             print("Metadata will be droppped and file will be saved as .txt by default")
@@ -67,7 +67,7 @@ for i in filelist:
     
     shape_before = df_file.shape
     df_file_cols = list(df_file.columns)
-    
+      
     #%% Perform renaming and filtering
     try:
         renamed_columns = rename_columns(df_file_cols)

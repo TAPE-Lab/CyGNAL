@@ -103,3 +103,5 @@ Preprocessed_Data/fulltest/Day-5_downsample_5000.txt
 Preprocessed_Data/fulltest/Day-6_downsample_5000.txt
 Preprocessed_Data/fulltest/Day-7_downsample_5000.txt
 Preprocessed_Data/fulltest/fulltest_panel_markers.csv
+Raw_Data/data1_standardfcs.fcs
+Raw_Data/LGR5-GFP (For Peli).fcs
