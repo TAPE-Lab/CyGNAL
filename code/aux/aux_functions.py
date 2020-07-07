@@ -5,6 +5,7 @@ import fcsparser
 import umap
 import sys
 import os
+import re
 
 
 #Read broken FCS through r.flowCore
@@ -15,7 +16,7 @@ def read_rFCS(file_path):
     flowcore = importr("flowCore")
     base = importr("base")
     arg_transf = "transformation=FALSE"
-    raw_FCS = flowcore.read_FCS(str(file_path))
+    raw_FCS = flowcore.read_FCS(str(file_path), transformation=False,)
     r('''
         marker_names<-function(FF){
             return(flowCore::markernames(FF))
@@ -29,10 +30,34 @@ def read_rFCS(file_path):
     ''')
     fcs_columns = globalenv["marker_names"](raw_FCS)
     df_file = globalenv["FF2dframe"](raw_FCS)
-    fcs_columns = ['Time']+fcs_columns.tolist()
-    df_file.columns = fcs_columns
+    fcs_columns = fcs_columns.tolist()
+    original_columns = df_file.columns.values.tolist()
+    filtered_columns = []
+    try:
+        reg_markers = re.compile("(\d+Di$)")#|_dist$)") #All isotopes + debarcoder info
+        reg_filter = re.compile("^\d+[A-Za-z]+")
+        match_list=[]
+        for i in original_columns:
+            if reg_markers.search(i):
+                match_list.append(i)
+        for i in fcs_columns:
+            if reg_filter.search(i):
+                filtered_columns.append(i)
+        if len(filtered_columns)==len(match_list):
+            for new_n,old_n in zip(filtered_columns,match_list):
+                df_file.rename({old_n: new_n}, axis="columns", inplace=True)
+            no_filter=False
+        else:
+            print("WARNING: $PnS (desc in flowCore) and $PnS channels don't match")
+            print("Desc marker",fcs_columns)
+            print("PnN", match_list)
+            raise ValueError
+    except ValueError:
+        print("ERROR: Couldn't read $PnS channel names")
+        print("No filtering will be performed. Please manually rename your channels")
+        no_filter=True
 
-    return df_file
+    return df_file, no_filter
 
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):

@@ -52,6 +52,7 @@ CyTOF_DataAnalysis.Rproj
 #   #Data directory:
 Raw_Data/Raw/
 Raw_Data/Tests/
+Raw_Data/UNNAMED/
 Raw_Data/Umap/
 
 #   #Pycache
@@ -105,3 +106,8 @@ Preprocessed_Data/fulltest/Day-7_downsample_5000.txt
 Preprocessed_Data/fulltest/fulltest_panel_markers.csv
 Raw_Data/data1_standardfcs.fcs
 Raw_Data/LGR5-GFP (For Peli).fcs
+Preprocessed_Data/UNNAMED/LGR5-GFP (For Peli).fcs
+Preprocessed_Data/UNNAMED/post-cytobank_7-Day.fcs
+Preprocessed_Data/UNNAMED/Residual
+Preprocessed_Data/UNNAMED/UNNAMED_panel_markers.csv
+Raw_Data/20181115 LGR5-GFP Time-course No.4 (TOBis, Ruthenium)_01_0.fcs

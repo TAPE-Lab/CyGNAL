@@ -2,6 +2,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Panel editing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #FIRST STEP: Data and pranel preprocessing. Marker list generation.
+import re
 import os
 import sys
 import pandas as pd
@@ -28,6 +29,11 @@ filelist = txt_filelist+fcs_filelist
 
 if len(txt_filelist) == 0 and len(fcs_filelist)==0:
     sys.exit(f"ERROR: There are no files in {input_dir}!")
+if len(txt_filelist)!=0:
+    txt_sopts = yes_or_NO("Would you like to save the processed .txt files also in .fcs format?")
+if len(fcs_filelist)!=0:
+    fcs_sopts = yes_or_NO("Would you like to save the processed .fcs files also in .txt format?")
+
 
 info_run =  input("Write info run (using no spaces!): ")
 if len(info_run) == 0:
@@ -44,6 +50,8 @@ else:
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pre-processing~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 cols = []
+no_filter=False
+
 for i in filelist:
     file_path = f"{input_dir}/{i}"
     if i in txt_filelist:
@@ -53,65 +61,76 @@ for i in filelist:
     else: 
         try: #Use fcsparser to read the fcs data files
             print (i)
-            metafcs,df_file = fcsparser.parse(file_path, meta_data_only=False)
-            nonstandard_FCS = "NO"
-            print ("remove:\n", metafcs)
+            metafcs,df_file = fcsparser.parse(file_path, meta_data_only=False,
+                                                channel_naming='$PnS')
+            # nonstandard_FCS = "NO"
+            reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
+            pnn_extracted=[]                 #columns match PnN pattern
+            for n in df_file.columns.values.tolist():
+                if reg_pnn.search(n):
+                    pnn_extracted.append(n)
+            if len(pnn_extracted)!=0:
+                raise fcsparser.api.ParserFeatureNotImplementedError
+            # print(df_file.columns)
         except fcsparser.api.ParserFeatureNotImplementedError:
-            print("Non-standard .fcs file detected: ", i)
-            print("Metadata will be droppped and file will be saved as .txt by default")
+            print("WARNING: Non-standard .fcs file detected: ", i)
+            print("This might take a while. Please take care and check the output")
             from aux.aux_functions import read_rFCS #Import only if needed
             #use rpy2 to read the files and load into python
-            df_file = read_rFCS(file_path)
+            df_file, no_filter = read_rFCS(file_path)
+            # print(df_file.columns)
             #print ("remove:\n", df_file)
-            nonstandard_FCS ="YES" #Offer to save as .txt by default
+            # nonstandard_FCS ="YES" #Offer to save as .txt by default
     
     shape_before = df_file.shape
     df_file_cols = list(df_file.columns)
       
     #%% Perform renaming and filtering
     try:
-        renamed_columns = rename_columns(df_file_cols)
-        columns_to_keep, filtered_columns = filter_columns(renamed_columns)
-        df_file.columns = renamed_columns
-        f_reduced = df_file[columns_to_keep].iloc[:].copy()
-        print ("Removed the following columns: ", filtered_columns)
-        
-        #Store columns present in each of the input files
-        cols.append([x for x in f_reduced.columns if x[0].isdigit()])
-        
-        shape_after = f_reduced.shape
-        print (
-            f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+        if no_filter==False:
+            renamed_columns = rename_columns(df_file_cols)
+            columns_to_keep, filtered_columns = filter_columns(renamed_columns)
+            df_file.columns = renamed_columns
+            f_reduced = df_file[columns_to_keep].iloc[:].copy()
+            print ("Removed the following columns: ", filtered_columns)
+            
+            #Store columns present in each of the input files
+            cols.append([x for x in f_reduced.columns if x[0].isdigit()])
+            
+            shape_after = f_reduced.shape
+            print (
+                f"file: {i}\n\trows before: {shape_before[0]} - columns before: {shape_before[1]}\n\trows after: {shape_after[0]} - columns after: {shape_after[1]}\n")
+        else:
+            print("No filtering being performed")
+            f_reduced = df_file
+            cols.append(df_file_cols)
     except:
         print("Column names processing and filtering failed. Check the format!",
                 "Using original unchanged panel")
         f_reduced = df_file
+        cols.append(df_file_cols)
 
 #Saving files#:
     if i in txt_filelist:
-        answ = yes_or_NO("File is a .txt. Would you like to also save it as an .fcs?")
         f_reduced.to_csv(f"{output_dir}/{info_run}/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank
-        if answ:
+        if txt_sopts:
             #SAVE AS FCS
-            print(list(f_reduced.columns))
-            print(f_reduced.to_numpy())
             fcswrite.write_fcs(f"{output_dir}/{info_run}/{i}.fcs", 
                                 chn_names=list(f_reduced.columns),
                                 compat_chn_names=False, 
                                 data=f_reduced.to_numpy())
             
     else:
-        answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
-                    default=nonstandard_FCS)
+        # answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
+        #             default=nonstandard_FCS)
         fcswrite.write_fcs(f"{output_dir}/{info_run}/{i}", 
                             chn_names=list(f_reduced.columns),
                             compat_chn_names=False, 
                             data=f_reduced.to_numpy())
-        print(answ==True)
-        if answ:
+        if fcs_sopts:
             print("Converting .fcs to .txt")
-            f_reduced.to_csv(f"{output_dir}/{info_run}/{i}.txt", index = True, sep = '\t') 
+            f_reduced.to_csv(f"{output_dir}/{info_run}/{i}.txt", index = False, sep = '\t') #Changed to index=False
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Panel markers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
