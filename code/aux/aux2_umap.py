@@ -48,9 +48,9 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc, input_files,
         no_arc.to_csv(f"{output_dir}/{info_run}/{whole_file}.txt", 
                         index = False, sep = '\t')
 
-    for i in input_files:
-        file_origin = i.split('.txt')[0]
-        partial_file = i.split('.txt')[0] + "_" + run_name
+    for i in input_files: #Split merged file by file_origin->
+        file_origin = i.split('.')[0] #>- allows to import conditions to cytobank
+        partial_file = file_origin + "_" + run_name
         no_arc.loc[no_arc["file_identifier"] == file_origin,:].to_csv(
             f"{output_dir}/{info_run}/{partial_file}.txt", index = False,
             sep = '\t')

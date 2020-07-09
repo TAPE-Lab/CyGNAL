@@ -61,53 +61,13 @@ code/aux/__pycache__/
 
 
 #   Ignore the output folders:
-Analysis/UMAP_output/test0
-
-Analysis/UMAP_input/Day-1_downsample_5000.txt
-Analysis/UMAP_input/Day-2_downsample_5000.txt.fcs
-Analysis/UMAP_input/Day-3_downsample_5000.txt
-Analysis/UMAP_input/test0_panel_markers.csv
 
 Preprocessed_Data/Tests/
+Analysis/UMAP_input/Tests/
+Analysis/UMAP_output/Tests/
+Analysis/EMD_input/Tests/
+Analysis/EMD_output/Tests/
+Analysis/DREMI_input/Tests/
+Analysis/DREMI_output/Tests/
 
-Analysis/EMD_input/Day-1_downsample_5000.txt
-Analysis/EMD_input/Day-2_downsample_5000.txt.fcs
-Analysis/EMD_input/Day-3_downsample_5000.txt
-Analysis/EMD_input/test0_panel_markers.csv
-Analysis/Vis_PCA/EMD_UNNAMED.txt
-Analysis/Vis_Heatmap/EMD_UNNAMED.txt
-Analysis/EMD_output/UNNAMED/EMD_UNNAMED.txt
-Analysis/DREMI_output/test0/DREMI_test0.txt
-Analysis/DREMI_input/test0_panel_markers.csv
-Analysis/DREMI_input/Day-3_downsample_5000.txt
-Analysis/DREMI_input/Day-2_downsample_5000.txt.fcs
-Analysis/DREMI_input/Day-1_downsample_5000.txt
-Analysis/EMD_input/Day-2_downsample_5000.txt
-Analysis/EMD_input/Day-4_downsample_5000.txt
-Analysis/EMD_input/Day-5_downsample_5000.txt
-Analysis/EMD_input/Day-6_downsample_5000.txt
-Analysis/EMD_input/Day-7_downsample_5000.txt
-Analysis/EMD_input/fulltest_panel_markers.csv
-Analysis/Vis_PCA/EMD_fulltest.txt
-Raw_Data/Day-1_downsample_5000.txt
-Raw_Data/Day-2_downsample_5000.txt
-Raw_Data/Day-3_downsample_5000.txt
-Raw_Data/Day-4_downsample_5000.txt
-Raw_Data/Day-5_downsample_5000.txt
-Raw_Data/Day-6_downsample_5000.txt
-Raw_Data/Day-7_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-1_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-2_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-3_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-4_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-5_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-6_downsample_5000.txt
-Preprocessed_Data/fulltest/Day-7_downsample_5000.txt
-Preprocessed_Data/fulltest/fulltest_panel_markers.csv
-Raw_Data/data1_standardfcs.fcs
-Raw_Data/LGR5-GFP (For Peli).fcs
-Preprocessed_Data/UNNAMED/LGR5-GFP (For Peli).fcs
-Preprocessed_Data/UNNAMED/post-cytobank_7-Day.fcs
-Preprocessed_Data/UNNAMED/Residual
-Preprocessed_Data/UNNAMED/UNNAMED_panel_markers.csv
-Raw_Data/20181115 LGR5-GFP Time-course No.4 (TOBis, Ruthenium)_01_0.fcs
+

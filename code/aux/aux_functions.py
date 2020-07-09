@@ -43,19 +43,28 @@ def read_rFCS(file_path):
         for i in fcs_columns:
             if reg_filter.search(i):
                 filtered_columns.append(i)
-        if len(filtered_columns)==len(match_list):
+        if len(filtered_columns)==len(match_list) and len(filtered_columns)!=0:
             for new_n,old_n in zip(filtered_columns,match_list):
                 df_file.rename({old_n: new_n}, axis="columns", inplace=True)
             no_filter=False
+        elif len(match_list)==0 and len(filtered_columns)!=0: #Columns already have PnS?
+            preprocessed_cols = []
+            for i in original_columns:
+                preprocessed_cols.append(i)
+            if preprocessed_cols==filtered_columns: #Indeed, PnS and "PnN" match!
+                print("WARNING: FCS was already processed. Keeping original columns")
+                no_filter=False
+            else:
+                raise ValueError
         else:
-            print("WARNING: $PnS (desc in flowCore) and $PnS channels don't match")
-            print("Desc marker",fcs_columns)
-            print("PnN", match_list)
+            print("WARNING: $PnS (desc in flowCore) and $PnN channels don't match")
+            print("marker PnS",fcs_columns)
+            print("marker PnN (original column names)", match_list)
             raise ValueError
     except ValueError:
         print("ERROR: Couldn't read $PnS channel names")
         print("No filtering will be performed. Please manually rename your channels")
-        no_filter=True
+        no_filter=True #Not applying filtering to avoid losing unwated cols
 
     return df_file, no_filter
 

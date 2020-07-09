@@ -109,8 +109,16 @@ for i in filelist:
                 "Using original unchanged panel")
         f_reduced = df_file
         cols.append(df_file_cols)
+    
+    #Add Cell_Index column
+    if "Cell_Index" not in f_reduced.columns:
+        print("MISSING CELL_INDEX")
+        f_reduced.reset_index(inplace=True)
+        f_reduced.rename({"index": "Cell_Index"}, axis="columns", inplace=True)
+    f_reduced["Cell_Index"] = pd.to_numeric(f_reduced["Cell_Index"])
+    print(f_reduced) #Print final dataframe
 
-#Saving files#:
+    #Saving files#:
     if i in txt_filelist:
         f_reduced.to_csv(f"{output_dir}/{info_run}/{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank
