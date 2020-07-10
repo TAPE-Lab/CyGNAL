@@ -36,9 +36,10 @@ filter_markers = yes_or_NO(
     "Do you want to filter out markers from the panel? (If so please provide .csv file)",
     default="YES")
 
-print ("By default concatenated input files will be used as the denominator.")
+print ("In EMD, the individual Variable distributions are compared against a reference distribution")
+print ("By default concatenated input files will be used as the reference distribution.")
 user_defined_denominator = yes_or_NO(
-                    "Would you like to define your own denominator instead?")
+                    "Would you like to define your own reference instead?")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -53,7 +54,7 @@ if user_defined_denominator:
     if len(filelist)==0:
         sys.exit (f"ERROR: There are no files in {input_dir}!")
     
-    denominator = input("Specify file from the list above to be used as denominator (including extension): ")
+    denominator = input("Specify file from the list above to be used as reference (including extension): ")
     denom_path = f"{input_dir}/{denominator}"
     
     if denominator in txt_filelist:
@@ -67,11 +68,11 @@ if user_defined_denominator:
             #use rpy2 to read the files and load into python
             compare_to = read_rFCS(denom_path)
     else:
-        sys.exit("ERROR: Denominator not recognised.\nPlease state exact and full name of file to be used as denominator!")
+        sys.exit("ERROR: Reference not recognised.\nPlease state exact and full name of file to be used as denominator!")
     input_files = filelist
 else: 
     denominator = 'concatenated-inputs'
-    print('Concatenated input files will be used as the denominator')
+    print('Concatenated input files will be used as the reference distribution')
     compare_to, input_files = concatenate_fcs(input_dir) #compare_from=inputfile
 
 #Keep only selected markers
@@ -91,7 +92,7 @@ compare_to_arc, marker_list = arcsinh_transf(cofactor, compare_to)
 
 print('Sample files:')
 print('\n'.join([f for f in input_files]))
-print(f'\nDenominator:\n{denominator}')
+print(f'\nReference:\n{denominator}')
 print('\nMarkers:')
 print('\n'.join([m for m in marker_list]))
 
