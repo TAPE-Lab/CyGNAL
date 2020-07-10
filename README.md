@@ -16,7 +16,8 @@ Overview of the current workflow:
 
 ### A Brief Step-by-Step Tutorial
 
-1. Clone the 'Workflow' and 'Data' folder to a local drive.
+Work In Progress
+<!-- 1. Clone the 'Workflow' and 'Data' folder to a local drive.
 
    *Optional (if exporting data from Cytobank):* Go to the working illustration page (Illustrations - My working illustration), highlight the population(s) of interest, and export events as untransformed text files (Actions - Export - Export events, with *'Include header with FCS filename'* unchecked).
 
@@ -36,9 +37,11 @@ Overview of the current workflow:
 
 6. **Heatmap:** To visualise EMD/DREMI scores in heatmaps, copy the EMD/DREMI calculation outputs to the 'Workflow/input/5v1-emd_dremi_htmp' folder. Run 5v1-emd_dremi_htmp.py and follow the instructions in the GUI. The current version of the script accepts one EMD data file and one DREMI data file (with 'EMD' and 'DREMI' in their file names respectively) to be visualised in the heatmaps generated.
 
-7. **Principal component analysis (PCA):** To perform PCA and visualise the results, copy the EMD/DREMI calculation outputs to the 'Workflow/input/5v2-pca' folder. Run 5v2-pca.py and follow the instructions in the GUI.
+7. **Principal component analysis (PCA):** To perform PCA and visualise the results, copy the EMD/DREMI calculation outputs to the 'Workflow/input/5v2-pca' folder. Run 5v2-pca.py and follow the instructions in the GUI. -->
 
 ## Dependencies
+
+We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment from 'conda_env.yml'.
 
 * Python: Tested with Python v3.6 and v3.7. Used in the backbone of the workflow and most computational steps.
     * `numpy`
@@ -67,4 +70,5 @@ Overview of the current workflow:
 
 ## Authors
 
-The work here is actively being developed by Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)). Based on the original work of Pelagia Kyriakidou.
+The work here is actively being developed by Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)). 
+Based also on original work by Pelagia Kyriakidou.
