@@ -24,7 +24,6 @@ r('''
                             "psych",
                             "Hmisc",
                             "MASS",
-                            "tabplot",
                             "RColorBrewer",
                             "shiny",
                             "tidyverse",
