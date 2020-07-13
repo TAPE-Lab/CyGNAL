@@ -63,6 +63,7 @@ code/aux/__pycache__/
 #   Ignore the output folders:
 
 Preprocessed_Data/Tests/
+Preprocessed_Data/UNNAMED/
 Analysis/UMAP_input/Tests/
 Analysis/UMAP_output/Tests/
 Analysis/EMD_input/Tests/

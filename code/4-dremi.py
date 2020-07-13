@@ -2,6 +2,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~DREMI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate marker DREMI scores per pair of markers in each dataset
+import re
 import os
 import sys
 import pandas as pd
@@ -84,10 +85,17 @@ for f in dremi_files:
         try: #Use fcsparser to read the fcs data files
             print(f)
             data = fcsparser.parse(file_path, meta_data_only=False)[1]
+            reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
+            pnn_extracted=[]                 #columns match PnN pattern
+            for n in data.columns.values.tolist():
+                if reg_pnn.search(n):
+                    pnn_extracted.append(n)
+            if len(pnn_extracted)!=0:
+                raise fcsparser.api.ParserFeatureNotImplementedError
         except fcsparser.api.ParserFeatureNotImplementedError:
                 print("WARNING: Non-standard .fcs file detected: ", f)
                 #use rpy2 to read the files and load into python
-                data = read_rFCS(file_path)
+                data = read_rFCS(file_path)[0]
     if filter_markers: #Load .csv with the markers to use -> Often PTMs
         selected_markers = read_marker_csv(input_dir) 
         data = data.loc[:, selected_markers] # Remove unwanted markers

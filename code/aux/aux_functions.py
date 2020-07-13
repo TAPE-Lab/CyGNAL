@@ -103,10 +103,17 @@ def concatenate_fcs(input_dir):
             try: #Use fcsparser to read the fcs data files
                 print(i)
                 df = fcsparser.parse(file_path, meta_data_only=False)[1]
+                reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
+                pnn_extracted=[]                 #columns match PnN pattern
+                for n in df.columns.values.tolist():
+                    if reg_pnn.search(n):
+                        pnn_extracted.append(n)
+                if len(pnn_extracted)!=0:
+                    raise fcsparser.api.ParserFeatureNotImplementedError
             except fcsparser.api.ParserFeatureNotImplementedError:
                 print("WARNING: Non-standard .fcs file detected: ", i)
                 #use rpy2 to read the files and load into python
-                df = read_rFCS(file_path)
+                df = read_rFCS(file_path)[0]
         
         # add a new column of 'file_origin' that will be used to separate each file after umap calculation
         df["file_identifier"] = name

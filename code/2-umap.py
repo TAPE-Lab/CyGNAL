@@ -2,6 +2,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UMAP~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Perfom UMAP on pre-processed datasets
+import re
 import sys
 import os
 import warnings
@@ -11,7 +12,8 @@ import numpy as np
 import umap
 
 from aux.aux2_umap import *
-from aux.aux_functions import *
+from aux.aux_functions import (arcsinh_transf, concatenate_fcs, 
+                                downsample_data, read_marker_csv, yes_or_NO)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 nn = "no-norm"

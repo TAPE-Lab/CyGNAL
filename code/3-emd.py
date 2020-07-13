@@ -2,6 +2,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~EMD~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate marker EMD scores per dataset
+import re
 import os
 import sys
 import numpy as np
@@ -10,7 +11,7 @@ import scprep
 import fcsparser
 
 from aux.aux3_emd import *
-from aux.aux_functions import *
+from aux.aux_functions import (read_rFCS, arcsinh_transf, concatenate_fcs, read_marker_csv, yes_or_NO)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5
@@ -63,10 +64,17 @@ if user_defined_denominator:
         try:
             print(denominator)
             compare_to = fcsparser.parse(denom_path, meta_data_only=False)[1]
+            reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
+            pnn_extracted=[]                 #columns match PnN pattern
+            for n in compare_to.columns.values.tolist():
+                if reg_pnn.search(n):
+                    pnn_extracted.append(n)
+            if len(pnn_extracted)!=0:
+                raise fcsparser.api.ParserFeatureNotImplementedError
         except fcsparser.api.ParserFeatureNotImplementedError:
             print("WARNING: Non-standard .fcs file detected: ", denominator)
             #use rpy2 to read the files and load into python
-            compare_to = read_rFCS(denom_path)
+            compare_to = read_rFCS(denom_path)[0]
     else:
         sys.exit("ERROR: Reference not recognised.\nPlease state exact and full name of file to be used as denominator!")
     input_files = filelist
@@ -115,10 +123,17 @@ for compare_from_file in input_files:
         try:
             print(compare_from_file)
             compare_from = fcsparser.parse(file_path, meta_data_only=False)[1]
+            reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
+            pnn_extracted=[]                 #columns match PnN pattern
+            for n in compare_from.columns.values.tolist():
+                if reg_pnn.search(n):
+                    pnn_extracted.append(n)
+            if len(pnn_extracted)!=0:
+                raise fcsparser.api.ParserFeatureNotImplementedError
         except fcsparser.api.ParserFeatureNotImplementedError:
             print("WARNING: Non-standard .fcs file detected: ", compare_from_file)
             #use rpy2 to read the files and load into python
-            compare_from = read_rFCS(file_path)
+            compare_from = read_rFCS(file_path)[0]
     
     if filter_markers:
         print (compare_from.columns)
