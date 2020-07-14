@@ -54,7 +54,7 @@ if user_defined_denominator:
     filelist = txt_filelist+fcs_filelist
     if len(filelist)==0:
         sys.exit (f"ERROR: There are no files in {input_dir}!")
-    
+    print(filelist)
     denominator = input("Specify file from the list above to be used as reference (including extension): ")
     denom_path = f"{input_dir}/{denominator}"
     
