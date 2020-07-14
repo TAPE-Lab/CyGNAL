@@ -71,4 +71,5 @@ Analysis/EMD_output/Tests/
 Analysis/DREMI_input/Tests/
 Analysis/DREMI_output/Tests/
 
-
+#   Ignore old workflow folder
+workflow/
