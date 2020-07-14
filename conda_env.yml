@@ -19,6 +19,7 @@ dependencies:
   - r-psych
   - r-hmisc
   - r-mass
+  - bioconductor-flowcore
 
   - pip:
     - fcsparser
