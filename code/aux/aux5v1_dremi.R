@@ -22,7 +22,7 @@ maxx <- max(dremi_info$with_outliers_arcsinh_DREMI_score)
 print (unique(dremi_info$marker_x_marker_y))
 
 initial_dremi <- dremi_info %>% ggplot(aes(
-                        x=file, y=factor(marker_x_marker_y,
+                        x=file_origin, y=factor(marker_x_marker_y,
                         levels=rev(unique(marker_x_marker_y))))) + 
                     geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score))
                     
@@ -36,7 +36,7 @@ initial_dremi <- dremi_info %>% ggplot(aes(
 ui <- fluidPage(
 
     # Application title
-    titlePanel("DREMI scores heatmap"),
+    titlePanel("CyGNAL: DREMI heatmap"),
 
     sidebarPanel(width=3,
         sliderInput("range",
@@ -46,7 +46,7 @@ ui <- fluidPage(
                     max = ceiling(maxx) +1,
                     value = c(minx, maxx)),
         selectInput('in6', 'Select markers', unique(dremi_info$marker_x), multiple=TRUE, selectize=TRUE),
-        selectInput('in12', 'Select and reorder conditions', unique(dremi_info$file), multiple=TRUE, selectize=TRUE),
+        selectInput('in12', 'Select and reorder conditions', unique(dremi_info$file_origin), multiple=TRUE, selectize=TRUE),
         tags$hr(),
         downloadButton('foo', "Download plot as .pdf")
     ),
@@ -65,20 +65,20 @@ server <- function(input, output, session) {
     
     output$trendPlot <- renderPlotly({
         if (!is.null(input$in6) & !is.null(input$in12)) {
-            data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file %in% input$in12)
-            data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+            data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file_origin %in% input$in12)
+            data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
         }
         else if (!is.null(input$in6) & is.null(input$in12)) {
             data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6))
         }
         else if (is.null(input$in6) & !is.null(input$in12)) {
-            data_to_plot <- dremi_info %>% filter(file %in% input$in12)
-            data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+            data_to_plot <- dremi_info %>% filter(file_origin %in% input$in12)
+            data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
         }
         else{data_to_plot <- dremi_info}
         
         initial_dremi <- data_to_plot %>% ggplot(aes(
-                                x=file, y=factor(marker_x_marker_y,
+                                x=file_origin, y=factor(marker_x_marker_y,
                                 levels=rev(unique(marker_x_marker_y))))) + 
                                 geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score)) +
                                 labs(fill = "DREMI score")
@@ -96,27 +96,27 @@ server <- function(input, output, session) {
     })
     output$foo <- downloadHandler(
         filename = "dremi_heatmap.pdf",
-        content = function(file) {
+        content = function(file_origin) {
             if (!is.null(input$in6) & !is.null(input$in12)) {
-                data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file %in% input$in12)
-                data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+                data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file_origin %in% input$in12)
+                data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
             }
             else if (!is.null(input$in6) & is.null(input$in12)) {
                 data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6))
             }
             else if (is.null(input$in6) & !is.null(input$in12)) {
-                data_to_plot <- dremi_info %>% filter(file %in% input$in12)
-                data_to_plot$file <- as.factor(data_to_plot$file) %>% fct_relevel(input$in12)
+                data_to_plot <- dremi_info %>% filter(file_origin %in% input$in12)
+                data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
             }
             else{data_to_plot <- dremi_info}
             
             initial_dremi <- data_to_plot %>% ggplot(aes(
-                                    x=file, y=factor(marker_x_marker_y,
+                                    x=file_origin, y=factor(marker_x_marker_y,
                                     levels=rev(unique(marker_x_marker_y))))) + 
                                     geom_tile(aes(fill=with_outliers_arcsinh_DREMI_score)) +
                                     labs(fill = "DREMI score")
             
-            ggsave(file, plot = initial_dremi + scale_fill_gradient(
+            ggsave(file_origin, plot = initial_dremi + scale_fill_gradient(
                         low = "#F6F6F6", high = "#A12014", limits=c(input$range[1], input$range[2]),
                         oob = scales::squish, breaks = c(input$range[1], input$range[2]), labels = c(paste('<',input$range[1]), paste('>',input$range[2])),
                     guide = guide_colourbar(nbin=100, draw.ulim = FALSE, draw.llim = FALSE, ticks = FALSE)) +

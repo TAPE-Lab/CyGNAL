@@ -1,5 +1,5 @@
 ###############################################################################
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Panel editing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Pre-processing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #FIRST STEP: Data and pranel preprocessing. Marker list generation.
 import re
@@ -30,10 +30,10 @@ filelist = txt_filelist+fcs_filelist
 if len(txt_filelist) == 0 and len(fcs_filelist)==0:
     sys.exit(f"ERROR: There are no files in {input_dir}!")
 if len(txt_filelist)!=0:
-    print("Found the following .txt files: ")
+    print("Found the following .txt files: ", txt_filelist)
     txt_sopts = yes_or_NO("Would you like to save the processed .txt files also in .fcs format?")
 if len(fcs_filelist)!=0:
-    print("Found the following .fcs files: ")
+    print("Found the following .fcs files: ", fcs_filelist)
     fcs_sopts = yes_or_NO("Would you like to save the processed .fcs files also in .txt format?")
 
 
@@ -122,11 +122,11 @@ for i in filelist:
 
     #Saving files#:
     if i in txt_filelist:
-        f_reduced.to_csv(f"{output_dir}/{info_run}/{i}", index = False, sep = '\t') 
+        f_reduced.to_csv(f"{output_dir}/{info_run}/Pro_{i}", index = False, sep = '\t') 
         # index = False to be compatible with Cytobank
         if txt_sopts:
             #SAVE AS FCS
-            fcswrite.write_fcs(f"{output_dir}/{info_run}/{i}.fcs", 
+            fcswrite.write_fcs(f"{output_dir}/{info_run}/Pro_{i}.fcs", 
                                 chn_names=list(f_reduced.columns),
                                 compat_chn_names=False, 
                                 data=f_reduced.to_numpy())
@@ -134,13 +134,13 @@ for i in filelist:
     else:
         # answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
         #             default=nonstandard_FCS)
-        fcswrite.write_fcs(f"{output_dir}/{info_run}/{i}", 
+        fcswrite.write_fcs(f"{output_dir}/{info_run}/Pro_{i}", 
                             chn_names=list(f_reduced.columns),
                             compat_chn_names=False, 
                             data=f_reduced.to_numpy())
         if fcs_sopts:
             print("Converting .fcs to .txt")
-            f_reduced.to_csv(f"{output_dir}/{info_run}/{i}.txt", index = False, sep = '\t') #Changed to index=False
+            f_reduced.to_csv(f"{output_dir}/{info_run}/Pro_{i}.txt", index = False, sep = '\t') #Changed to index=False
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Panel markers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

@@ -63,8 +63,9 @@ dremi_files = txt_filelist+fcs_filelist
 if len(dremi_files)==0:
     sys.exit (f"ERROR: There are no files in {input_dir}!")
 
-print('Sample files:')
-print('\n'.join([f for f in dremi_files]))
+print("Sample files:")
+print("\n".join([f for f in dremi_files]))
+print("Calculating...")
 
 # create a dataframe to store the dremi result
 df_info = pd.DataFrame()
@@ -79,7 +80,7 @@ for f in dremi_files:
     file_path = f"{input_dir}/{f}"
     filename = f.split(".")[0]
     if f in txt_filelist:
-        print (f)
+        print ("Working on ",f)
         data = pd.read_csv(file_path, sep = '\t')
     else:
         try: #Use fcsparser to read the fcs data files

@@ -29,7 +29,7 @@ print(minx, maxx)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("EMD scores heatmap"),
+    titlePanel("CyGNAL: EMD heatmap"),
 
     sidebarPanel(width=4,
         sliderInput("range",

@@ -40,7 +40,7 @@ calculated_sd <- rowSds(as.matrix.data.frame(data4pca))
 ###############################################################################
 ui <- bootstrapPage(
     mainPanel(
-    titlePanel("EMD: iPCA"),
+    titlePanel("CyGNAL: EMD iPCA"),
         
         tabsetPanel(
             tabPanel("Inspect the data",

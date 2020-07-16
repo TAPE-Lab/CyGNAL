@@ -27,7 +27,7 @@ the_data <- read_tsv(args)
 
 exploratory_data <- the_data %>% select(-starts_with("arcsinh")) %>% select(-starts_with("num")) %>% select(-"marker_x") %>% select(-"marker_y")
 
-data4pca <- exploratory_data %>% select(-starts_with("wo")) %>% spread(marker_x_marker_y, with_outliers_arcsinh_DREMI_score) %>% column_to_rownames(., var = "file")
+data4pca <- exploratory_data %>% select(-starts_with("wo")) %>% spread(marker_x_marker_y, with_outliers_arcsinh_DREMI_score) %>% column_to_rownames(., var = "file_origin")
 #Calculate row SD for later use in PCA plots
 calculated_sd <- rowSds(as.matrix.data.frame(data4pca))
 
@@ -39,7 +39,7 @@ calculated_sd <- rowSds(as.matrix.data.frame(data4pca))
 ###############################################################################
 ui <- bootstrapPage(
     mainPanel(
-    titlePanel("DREMI: iPCA"),
+    titlePanel("CyGNAL: DREMI iPCA"),
         
         tabsetPanel(
             tabPanel("Inspect the data",
@@ -293,10 +293,10 @@ server <- function(input, output, session) {
         # exclude cols with zero variance
         the_data_num <- the_data_num[,!apply(the_data_num, MARGIN = 2, function(x) max(x, na.rm = TRUE) == min(x, na.rm = TRUE))]
         colnames <- names(the_data_num)
-        # Create the checkboxes and select them all by default
+        # Create the checkboxes and don't select by default
         checkboxGroupInput("columns", "Choose columns", 
-                            choices  = colnames,
-                            selected = colnames)
+                            choices  = colnames)#,
+                            #selected = colnames)
     })
     # # choose a grouping variable
     # output$the_grouping_variable <- renderUI({
@@ -413,13 +413,13 @@ server <- function(input, output, session) {
     #Downloads
     output$dwn_pcaplot <- downloadHandler(
         filename <- "pca_plot.pdf",
-        content = function(file) {
-            ggsave(file, plot = pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
+        content = function(file_origin) {
+            ggsave(file_origin, plot = pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
         })
     output$dwn_pcaplot_n <- downloadHandler(
         filename <- "pca_plot_n.pdf",
-        content = function(file) {
-            ggsave(file, plot = pca_indplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
+        content = function(file_origin) {
+            ggsave(file_origin, plot = pca_indplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
         })
     
     #Plotly:
@@ -450,12 +450,12 @@ server <- function(input, output, session) {
     })
     output$dwn_pcainfo <- downloadHandler(
         filename = "pca_info.txt",
-        content = function(file) {
-            write.table(paste(unlist(rownames(get_pca(pca_objects()$pca_output)$coord)), collapse=", "), file, sep = "\t", append = TRUE,
+        content = function(file_origin) {
+            write.table(paste(unlist(rownames(get_pca(pca_objects()$pca_output)$coord)), collapse=", "), file_origin, sep = "\t", append = TRUE,
                         row.names = TRUE, col.names = NA)
-            write.table(get_eig(pca_objects()$pca_output)[2], file, sep = "\t", append = TRUE,
+            write.table(get_eig(pca_objects()$pca_output)[2], file_origin, sep = "\t", append = TRUE,
                         row.names = TRUE, col.names = NA)
-            write.table(get_pca_ind(pca_objects()$pca_output)$coord, file, sep = "\t", append = TRUE,
+            write.table(get_pca_ind(pca_objects()$pca_output)$coord, file_origin, sep = "\t", append = TRUE,
                         row.names = TRUE, col.names = NA)
     })
     
