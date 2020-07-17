@@ -1,4 +1,4 @@
-name: cytofdataanalysis
+name: cygnal
 channels:
   - bioconda
   - conda-forge

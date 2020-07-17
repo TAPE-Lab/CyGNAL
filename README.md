@@ -1,14 +1,14 @@
 [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest)
-# CyTOF_Data Analysis
+# **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
 Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. The Cell Communication Lab studies how oncogenic mutations communicate with stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer.
 
-In this repo we present a workflow for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, the workflow assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
+In this repo we present *CyGNAL*, a pipeline for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, CyGNAL assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
 
 Overview of the current workflow:
 ![alt text][Overview]
 
-[Overview]: https://github.com/TAPE-Lab/CyTOF_DataAnalysis/blob/master/figs/flowchart_v1.png "Overview of cell identification"
+[Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.png "Overview of cell identification"
 
 ## How to use
 
@@ -50,9 +50,12 @@ Raw data contains sample dataset files. Pipeline can take in both FCS and .txt f
 We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment from 'conda_env.yml'.
 
 * Python: Tested with Python v3.6 and v3.7. Used in the backbone of the workflow and most computational steps.
+    * `fcsparser`
+    * `fcswrite`
     * `numpy`
     * `pandas`
     * `plotly`
+    * `rpy2`
     * `scprep`
     * `sklearn`
     * `umap-learn`
@@ -61,6 +64,7 @@ We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.ht
     * `DT`
     * `factoextra`
     * `FactoMineR`
+    * `flowCore`
     * `Ggally`
     * `Hmisc`
     * `MASS`
