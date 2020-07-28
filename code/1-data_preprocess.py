@@ -149,35 +149,3 @@ if not all(x==cols[0] for x in cols):
 else:
     write_panel_markers(cols, f"{output_dir}/{info_run}", info_run)
 
-
-#RELIC CODE#
-#Saving fcs should be done at the end ina  simialr check as the one above for .txt and fcs.
-        #   If fcs, ask user which format to save results as: .txt, .fcs, both
-
-                                                                               #Since Flowcytometry ALSO uses fcsparser under the hood...
-                                                                                #So options are: -Use R to load .fcs if formatted shity (thanks cytobank..)
-                                                                                #                  -Write our own fcs parser (lol, that's certainly too much effort)
-                                                                                #                  -Complain to Cytobank or try and get fcsparser fixed to support cytobank's shity fcss..)
-                                                                               
-                                                                               #FLOWKIT AND FLOIO generate proper fcs files but the intensities in them aren't the right numbers
-                                                                                # df_file = flowkit.Sample(file)
-                                                                                # print(df_file)
-                                                                                # print(df_file.channels)
-                                                                                # if os.path.isdir(f"{input_dir}/Reformatted_FCSs") == False:
-                                                                                #     os.makedirs(f"{input_dir}/Reformatted_FCSs")
-                                                                                # print(df_file.export("test.fcs", source="raw"))
-
-                                                                                # df_file_channels = []
-                                                                                # df_file=flowio.FlowData(file)
-                                                                                # print("File", df_file)
-                                                                                # print("Evenets",df_file.events)
-                                                                                # # print("Text is useless", df_file.text)
-                                                                                # print("Channels", df_file.channels)
-                                                                                # for key in sorted(df_file.channels.keys()):
-                                                                                #     print(df_file.channels[key])
-                                                                                #     try:
-                                                                                #         df_file_channels.append(df_file.channels[key]["PnN"])
-                                                                                #     except:
-                                                                                #         print ("PnN short names weren't found. Trying instead with PnS names")
-                                                                                #         df_file_channels.append(df_file_channels[key]["PnS"])
-                                                                                # print (df_file_channels)
