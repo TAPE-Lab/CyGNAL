@@ -72,3 +72,12 @@ Analysis/DREMI_input/Tests/
 Analysis/DREMI_output/Tests/
 
 
+Preprocessed_Data/test_zoom/
+Analysis/Vis_Heatmap/EMD_testingemd_zoom.txt
+Analysis/EMD_output/testingemd_zoom/
+Analysis/EMD_input/Pro_TOBis01_Organoids.fcs
+Analysis/EMD_input/Pro_TOBis02_Organoids.fcs
+Analysis/EMD_input/Pro_TOBis03_Organoids.fcs
+Analysis/EMD_input/Pro_TOBis04_Organoids.fcs
+Analysis/EMD_input/Pro_TOBis05_Organoids.fcs
+Analysis/EMD_input/test_zoom_panel_markers.csv
