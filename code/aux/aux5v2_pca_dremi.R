@@ -295,8 +295,8 @@ server <- function(input, output, session) {
         colnames <- names(the_data_num)
         # Create the checkboxes and don't select by default
         checkboxGroupInput("columns", "Choose columns", 
-                            choices  = colnames)#,
-                            #selected = colnames)
+                            choices  = colnames,
+                            selected = colnames)
     })
     # # choose a grouping variable
     # output$the_grouping_variable <- renderUI({

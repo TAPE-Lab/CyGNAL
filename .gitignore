@@ -81,3 +81,8 @@ Analysis/EMD_input/Pro_TOBis03_Organoids.fcs
 Analysis/EMD_input/Pro_TOBis04_Organoids.fcs
 Analysis/EMD_input/Pro_TOBis05_Organoids.fcs
 Analysis/EMD_input/test_zoom_panel_markers.csv
+
+# Ignore User Data
+Preprocessed_Data/
+Analysis/
+Utils_Data/
