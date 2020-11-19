@@ -1,4 +1,5 @@
 args <- commandArgs(trailingOnly = TRUE)
+args <- paste(args, collapse=" ") #Collapse paths with spaces to single string
 
 #Packages to use:
 list.of.packages <- c("DT", 
