@@ -1,5 +1,5 @@
 ###############################################################################
-#~~~~~~~~~~~~~~~~~~~~~~~~~~#~Conncatenate and Save~#~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~#~Concatenate and Save~#~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #OPTIONAL: Sometimes the user may want to save concatenated sample files for 
 #downstream analysis, e.g. concatenate technical replicates
@@ -18,24 +18,18 @@ from aux.aux_functions import *
 # The concatenated file will be saved in the 'output/opt1_concatenation' folder
 # The user will need to change the name of the concatenate file and move it to the input folder for the next step
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-folder_name = "opt1_concatenation"
-
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
-if os.path.isdir(f"./input/{folder_name}") == False:
-    os.makedirs(f"./input/{folder_name}")
-    sys.exit("ERROR: There is no input folder") 
-    
-input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+input_dir = f"{base_dir}/Utils_Data/input/opt1_concatenation"
+output_dir = f"{base_dir}/Utils_Data/output/opt1_concatenation"
 
 filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
+if len(filelist) == 0:
+    sys.exit(f"ERROR: There are no .txt files in {input_dir}!")
 #Check the files found in the directory:
-print ("Input files:")
+print ("Concatenate script supports only .txt files. Input files:")
 for i in filelist:
     print (i)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 concatenate_save(input_dir, output_dir)

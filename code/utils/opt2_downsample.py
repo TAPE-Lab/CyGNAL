@@ -1,21 +1,22 @@
 import pandas as pd
 import numpy as np
 import umap
-import sys
-import os
-from aux_functions import concatenate_fcs, downsample_data
+import os, sys #Fix importing from diff. directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from aux.aux_functions import concatenate_fcs, downsample_data
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CONFIG~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-folder_name = "opt2_downsample"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+input_dir = f"{base_dir}/Utils_Data/input/opt2_downsample"
+output_dir = f"{base_dir}/Utils_Data/output/opt2_downsample"
 
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
-if os.path.isdir(f"./input/{folder_name}") == False:
-    os.makedirs(f"./input/{folder_name}")
-    sys.exit("ERROR: There is no input folder") 
-    
-input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
+filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
+if len(filelist) == 0:
+    sys.exit(f"ERROR: There are no .txt files in {input_dir}!")
+#Check the files found in the directory:
+print ("Downsample script supports only .txt files. Input files:")
+for i in filelist:
+    print (i)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 print ("This script now downsamples multiple files on the input to the condition with less cells")
@@ -31,6 +32,9 @@ for name, group in downsampled_conc_df.reset_index(drop=True).groupby("file_iden
     group.reset_index()
     # group['post-downsample_cell-index'] = group.index
     group.to_csv(f"{output_dir}/{info_run}/{name}_downsample_{info_run}.txt", index = False, sep = '\t')
+
+print(f"Downsampled files saved in {output_dir}")
+
 
 #Cell state sepration -> Interactive queastion, defaul file origin
 # #Divide concatenated into separate files
