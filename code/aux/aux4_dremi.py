@@ -1,11 +1,11 @@
 
-import pandas as pd
-import numpy as np
-import scprep
-import sys
 import os
+import sys
 from itertools import permutations
 
+import numpy as np
+import pandas as pd
+import scprep
 
 
 # find outliers for both marker_x and marker_y based on cufoffs of standard deviations

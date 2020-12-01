@@ -1,8 +1,9 @@
-import os, glob
-import pandas as pd
-import numpy as np
+import glob
+import os
 import re
 
+import numpy as np
+import pandas as pd
 
 #FCR 14/10/19: Automated column name editing with regex
 #Idea is to rename all columns and then filter non-relevant ones (less optimal,

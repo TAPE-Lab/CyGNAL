@@ -1,9 +1,10 @@
 
-import pandas as pd
-import numpy as np
-import umap
-import sys
 import os
+import sys
+
+import numpy as np
+import pandas as pd
+import umap
 
 # import warnings
 # warnings.filterwarnings('ignore')

@@ -6,12 +6,13 @@
 #This script identifies the marker columns containing RAW intensities and
 #overwrites them with normalised values
 
-import os, sys #Fix importing from diff. directory
+import os  # Fix importing from diff. directory
+import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 import numpy as np
 import pandas as pd
-from aux.aux_functions import yes_or_NO, arcsinh_transf
-
+from aux.aux_functions import arcsinh_transf, yes_or_NO
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "opt4_arcsinh"

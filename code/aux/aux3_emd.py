@@ -1,8 +1,9 @@
 
+import os
+import sys
+
 import pandas as pd
 import scprep
-import sys
-import os
 
 # Function to calculate EMD
 

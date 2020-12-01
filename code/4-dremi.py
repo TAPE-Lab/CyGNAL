@@ -2,19 +2,21 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~DREMI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate marker DREMI scores per pair of markers in each dataset
-import re
 import os
+import re
 import sys
-import pandas as pd
-import numpy as np
-import scprep
-import fcsparser
-from itertools import permutations
 import warnings
 warnings.filterwarnings('ignore')
+from itertools import permutations
 
-from aux.aux_functions import yes_or_NO, read_rFCS, arcsinh_transf, read_marker_csv
+import fcsparser
+import numpy as np
+import pandas as pd
+import scprep
+
 from aux.aux4_dremi import *
+from aux.aux_functions import (arcsinh_transf, read_marker_csv, read_rFCS,
+                                yes_or_NO)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 cofactor = 5

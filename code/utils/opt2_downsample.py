@@ -1,8 +1,11 @@
-import pandas as pd
-import numpy as np
-import umap
-import os, sys #Fix importing from diff. directory
+
+import os  # Fix importing from diff. directory
+import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+import numpy as np
+import pandas as pd
+import umap
 from aux.aux_functions import concatenate_fcs, downsample_data
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

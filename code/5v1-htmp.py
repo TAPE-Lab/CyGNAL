@@ -2,10 +2,12 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Heatmaps~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Plot EMD and DREMI scores as heatmaps
-import subprocess
 import os
+import subprocess
 import sys
+
 from aux.aux_functions import yes_or_NO
+
 #Import yes or no question to choose the different plotings
 #Run the separate R shiny apps accordingly
 #Simultaneous emd and DREMI should both be possible since the ports are random

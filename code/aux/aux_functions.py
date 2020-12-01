@@ -1,16 +1,17 @@
 
-import pandas as pd
-import numpy as np
-import fcsparser
-import umap
-import sys
 import os
 import re
+import sys
+
+import fcsparser
+import numpy as np
+import pandas as pd
+import umap
 
 
 #Read broken FCS through r.flowCore
 def read_rFCS(file_path):
-    from rpy2.robjects import r, pandas2ri, globalenv
+    from rpy2.robjects import globalenv, pandas2ri, r
     from rpy2.robjects.packages import importr
     pandas2ri.activate()
     flowcore = importr("flowCore")
@@ -144,14 +145,16 @@ def concatenate_save(input_dir, output_dir):
     concat.to_csv(f'{output_dir}/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")
 
-def downsample_data(no_arc, info_run, output_dir):
+#Downsample dataframe by column and save to file which IDs were removed
+def downsample_data(no_arc, info_run, output_dir, 
+                    split_bycol="file_identifier"): 
     downsampled_dframe = no_arc.copy()
-    #Defiine downsampling size (N) per file:
-    downsample_size = downsampled_dframe["file_identifier"].value_counts().min() #at least N cells in all input files
-    print ("Working with ", downsample_size, " cells per file_origin")
+    #Defiine downsampling size (N) per file: at least N cells in all input files
+    downsample_size = downsampled_dframe[split_bycol].value_counts().min() 
+    print ("Working with ", downsample_size, " cells per split")
     #Group by file+origin and sample without replacement -> 
     # thus we can sample file for which len(file)=N without -tive consequences 
-    reduced_df = downsampled_dframe.groupby("file_identifier").apply(lambda x:
+    reduced_df = downsampled_dframe.groupby(split_bycol).apply(lambda x:
                                                     x.sample(downsample_size))
     # reduced_df['new-cell-index'] = list(range(len(reduced_df.index)))
     # reduced_df['post_downsample-cell_index'] = reduced_df.index
@@ -160,9 +163,12 @@ def downsample_data(no_arc, info_run, output_dir):
     new_df = pd.DataFrame()
     os.makedirs(f'{output_dir}/{info_run}', exist_ok = True)
     new_df["Sample_ID-Cell_Index"] = no_arc["Sample_ID-Cell_Index"]
-    new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])
-    new_df.to_csv(f"{output_dir}/{info_run}/{info_run}_downsampled_IDs.csv", index = False)
-    no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(reduced_df["Sample_ID-Cell_Index"])]
+    new_df["In_donwsampled_file"] = new_df["Sample_ID-Cell_Index"].isin(
+                                    reduced_df["Sample_ID-Cell_Index"])
+    new_df.to_csv(f"{output_dir}/{info_run}/{info_run}_downsampled_IDs.csv", 
+                    index = False)
+    no_arc = no_arc[no_arc["Sample_ID-Cell_Index"].isin(
+                reduced_df["Sample_ID-Cell_Index"])]
     return reduced_df 
 
 # Random downsampling of a dataframe to n rows

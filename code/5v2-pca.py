@@ -2,9 +2,10 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Heatmaps~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate and plot PCAs on EMD and DREMI scores
-import subprocess
 import os
+import subprocess
 import sys
+
 from aux.aux_functions import yes_or_NO
 
 #2 options for the PCA plots:

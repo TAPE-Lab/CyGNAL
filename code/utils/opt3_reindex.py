@@ -1,6 +1,8 @@
 #! python3
-import os, sys #Fix importing from diff. directory
+import os  # Fix importing from diff. directory
+import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 import pandas as pd
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 

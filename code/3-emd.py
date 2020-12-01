@@ -2,16 +2,18 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~EMD~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate marker EMD scores per dataset
-import re
 import os
+import re
 import sys
+
+import fcsparser
 import numpy as np
 import pandas as pd
 import scprep
-import fcsparser
 
 from aux.aux3_emd import *
-from aux.aux_functions import (read_rFCS, arcsinh_transf, concatenate_fcs, read_marker_csv, yes_or_NO)
+from aux.aux_functions import (arcsinh_transf, concatenate_fcs,
+                                read_marker_csv, read_rFCS, yes_or_NO)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 cofactor = 5

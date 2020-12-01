@@ -2,12 +2,13 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Pre-processing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #FIRST STEP: Data and pranel preprocessing. Marker list generation.
-import re
 import os
+import re
 import sys
-import pandas as pd
-import fcswrite
+
 import fcsparser
+import fcswrite
+import pandas as pd
 
 from aux.aux1_data_preprocess import *
 from aux.aux_functions import yes_or_NO
@@ -77,7 +78,8 @@ for i in filelist:
         except fcsparser.api.ParserFeatureNotImplementedError:
             print("WARNING: Non-standard .fcs file detected: ", i)
             print("This might take a while. Please take care and check the output")
-            from aux.aux_functions import read_rFCS #Import only if needed
+            from aux.aux_functions import read_rFCS  # Import only if needed
+
             #use rpy2 to read the files and load into python
             df_file, no_filter = read_rFCS(file_path)
             # print(df_file.columns)
