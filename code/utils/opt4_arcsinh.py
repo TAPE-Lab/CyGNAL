@@ -6,24 +6,19 @@
 #This script identifies the marker columns containing RAW intensities and
 #overwrites them with normalised values
 
-import os
-import sys
+import os, sys #Fix importing from diff. directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import numpy as np
 import pandas as pd
-from aux_functions import *
+from aux.aux_functions import yes_or_NO, arcsinh_transf
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 folder_name = "opt4_arcsinh"
 
-if os.path.isdir(f"./output/{folder_name}") == False:
-    os.makedirs(f"./output/{folder_name}")
-if os.path.isdir(f"./input/{folder_name}") == False:
-    os.makedirs(f"./input/{folder_name}")
-    sys.exit("ERROR: There is no input folder") 
-    
-input_dir = f"./input/{folder_name}"
-output_dir = f"./output/{folder_name}"
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 ###~Sanity check for contents~###
 filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
