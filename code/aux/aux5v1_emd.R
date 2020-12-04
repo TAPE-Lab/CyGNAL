@@ -5,7 +5,8 @@ args <- paste(args, collapse=" ") #Collapse paths with spaces to single string
 list.of.packages <- c("tidyverse", 
                         "RColorBrewer",
                         "shiny",
-                        "plotly"
+                        "plotly",
+                        "ComplexHeatmap"
                         )
 # check if pkgs are installed already, if not, install automatically:
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -32,21 +33,29 @@ ui <- fluidPage(
     # Application title
     titlePanel("CyGNAL: EMD heatmap"),
 
-    sidebarPanel(width=4,
-        sliderInput("range",
-                    "Slider Range:",
-                    step = 0.1,
-                    min = floor(minx) - 1,
-                    max = ceiling(maxx) +1,
-                    value = c(minx, maxx)),
-        selectInput('in6', 'Select markers', unique(emd_info$marker), multiple=TRUE, selectize=TRUE),
-        selectInput('in12', 'Select and reorder conditions', unique(emd_info$file_origin), multiple=TRUE, selectize=TRUE),
-        tags$hr(),
-        downloadButton('foo', "Download plot as .pdf")
-    ),
-    mainPanel(width=8,
-        plotlyOutput("trendPlot")
+    sidebarLayout(
+        sidebarPanel(width=4,
+            sliderInput("range",
+                        "Slider Range: (only for Plotly heatmap",
+                        step = 0.1,
+                        min = floor(minx) - 1,
+                        max = ceiling(maxx) +1,
+                        value = c(minx, maxx)),
+            selectInput('in6', 'Select markers', unique(emd_info$marker), multiple=TRUE, selectize=TRUE),
+            selectInput('in12', 'Select and reorder conditions', unique(emd_info$file_origin), multiple=TRUE, selectize=TRUE),
+            tags$hr(),
+            downloadButton('foo', "Download plotly Heatmap as .pdf"),
+            downloadButton("complex", "Download annotated ComplexHeatmap as .pdf")
+        ),
+        mainPanel(
+            tabsetPanel(
+                tabPanel("Plotly plot", width=8, plotlyOutput("trendPlot")),
+                tabPanel("Complex Heatmap",height = "800px",plotOutput("complexheatmap"))
+            )
+        )
     )
+
+
 )
 
 ###############################################################################
@@ -70,7 +79,7 @@ server <- function(input, output, session) {
             data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
         }
         else{data_to_plot <- emd_info}
-        
+        # saveRDS(data_to_plot, "testdata.RDS")
         initial_emd <- data_to_plot %>% ggplot(aes(x=file_origin, y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
         print(
         ggplotly(initial_emd + scale_fill_distiller(
@@ -85,6 +94,26 @@ server <- function(input, output, session) {
             ggtitle("EMD scores heatmap")
         ) %>% layout(height = 700, width = 700))
     })
+    output$complexheatmap <- renderPlot({ ###TESTING ADDITION OF COMPLEXHEATMAP###
+        if (!is.null(input$in6) & !is.null(input$in12)) {
+            data_to_plot <- emd_info %>% filter(marker %in% input$in6) %>% filter(file_origin %in% input$in12)
+            data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
+        }
+        else if (!is.null(input$in6) & is.null(input$in12)) {
+            data_to_plot <- emd_info %>% filter(marker %in% input$in6)
+        }
+        else if (is.null(input$in6) & !is.null(input$in12)) {
+            data_to_plot <- emd_info %>% filter(file_origin %in% input$in12) 
+            data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
+        }
+        else{data_to_plot <- emd_info}
+        df <- data_to_plot %>% select(EMD_no_norm_arc, file_origin, marker) %>% spread(marker,EMD_no_norm_arc)
+        conditions <- df$file_origin
+        df_mat <- df %>% select(-file_origin) %>% as.matrix()
+        rownames(df_mat) <- conditions
+        Heatmap(t(df_mat), name="EMD scores", column_title="Conditions",row_title="Markers",column_names_rot=60)
+    }, width=600, height=800)
+
     output$foo <- downloadHandler(
         filename = "emd_heatmap.pdf",
         content = function(file) {
@@ -114,6 +143,31 @@ server <- function(input, output, session) {
                             xlab("Condition") + ylab("Markers") +
                     ggtitle("EMD scores heatmap")
             , device = "pdf")
+        }
+    )
+    output$complex <- downloadHandler(
+        filename = "emd_complexheatmap.pdf",
+        content = function(file) {
+            if (!is.null(input$in6) & !is.null(input$in12)) {
+                data_to_plot <- emd_info %>% filter(marker %in% input$in6) %>% filter(file_origin %in% input$in12)
+                data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
+            }
+            else if (!is.null(input$in6) & is.null(input$in12)) {
+                data_to_plot <- emd_info %>% filter(marker %in% input$in6)
+            }
+            else if (is.null(input$in6) & !is.null(input$in12)) {
+                data_to_plot <- emd_info %>% filter(file_origin %in% input$in12) 
+                data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
+            }
+            else{data_to_plot <- emd_info}
+            
+            df <- data_to_plot %>% select(EMD_no_norm_arc, file_origin, marker) %>% spread(marker,EMD_no_norm_arc)
+            conditions <- df$file_origin
+            df_mat <- df %>% select(-file_origin) %>% as.matrix()
+            rownames(df_mat) <- conditions
+            pdf(file)#Had to save using general method and calling draw() to heatmap
+            draw(Heatmap(t(df_mat), name="EMD scores", column_title="Conditions",row_title="Markers",column_names_rot=60)) #, heatmap_height=unit(16,"cm") apply to draw call to modify height
+            dev.off()
         }
     )
     #session$onSessionEnded(stopApp)
