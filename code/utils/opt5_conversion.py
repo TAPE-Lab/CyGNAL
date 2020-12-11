@@ -19,8 +19,10 @@ from aux.aux_functions import *
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-input_dir = f"{base_dir}/Utils_Data/input/opt5_conversion"
-output_dir = f"{base_dir}/Utils_Data/output/opt5_conversion"
+folder_name = "opt5_conversion"
+
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]

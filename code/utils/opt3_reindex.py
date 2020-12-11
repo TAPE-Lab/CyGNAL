@@ -7,8 +7,10 @@ import pandas as pd
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-input_dir = f"{base_dir}/Utils_Data/input/opt3_reindex"
-output_dir = f"{base_dir}/Utils_Data/output/opt3_reindex"
+folder_name = "opt3_reindex"
+
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 if len(filelist) == 0:

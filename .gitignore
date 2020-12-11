@@ -85,4 +85,5 @@ Analysis/EMD_input/test_zoom_panel_markers.csv
 # Ignore User Data
 Preprocessed_Data/
 Analysis/
-Utils_Data/
+Utils_Data/input/opt1_concatenation/Tests/
+Utils_Data/output/opt1_concatenation/UNNAMED/

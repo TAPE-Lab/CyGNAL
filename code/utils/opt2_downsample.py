@@ -10,8 +10,10 @@ from aux.aux_functions import concatenate_fcs, downsample_data
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-input_dir = f"{base_dir}/Utils_Data/input/opt2_downsample"
-output_dir = f"{base_dir}/Utils_Data/output/opt2_downsample"
+folder_name = "opt2_downsample"
+
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 if len(filelist) == 0:

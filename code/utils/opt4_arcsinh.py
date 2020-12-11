@@ -15,9 +15,9 @@ import pandas as pd
 from aux.aux_functions import arcsinh_transf, yes_or_NO
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 folder_name = "opt4_arcsinh"
 
-base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
 output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 

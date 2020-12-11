@@ -20,8 +20,10 @@ from aux.aux_functions import *
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-input_dir = f"{base_dir}/Utils_Data/input/opt1_concatenation"
-output_dir = f"{base_dir}/Utils_Data/output/opt1_concatenation"
+folder_name = "opt1_concatenation"
+
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 info_run =  input("Write info run (using no spaces!): ")
 if len(info_run) == 0:
