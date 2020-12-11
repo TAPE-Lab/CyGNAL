@@ -82,7 +82,7 @@ def arcsinh_transf(cofactor, no_arc):
     #     print ("(there was no concatenation prior to transforming)")
     return arc, cols
 
-#Function to concatenate all files
+#Function to concatenate all files: Read input .txt and .fcs. Sanity check. Concatenate
 def concatenate_fcs(input_dir):
     txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
@@ -120,12 +120,15 @@ def concatenate_fcs(input_dir):
         df["file_identifier"] = name
         df["file_origin"] = str(fcounter)+" | "+ name 
         #File+ID #This way the cell-index will be preserved after Cytobank upload
-        df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
-                                        lambda x: str(fcounter)+"-"+str(x))
+        try:
+            df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
+                                            lambda x: str(fcounter)+"-"+str(x))
+        except KeyError:
+            sys.exit("ERROR: Cell_Index missing from data. Have you preprocessed it?")
         no_arc = no_arc.append(df, ignore_index=True)
     return no_arc, filelist
 
-#Function to concatenate all files and save as txt 
+#Function to concatenate all files and save as txt -> DEPRECATE IN THE NEAR FUTURE!
 def concatenate_save(input_dir, output_dir):
     input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     concat = pd.DataFrame()

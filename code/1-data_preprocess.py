@@ -28,8 +28,8 @@ txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
 filelist = txt_filelist+fcs_filelist
 
-if len(txt_filelist) == 0 and len(fcs_filelist)==0:
-    sys.exit(f"ERROR: There are no files in {input_dir}!")
+if len(filelist)==0:
+    sys.exit (f"ERROR: There are no files in {input_dir}!")
 if len(txt_filelist)!=0:
     print("Found the following .txt files: ", txt_filelist)
     txt_sopts = yes_or_NO("Would you like to save the processed .txt files also in .fcs format?")
