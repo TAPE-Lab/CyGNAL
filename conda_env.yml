@@ -27,3 +27,5 @@ dependencies:
     - sklearn
     # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
     - umap-learn
+
+#TODO: Add complexheatmap and possilby new UMAP dependencies
