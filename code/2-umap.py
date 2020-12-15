@@ -24,6 +24,7 @@ n = 15
 m = 0.1
 comp = 2
 d = "euclidean"
+low_memory = False #Add support for low_memory flag to umap run
 
 cofactor = 5
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

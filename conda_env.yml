@@ -3,12 +3,15 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - python=3.7
+  - python=3.8
   - pip=20   
+  - r-base>=4
   - r-essentials
-  - r-base
   - numpy
   - pandas
+  - scikit-learn #Added sklearn from main conda channel
+  - pynndescent #Should be in conda-forge
+  - umap-learn #In conda-forge, moved to conda from pip
   - plotly
   - scprep
   - rpy2
@@ -20,12 +23,13 @@ dependencies:
   - r-hmisc
   - r-mass
   - bioconductor-flowcore
+  - bioconductor-complexheatmap
 
   - pip:
     - fcsparser
     - fcswrite
-    - sklearn
+    # - sklearn Changed to conda
     # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
-    - umap-learn
+    # - umap-learn Changed to conda
 
 #TODO: Add complexheatmap and possilby new UMAP dependencies
