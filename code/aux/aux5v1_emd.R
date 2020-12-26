@@ -174,4 +174,11 @@ server <- function(input, output, session) {
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server)
+
+if (getOption("browser") == "") {
+    options(browser="xdg-open")
+    print("R encountered an error when identifying your default browser.")
+    print("Please manually open in your browser the addres indicated below.")
+} #The block below solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
+
+shinyApp(ui = ui, server = server) #, options = list(launch.browser=TRUE))

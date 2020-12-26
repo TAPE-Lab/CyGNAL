@@ -22,6 +22,9 @@ dependencies:
   - r-psych
   - r-hmisc
   - r-mass
+  - r-factominer
+  - r-factoextra
+  - r-matrixstats
   - bioconductor-flowcore
   - bioconductor-complexheatmap
 
