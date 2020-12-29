@@ -13,6 +13,9 @@ import umap
 def read_rFCS(file_path):
     from rpy2.robjects import globalenv, pandas2ri, r
     from rpy2.robjects.packages import importr
+    # from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
+    # import logging
+    # rpy2_logger.setLevel(logging.ERROR) #Silence R warnings and show only Errors
     pandas2ri.activate()
     flowcore = importr("flowCore")
     base = importr("base")
