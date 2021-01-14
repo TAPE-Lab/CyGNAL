@@ -8,9 +8,10 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 [Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
-## How to use
+## Using CyGNAL
 
-Main steps in code folder. Various utilities can be found in code/utils.
+CyGNAL is distributed as multilevel directory. The 'code' folder contains the main steps, with other utility scripts found in 'code/utils/'. Input data should be added to 'Raw_Data' for pre-processing and processed datasets are stored in 'Preprocessed_Data'.
+Input and output directories for the analysis and visualisation steps are found in the 'Analysis' directory.
 
 ### Input data
 
@@ -20,31 +21,39 @@ Raw data contains sample dataset files. Pipeline can take in both FCS and .txt f
 
 ### A Brief Step-by-Step Tutorial
 
-Brief tutotorial to run all main steps in CyGNAL with a sequential order. All console commands given assume the user is in the tool's root directory (.../CyGNAL/).
+Brief tutotorial to run all main steps in CyGNAL with a sequential order. 
+All console commands given assume the user is in the tool's root directory (.../CyGNAL/) and moves the relevant data from the ouput folder of the previous step to the input of the current.
 <!-- (Refer to the Nature Protocols paper for more in-depth instructions) -->
 
-1. **(SETUP):** Clone the repository and ensure you have all necessary software and dependencies.
-    * We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment from 'conda_env.yml' using `conda create -f conda_env.yml`.
+0. **(SETUP):** Clone (or download) the repository and ensure you have all necessary software and dependencies.
+    * We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment with `conda create -f conda_env.yml`.
 
-2. **Pre-process:** Copy all the data files to the 'Raw_Data' folder and run `1-data_preprocess.py`. The output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the 'Preprocessed_Data' folder, together with a *'panel_markers.csv'* file listing all the markers measured in the given experiment.
+1. **Pre-process:** Copy all the data files to the 'Raw_Data' folder and run `1-data_preprocess.py`. The output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the 'Preprocessed_Data' folder, together with a *'panel_markers.csv'* file listing all the markers measured in the given experiment.
+    * `python 1-data_preprocess.py`
 
     *Optional (if exporting .txt datasets from Cytobank):* Go to the working illustration page (Illustrations - My working illustration), highlight the population(s) of interest, and export events as untransformed text files (Actions - Export - Export events, with *'Include header with FCS filename'* unchecked).
 
     *Note:* This step is essential for getting the dataset compatible with downstream analysis and has to be performed as the first step in our workflow.
 
-3. **UMAP:** Move the processed data file(s) and panel_marker.csv to 'Analysis/UMAP_input'. Edit *'panel_markers.csv'* to set all the markers used for UMAP analysis from 'N' to 'Y'. Run `2-umap.py`, and the output files will be saved within the 'Analysis/UMAP_output' folder. The markers and the indices of the cells used in the analysis will also be saved in the new folder.
-
+2. **UMAP:** Move the processed data file(s) and panel_marker.csv to 'Analysis/UMAP_input'. Edit *'panel_markers.csv'* to set all the markers used for UMAP analysis from 'N' to 'Y'. Run `2-umap.py`, and the output files will be saved within the 'Analysis/UMAP_output' folder. The markers and the indices of the cells used in the analysis will also be saved in the new folder.
+    * `python 2-umap.py`
+   
    *Note:* When there is more than one data file used as input of the analysis, each data file can be downsampled to the lowest number of the input (i.e. 'equal' sampling) and concatenated prior to UMAP calculation. After the calculation is complete, the concatenated dataset as well as each individual condition are saved with their UMAP coordinates attached.
 
-4. **EMD:** To perform EMD calculation (using the tools available in the [scprep](https://github.com/KrishnaswamyLab/scprep) library), copy the input data files to 'Analysis/EMD_input'. Run `3-emd.py` and follow the instructions. By default, the denominator of the EMD calculation will be the concatenation of all the input data files, but the user is given the option to provide a specific denominator data file. While EMD scores of all channels can be calculated by default, by default the user should place the *'panel_markers.csv'* in the input folder to specifiy which marker are to be used. The calculated EMD scores will be saved in 'Analysis/EMD_output', within the 'EMD_arc_no_norm' column in the saved file.
+3. **EMD:** To perform EMD calculation (using the tools available in the [scprep](https://github.com/KrishnaswamyLab/scprep) library), copy the input data files to 'Analysis/EMD_input'. Run `3-emd.py` and follow the instructions. By default, the denominator of the EMD calculation will be the concatenation of all the input data files, but the user is given the option to provide a specific denominator data file. While EMD scores of all channels can be calculated by default, by default the user should place the *'panel_markers.csv'* in the input folder to specifiy which marker are to be used. The calculated EMD scores will be saved in 'Analysis/EMD_output', within the 'EMD_arc_no_norm' column in the saved file.
+    * `python 3-emd.py`
 
-5. **DREMI:** To perform DREMI calculation (using the tools available in the [scprep](https://github.com/KrishnaswamyLab/scprep) library) copy the input data files to 'Analysis/DREMI_input'. Run `4-dremi.py` and follow the instructions. As with EMD, DREMI scores of all permutations of marker combinations can be calculated, but we suggest specifying the markers of interest by modifying the *'panel_markers.csv'* file. The calculated DREMI scores will be saved in 'Analysis/DREMI_output'.
-
+4. **DREMI:** To perform DREMI calculation (using the tools available in the [scprep](https://github.com/KrishnaswamyLab/scprep) library) copy the input data files to 'Analysis/DREMI_input'. Run `4-dremi.py` and follow the instructions. As with EMD, DREMI scores of all permutations of marker combinations can be calculated, but we suggest specifying the markers of interest by modifying the *'panel_markers.csv'* file. The calculated DREMI scores will be saved in 'Analysis/DREMI_output'.
+    * `python 4-dremi.py`
+    
     *Optional:* The user is given the option to save the density-resampled plots for data inspection and to perform a standard deviation-based outlier removal step prior to DREMI calculation.
 
-6. **Heatmap:** To visualise EMD/DREMI scores in heatmaps, copy the EMD/DREMI calculation outputs to the 'Analysis/Vis_Heatmap' folder. Run `5v1-emd_dremi_htmp.py` and follow the instructions in the GUI. The script accepts only one EMD data file and one DREMI data file (with 'EMD' and 'DREMI' in their file names respectively) to be visualised.
+5. **Heatmap:** To visualise EMD/DREMI scores in heatmaps, copy the EMD/DREMI calculation outputs to the 'Analysis/Vis_Heatmap' folder. Run `5v1-htmp.py` and follow the instructions in the GUI. The script accepts only one EMD data file and one DREMI data file (with 'EMD' and 'DREMI' in their file names respectively) to be visualised.
+    * `python 5v1-htmp.py`
 
-7. **Principal component analysis (PCA):** To perform PCA and visualise the results, copy the EMD/DREMI calculation outputs to the 'Analysis/Vis_PCA' folder. Run `5v2-pca.py` and follow the instructions in the GUI.
+6. **Principal component analysis (PCA):** To perform PCA and visualise the results, copy the EMD/DREMI calculation outputs to the 'Analysis/Vis_PCA' folder. Run `5v2-pca.py` and follow the instructions in the GUI.
+    * `python 5v2-pca.py`
+
 
 ## Dependencies
 
