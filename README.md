@@ -10,7 +10,7 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 ## Using CyGNAL
 
-CyGNAL is distributed as multilevel directory. The 'code' folder contains the main steps, with other utility scripts found in 'code/utils/'. Input data should be added to 'Raw_Data' for pre-processing and processed datasets are stored in 'Preprocessed_Data'.
+CyGNAL is distributed as a multilevel directory. The 'code' folder contains the main steps, with other utility scripts found in 'code/utils/'. Input data should be added to 'Raw_Data' for pre-processing and processed datasets are stored in 'Preprocessed_Data'.
 Input and output directories for the analysis and visualisation steps are found in the 'Analysis' directory.
 
 ### Input data
