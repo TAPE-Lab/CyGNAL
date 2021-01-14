@@ -1,29 +1,30 @@
 [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest)
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
-Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. The Cell Communication Lab studies how oncogenic mutations communicate with stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer.
+In this repository we present *CyGNAL*, a pipeline for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, CyGNAL assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
 
-In this repo we present *CyGNAL*, a pipeline for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, CyGNAL assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
-
-Overview of the current workflow:
+Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 ![alt text][Overview]
 
-[Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.png "Overview of cell identification"
+[Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
 ## How to use
 
 Main steps in code folder. Various utilities can be found in code/utils.
 
+### Input data
+
 Raw data contains sample dataset files. Pipeline can take in both FCS and .txt files (as tab-separated dataframes).
 
-
-*NOTE*: The dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [paper](https://www.nature.com/articles/s41592-020-0737-8). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.
+*NOTE*: The toy dataset used in this tutorial is a down-sampled version (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal organoid time-course experiment described in Figure 4 of our [paper](https://www.nature.com/articles/s41592-020-0737-8). The full dataset is available through [Cytobank Community](https://community.cytobank.org/cytobank/experiments/81059). The users will need to register a free Cytobank Community account to access the project and are encouraged to clone the experiments and explore the data in further details.
 
 ### A Brief Step-by-Step Tutorial
 
+Brief tutotorial to run all main steps in CyGNAL with a sequential order. All console commands given assume the user is in the tool's root directory (.../CyGNAL/).
 <!-- (Refer to the Nature Protocols paper for more in-depth instructions) -->
 
 1. **(SETUP):** Clone the repository and ensure you have all necessary software and dependencies.
+    * We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment from 'conda_env.yml' using `conda create -f conda_env.yml`.
 
 2. **Pre-process:** Copy all the data files to the 'Raw_Data' folder and run `1-data_preprocess.py`. The output files with their antibody panel processed (i.e. measured channels decluttered, empty channels deleted, cell-index assigned) will be saved in the 'Preprocessed_Data' folder, together with a *'panel_markers.csv'* file listing all the markers measured in the given experiment.
 
@@ -47,20 +48,20 @@ Raw data contains sample dataset files. Pipeline can take in both FCS and .txt f
 
 ## Dependencies
 
-We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) to setup an environment from 'conda_env.yml'.
-
-* Python: Tested with Python v3.6 and v3.7. Used in the backbone of the workflow and most computational steps.
+* Python: Tested with Python v3.6, v3.7, and v3.8. Used in the backbone of the workflow and most computational steps.
     * `fcsparser`
     * `fcswrite`
     * `numpy`
     * `pandas`
     * `plotly`
+    * `pynndescent`
     * `rpy2`
     * `scprep`
     * `sklearn`
     * `umap-learn`
 
-* R: Tested with R v3.6.1 and RStudio v1.2.5001. Mostly used for visualisation, but also for computing the PCA.
+* R: Tested with v3.6.1 < R <= v4. Mostly used for visualisation, but also for computing the PCA.
+    * `ComplexHeatmap`
     * `DT`
     * `factoextra`
     * `FactoMineR`
@@ -82,3 +83,9 @@ We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.ht
 
 The work here is actively being developed by Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)). 
 Based also on original work by Pelagia Kyriakidou.
+
+We acknowledge the work of all third-parties whose packages are used in CyGNAL.
+
+## About the group
+
+Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. The Cell Communication Lab studies how oncogenic mutations communicate with stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). By understanding how mutations regulate all cell types within a tumour, we aim to uncover novel approaches to treat cancer.
