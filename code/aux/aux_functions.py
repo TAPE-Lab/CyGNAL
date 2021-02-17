@@ -40,13 +40,15 @@ def read_rFCS(file_path):
         print(type(fcs_columns),": ", fcs_columns)
         for i in fcs_columns:
             print(i)
-        sys.exit("Bye!")
+        bad_flag = 1
     if not isinstance(df_file,pd.core.frame.DataFrame):
         print("CALLUM'S ERROR. CONTACT @FerranC96")
         print(type(df_file),": ", df_file)
         for i in df_file:
             print(i)
-        sys.exit("Bye!")
+        bad_flag = 1
+    if bad_flag ==1:
+        sys.exit("Bye!")    
     fcs_columns = fcs_columns.tolist()
     original_columns = df_file.columns.values.tolist()
     filtered_columns = []
