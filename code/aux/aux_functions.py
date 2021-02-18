@@ -35,21 +35,21 @@ def read_rFCS(file_path):
     ''')
     fcs_columns = globalenv["marker_names"](raw_FCS)
     df_file = globalenv["FF2dframe"](raw_FCS)
-    if not isinstance(fcs_columns,np.ndarray):
+    if not isinstance(fcs_columns,np.ndarray): #Error checking for StrVector output from rpy2
         print("CALLUM'S ERROR. CONTACT @FerranC96")
         print(type(fcs_columns),": ", fcs_columns)
+        columns_list = []
         for i in fcs_columns:
             print(i)
-        bad_flag = 1
+            columns_list.append(i)
+        fcs_columns = columns_list
+    else:
+        fcs_columns = fcs_columns.tolist()
     if not isinstance(df_file,pd.core.frame.DataFrame):
         print("CALLUM'S ERROR. CONTACT @FerranC96")
         print(type(df_file),": ", df_file)
         for i in df_file:
             print(i)
-        bad_flag = 1
-    if bad_flag ==1:
-        sys.exit("Bye!")    
-    fcs_columns = fcs_columns.tolist()
     original_columns = df_file.columns.values.tolist()
     filtered_columns = []
     try:
