@@ -13,9 +13,11 @@ if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.
 #Load packages
 lapply(list.of.packages, require, character.only = TRUE)
 
+#FUTURE WORK: Look into ComplexHeatmap (group similar DREMI patterns)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#Make sure no_norm is like this and marker_marker, not marker-marker -> check dremi script for populatiog the column itself, although i don't think that will pose a problem here in R
+#Make sure no_norm is like this and marker_marker, not marker-marker -> 
+#check dremi script for populatiog the column itself, although i don't think that will pose a problem here in R
 dremi_info <- read_tsv(args)
 minx <- min(dremi_info$with_outliers_arcsinh_DREMI_score)
 maxx <- max(dremi_info$with_outliers_arcsinh_DREMI_score)
@@ -33,7 +35,7 @@ initial_dremi <- dremi_info %>% ggplot(aes(
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# Define UI for application that draws a histogram
+
 ui <- fluidPage(
 
     # Application title
@@ -59,12 +61,12 @@ ui <- fluidPage(
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Server~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# Define server logic required to draw a histogram
+
 server <- function(input, output, session) {
 
     output$out6 <- renderPrint(input$in6)
     
-    output$trendPlot <- renderPlotly({
+    output$trendPlot <- renderPlotly({ #Process input data and make plotly heatmap
         if (!is.null(input$in6) & !is.null(input$in12)) {
             data_to_plot <- dremi_info %>% filter(str_detect(marker_x_marker_y, input$in6)) %>% filter(file_origin %in% input$in12)
             data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
@@ -95,7 +97,7 @@ server <- function(input, output, session) {
             ) %>% layout(height = 800) # %>% layout(height = 1400, width = 1200)
         )
     })
-    output$foo <- downloadHandler(
+    output$foo <- downloadHandler( #Download plotly heatmap
         filename = "dremi_heatmap.pdf",
         content = function(file_origin) {
             if (!is.null(input$in6) & !is.null(input$in12)) {

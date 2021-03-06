@@ -100,14 +100,6 @@ print('\n'.join([m for m in all_together_vs_marks]))
 print(f"\n Number of markers used: {len(all_together_vs_marks.columns)}")
 
 
-#~~~~~~~~~~~~~~~~~~~Optional: z-score transformation~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# Z-SCORE: Not used now, interactive inplementation on later stages of the pipeline
-# z-score transformation (for the Organoid Methods Paper, only applied to supplementary figure 1)
-# all_together_vs_marks.head()
-# all_together_vs_marks = all_together_vs_marks.apply(zscore)
-# all_together_vs_marks.head()
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~Perform  and save UMAP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #Define UMAP parameters
 

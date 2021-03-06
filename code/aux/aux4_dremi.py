@@ -8,6 +8,7 @@ import pandas as pd
 import scprep
 
 
+# EXPERIMENTAL #
 # find outliers for both marker_x and marker_y based on cufoffs of standard deviations
 # return the number of outliers and a dataframe after outlier removal
 # update the df_info_dict with the number of outliers

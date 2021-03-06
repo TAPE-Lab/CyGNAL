@@ -27,7 +27,7 @@ print(minx, maxx)
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~UI~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# Define UI for application that draws a histogram
+
 ui <- fluidPage(
 
     # Application title
@@ -61,12 +61,12 @@ ui <- fluidPage(
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Server~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-# Define server logic required to draw a histogram
+
 server <- function(input, output, session) {
 
     output$out6 <- renderPrint(input$in6)
     
-    output$trendPlot <- renderPlotly({
+    output$trendPlot <- renderPlotly({ #Process input data and make plotly heatmap
         if (!is.null(input$in6) & !is.null(input$in12)) {
             data_to_plot <- emd_info %>% filter(marker %in% input$in6) %>% filter(file_origin %in% input$in12)
             data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
@@ -79,7 +79,6 @@ server <- function(input, output, session) {
             data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
         }
         else{data_to_plot <- emd_info}
-        # saveRDS(data_to_plot, "testdata.RDS")
         initial_emd <- data_to_plot %>% ggplot(aes(x=file_origin, y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
         print(
         ggplotly(initial_emd + scale_fill_distiller(
@@ -94,7 +93,7 @@ server <- function(input, output, session) {
             ggtitle("EMD scores heatmap")
         ) %>% layout(height = 700, width = 700))
     })
-    output$complexheatmap <- renderPlot({ ###TESTING ADDITION OF COMPLEXHEATMAP###
+    output$complexheatmap <- renderPlot({ #Process input data and make ComplexHeatmap
         if (!is.null(input$in6) & !is.null(input$in12)) {
             data_to_plot <- emd_info %>% filter(marker %in% input$in6) %>% filter(file_origin %in% input$in12)
             data_to_plot$file_origin <- as.factor(data_to_plot$file_origin) %>% fct_relevel(input$in12)
@@ -114,7 +113,7 @@ server <- function(input, output, session) {
         Heatmap(t(df_mat), name="EMD scores", column_title="Conditions",row_title="Markers",column_names_rot=60)
     }, width=600, height=800)
 
-    output$foo <- downloadHandler(
+    output$foo <- downloadHandler( #Download plotly heatmap
         filename = "emd_heatmap.pdf",
         content = function(file) {
             if (!is.null(input$in6) & !is.null(input$in12)) {
@@ -145,7 +144,7 @@ server <- function(input, output, session) {
             , device = "pdf")
         }
     )
-    output$complex <- downloadHandler(
+    output$complex <- downloadHandler( #Download ComplexHeatmap
         filename = "emd_complexheatmap.pdf",
         content = function(file) {
             if (!is.null(input$in6) & !is.null(input$in12)) {
@@ -179,6 +178,6 @@ if (getOption("browser") == "") {
     options(browser="xdg-open")
     print("R encountered an error when identifying your default browser.")
     print("Please manually open in your browser the addres indicated below.")
-} #The block below solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
+} #The block above solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
 
 shinyApp(ui = ui, server = server) #, options = list(launch.browser=TRUE))

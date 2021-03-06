@@ -1,5 +1,5 @@
 ###############################################################################
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Heatmaps~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~PCA~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
 #Calculate and plot PCAs on EMD and DREMI scores
 import os
@@ -8,11 +8,9 @@ import sys
 
 from aux.aux_functions import yes_or_NO
 
-#2 options for the PCA plots:
-    #Either run basic PCA on R and plot in shiny app (less graphical customisation, simpler plots)
-    #Leverage PCA shiny apps. 
-        #PCAshiny from Factoshiny -> Very basic
-        #Interactive PCA Explorer
+#Import yes or no question to choose the different plotings
+#Run the separate R shiny apps accordingly
+#Simultaneous emd and DREMI should both be possible since the ports are random
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
