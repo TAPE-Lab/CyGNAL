@@ -1,4 +1,6 @@
 [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4587193.svg)](https://doi.org/10.5281/zenodo.4587193)
+
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
 In this repository we present *CyGNAL*, a pipeline for analysing mass cytometry data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). With code in both Python and R, CyGNAL assumes some preliminary and inter-step processing through the platform [Cytobank](https://cytobank.org/) (although the user could in theory use any other solution for this and the gating steps).
