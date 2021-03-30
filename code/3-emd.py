@@ -97,8 +97,10 @@ if filter_markers:
                 compare_to = compare_to.drop(x, axis=1)
     print (compare_to.columns)
 
-# compare_to = downsample_data(compare_to, info_run, output_dir)
-compare_to_arc, marker_list = arcsinh_transf(cofactor, compare_to)
+# compare_to = downsample_data(compare_to, info_run, output_dir) #Customtest_1
+compare_to_arc, marker_list = arcsinh_transf(cofactor, compare_to) #Leeave as default
+# compare_to_arc = compare_to #Customtest_2
+# marker_list = [x for x in compare_to_arc.columns if x[0].isdigit()] #Customtest_2
 
 print('Sample files:')
 print('\n'.join([f for f in input_files]))
