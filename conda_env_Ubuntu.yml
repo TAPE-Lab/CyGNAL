@@ -3,34 +3,32 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - bioconductor-complexheatmap
-  - numpy
-  - bioconductor-flowcore
-  - pynndescent
-  - r-dt
-  - r-plotly
-  - r-essentials
-  - rpy2
-  - umap-learn
-  - r-psych
-  - scikit-learn
-  - plotly
-  - python=3.8
-  - r-ggally
-  - pandas
-  - r-rcolorbrewer
-  - scprep
-  - r-factoextra
-  - r-mass
-  - pip=20
-  - r-factominer
-  - r-matrixstats
-  - r-base[version='>=4']
-  - r-hmisc
+  - python=3.8  #ALLarch
+  - pip=20  #ALLarch
+  - conda-forge::r-base>=4  #ALLarch
+  - numpy #ALLarch
+  - pandas  #ALLarch
+  - scikit-learn  #ALLarch
+  - pynndescent #ALLarch
+  - conda-forge::umap-learn #ALL64arch
+  - plotly #noarch
+  - bioconda::scprep #noarch
+  - bioconda::fcsparser #noarch
+  - conda-forge::rpy2 #ALL64arch
+  - conda-forge::r-rcolorbrewer #noarch
+  - conda-forge::r-plotly #noarch
+  - conda-forge::r-dt #noarch
+  - conda-forge::r-ggally #noarch
+  - conda-forge::r-psych  #noarch
+  - conda-forge::r-hmisc  #noarch
+  - conda-forge::r-mass #noarch
+  - conda-forge::r-factominer #noarch
+  - conda-forge::r-factoextra #noarch
+  - conda-forge::r-matrixstats  #noarch
+  - conda-forge::r-tidyverse  #noarch
+  - conda-forge::r-shiny #noarch
+  - bioconda::bioconductor-flowcore #linos64
+  - bioconda::bioconductor-complexheatmap #noarch
 
   - pip:
-    - fcsparser
     - fcswrite
-    # - sklearn Changed to conda
-    # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
-    # - umap-learn Changed to conda
