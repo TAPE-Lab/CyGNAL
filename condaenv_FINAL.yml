@@ -1,4 +1,4 @@
-name: test3
+name: envtest
 channels:
   # - bioconda
   - conda-forge
