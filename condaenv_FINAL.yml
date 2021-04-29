@@ -3,9 +3,9 @@ channels:
   # - bioconda
   - conda-forge
 dependencies: #Having some clobberErros and VerificationError (plotly seems corrupted in mac)
-  - python  #ALLarch
+  - python  #ALLarch -> Installs to 3.8.8 in macOS
   - pip  #ALLarch
-  - r-base  #ALLarch
+  - r-base  #ALLarch -> Installs to 4.0.3 in macOS
   - numpy #ALLarch
   - pandas  #ALLarch
   - scikit-learn  #ALLarch
