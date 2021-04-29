@@ -1,9 +1,8 @@
-name: test
-channels: #Just noticed that mixing channels results in conflicts. Apparently i'm not the nly one....
-  - defaults
-  - bioconda
+name: test3
+channels:
+  # - bioconda
   - conda-forge
-dependencies: #Removed any version numbers to get it running in any way.
+dependencies: #Having some clobberErros and VerificationError (plotly seems corrupted in mac)
   - python  #ALLarch
   - pip  #ALLarch
   - r-base  #ALLarch
@@ -13,8 +12,8 @@ dependencies: #Removed any version numbers to get it running in any way.
   - pynndescent #ALLarch
   - umap-learn #ALL64arch
   - plotly #noarch
-  - scprep #noarch
-  - fcsparser #noarch
+  - bioconda::scprep #noarch
+  - bioconda::fcsparser #noarch
   - rpy2 #ALL64arch
   - r-rcolorbrewer #noarch
   - r-plotly #noarch
@@ -28,8 +27,8 @@ dependencies: #Removed any version numbers to get it running in any way.
   - r-matrixstats  #noarch
   - r-tidyverse  #noarch
   - r-shiny #noarch
-  - bioconductor-flowcore #linos64
-  - bioconductor-complexheatmap #noarch
+  - bioconda::bioconductor-flowcore #linos64
+  - bioconda::bioconductor-complexheatmap #noarch
   - pip:
     - fcswrite
   #   - rpy2
