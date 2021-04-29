@@ -43,9 +43,9 @@ r('''
     new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) {
         print(paste0("WARNING!: Missing R package(s): ", new.packages))
-        print("Attempting to install missing R package(s)...")
-        install.packages(new.packages, repos = "http://cran.us.r-project.org")
-        lapply(list.of.packages, require, character.only = TRUE) #Load packages
+        # print("Attempting to install missing R package(s)...")
+        # install.packages(new.packages, repos = "http://cran.us.r-project.org")
+        # lapply(list.of.packages, require, character.only = TRUE) #Load packages
     } else {
         print("All R packages are installed!")
     }

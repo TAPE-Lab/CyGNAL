@@ -1,0 +1,36 @@
+name: cygnal_ubuntu
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - bioconductor-complexheatmap
+  - numpy
+  - bioconductor-flowcore
+  - pynndescent
+  - r-dt
+  - r-plotly
+  - r-essentials
+  - rpy2
+  - umap-learn
+  - r-psych
+  - scikit-learn
+  - plotly
+  - python=3.8
+  - r-ggally
+  - pandas
+  - r-rcolorbrewer
+  - scprep
+  - r-factoextra
+  - r-mass
+  - pip=20
+  - r-factominer
+  - r-matrixstats
+  - r-base[version='>=4']
+  - r-hmisc
+
+  - pip:
+    - fcsparser
+    - fcswrite
+    # - sklearn Changed to conda
+    # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
+    # - umap-learn Changed to conda

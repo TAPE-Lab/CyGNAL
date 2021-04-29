@@ -1,0 +1,29 @@
+name: cygnal_macos
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+ - r-base
+ - r-essentials
+ - r-dt
+ - r-ggally
+ - r-mass
+ - r-psych
+ - numpy
+ - bioconductor-flowcore
+ - pandas
+ - r-hmisc
+ - rpy2
+ - r-plotly
+ - r-rcolorbrewer
+ - scprep
+ - plotly
+ - pip=20
+ - python=3.7
+
+  - pip:
+    - fcsparser
+    - fcswrite
+    # - sklearn Changed to conda
+    # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
+    # - umap-learn Changed to conda
