@@ -1,38 +1,35 @@
 name: cygnal
 channels:
-  - bioconda
+  # - bioconda
   - conda-forge
-dependencies:
-  - python=3.8
-  - pip=20   
-  - r-base>=4
-  - r-essentials
-  - numpy
-  - pandas
-  - scikit-learn #Added sklearn from main conda channel
-  - pynndescent #Should be in conda-forge
-  - umap-learn #In conda-forge, moved to conda from pip
-  - plotly
-  - scprep
-  - rpy2
-  - r-rcolorbrewer
-  - r-plotly
-  - r-dt
-  - r-ggally
-  - r-psych
-  - r-hmisc
-  - r-mass
-  - r-factominer
-  - r-factoextra
-  - r-matrixstats
-  - bioconductor-flowcore
-  - bioconductor-complexheatmap
-
+dependencies: 
+  - python=3.8  
+  - pip=21  
+  - r-base=4.0  
+  - numpy #ALLarch
+  - pandas  #ALLarch
+  - scikit-learn  #ALLarch
+  - pynndescent #ALLarch
+  - umap-learn #ALL64arch
+  - plotly #noarch
+  - bioconda::scprep #noarch
+  - bioconda::fcsparser #noarch
+  - rpy2=3.4 #ALL64arch
+  - r-rcolorbrewer #noarch
+  - r-plotly #noarch
+  - r-dt #noarch
+  - r-ggally #noarch
+  - r-psych  #noarch
+  - r-hmisc  #noarch
+  - r-mass #noarch
+  - r-factominer #noarch
+  - r-factoextra #noarch
+  - r-matrixstats  #noarch
+  - r-tidyverse  #noarch
+  - r-shiny #noarch
+  - bioconda::bioconductor-complexheatmap #noarch
+  - bioconda::bioconductor-flowcore=2.2.0 
+  - bioconda::bioconductor-cytolib=2.2.0 #As of 30/04/21 2.2.1 on bioconda fails. Merge with fix already open in github
   - pip:
-    - fcsparser
     - fcswrite
-    # - sklearn Changed to conda
-    # rpy2 R dependencies are accesible only if rpy2 is installed trhough conda
-    # - umap-learn Changed to conda
 
-#TODO: Add complexheatmap and possilby new UMAP dependencies
