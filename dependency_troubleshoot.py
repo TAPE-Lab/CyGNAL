@@ -39,7 +39,7 @@ r('''
                             "shiny",
                             "tidyverse"
                         )
-    # check if pkgs are installed already, if not, install automatically:
+    # check if pkgs are already installed:
     new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
     if(length(new.packages)) {
         print(paste0("WARNING!: Missing R package(s): ", new.packages))
