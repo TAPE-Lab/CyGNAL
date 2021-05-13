@@ -27,6 +27,7 @@ dependencies:
   - r-matrixstats  #noarch
   - r-tidyverse  #noarch
   - r-shiny #noarch
+  - r-ggrepel #in conda-forge
   - bioconda::bioconductor-complexheatmap #noarch
   - bioconda::bioconductor-flowcore=2.2.0 
   - bioconda::bioconductor-cytolib=2.2.1 #2.2.1 fixed on 01/05/21

@@ -454,16 +454,15 @@ server <- function(input, output, session) {
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Run PCA~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-#Acknowledgment
-#The original code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer")
-#"Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick")
-
 # Run the application 
 if (getOption("browser") == "") {
     options(browser="xdg-open")
     print("R encountered an error when identifying your default browser.")
-    print("Please manually open in your browser the addres indicated below.")
+    print("You may have to manually open the ShinyApp in your browser at the addres indicated below.")
 } #The block below solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
 
 shinyApp(ui = ui, server = server)
 
+#Acknowledgment
+#The original code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer")
+#"Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick")
