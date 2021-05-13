@@ -7,7 +7,7 @@ list.of.packages <- c("DT",
                         "psych",
                         "Hmisc",
                         "MASS",
-                        #"tabplot",
+                        "ggrepel",
                         "RColorBrewer",
                         "shiny",
                         "tidyverse",
@@ -30,8 +30,6 @@ the_data <- read_tsv(args)
 exploratory_data <- the_data %>% select(-starts_with("denominator"))
 
 data4pca <- the_data %>% select(-starts_with("median")) %>% select(-starts_with("denominator")) %>% spread (marker, EMD_no_norm_arc) %>% column_to_rownames(., var = "file_origin")#read_tsv(args)
-#Calculate row SD for later use in PCA plots
-calculated_sd <- rowSds(as.matrix.data.frame(data4pca))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
@@ -78,20 +76,30 @@ ui <- bootstrapPage(
                 tags$hr(),
                 sidebarLayout(
                     sidebarPanel(
-                        p("Choose the columns of your data to include in the PCA."),
-                        uiOutput("choose_columns_pca")
-                    ),
-                    mainPanel(
                         p("Select options for the PCA computation (we are using the prcomp function here)"),
                         radioButtons(inputId = 'center',  
-                                    label = 'Center',
-                                    choices = c('Shift variables to be zero centered'='Yes',
-                                                'Do not shift variables'='No'), 
-                                    selected = 'Yes'),
+                                     label = 'Center',
+                                     choices = c('Shift variables to be zero centered'='Yes',
+                                                 'Do not shift variables'='No'), 
+                                     selected = 'Yes'),
                         radioButtons('scale.', 'Scale',
-                                    choices = c('Scale variables to have unit variance'='Yes',
-                                                'Do not scale variables'='No'), 
-                                    selected = 'Yes')
+                                     choices = c('Scale variables to have unit variance'='Yes',
+                                                 'Do not scale variables'='No'), 
+                                     selected = 'Yes')
+                        
+                    ),
+                    mainPanel(
+                        fluidRow(
+                            column(6,
+                                   p("Choose the columns (markers) of your data to include in the PCA."),
+                                   uiOutput("choose_columns_pca")
+                            ),
+                            column(6,
+                                   p("Choose the rows (conditions) of your data to include in the PCA."),
+                                   p("Be aware that if the underlying EMD scores where computed using the concatenation of the input datasets as the reference, you should keep ALL conditions selected."),
+                                    uiOutput("choose_rows_pca")
+                            )
+                        )
                     )
                 )
         ), # end  tab
@@ -267,17 +275,26 @@ server <- function(input, output, session) {
                             choices  = colnames,
                             selected = colnames)
     })
+    output$choose_rows_pca <- renderUI({
+        rownames <- row.names(data4pca)
+        # Create the checkboxes and select them all by default
+        checkboxGroupInput("rows", "Choose rows", 
+                           choices  = rownames,
+                           selected = rownames)
+    })
     pca_objects <- reactive({
         # Keep the selected columns
         columns <-    input$columns
+        rows <- input$rows
         the_data <- na.omit(data4pca)
         the_data_subset <- na.omit(the_data[, columns, drop = FALSE])
+        the_data_subset <- the_data_subset[row.names(the_data_subset) %in% rows, ]
         # from http://rpubs.com/sinhrks/plot_pca
         pca_output <- prcomp(na.omit(the_data_subset), 
                         center = (input$center == 'Yes'), 
                         scale. = (input$scale. == 'Yes'))
         # data.frame of PCs
-        pcs_df <- cbind(the_data, pca_output$x)
+        pcs_df <- cbind(the_data_subset, pca_output$x)
             return(list(the_data = the_data, 
                 the_data_subset = the_data_subset,
                 pca_output = pca_output, 
@@ -307,13 +324,15 @@ server <- function(input, output, session) {
     })
     # PC plot
     pca_biplot <- reactive({
-        pcs_df <- pca_objects()$pcs_df
         pca_output <-  pca_objects()$pca_output
+        the_data_subset <- pca_objects()$the_data_subset
+        calculated_sd <- rowSds(as.matrix.data.frame(the_data_subset))
+        row_conditions <- rownames(pca_output$x)
+        
         var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                         input$the_pcs_to_plot_x))]^2/sum(pca_output$sdev^2), 1)
         var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                         input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
-        labels <- rownames(pca_output$x)
         eixos = c(1,2)
         eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
                 nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
@@ -321,19 +340,24 @@ server <- function(input, output, session) {
         
         fviz_pca_biplot(pca_output,
             axes = as.numeric(eixos),
-            col.ind = rownames(data4pca),
+            geom=c(""),
             alpha.var="contrib" ) + 
-            geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
-            guides(alpha="none", shape="none", size=guide_legend(title = "SD"))
+            geom_point(aes(colour=row_conditions, 
+                           size=calculated_sd)) +
+            geom_text_repel(label=row_conditions) +
+            guides(alpha="none", colour=guide_legend(title="Conditions"), 
+                   size=guide_legend(title = "SD"))
     })
     pca_indplot <- reactive({
-        pcs_df <- pca_objects()$pcs_df
         pca_output <-  pca_objects()$pca_output
+        the_data_subset <- pca_objects()$the_data_subset
+        calculated_sd <- rowSds(as.matrix.data.frame(the_data_subset))
+        row_conditions <- rownames(pca_output$x)
+        
         var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                                                                 input$the_pcs_to_plot_x))]^2/sum(pca_output$sdev^2), 1)
         var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                                                                 input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
-        labels <- rownames(pca_output$x)
         eixos = c(1,2)
         eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
                         nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
@@ -341,9 +365,12 @@ server <- function(input, output, session) {
         
         fviz_pca_ind(pca_output,
                         axes = as.numeric(eixos),
-                        col.ind = rownames(data4pca)) + 
-            geom_point(aes(color = rownames(data4pca),size=(calculated_sd))) +
-            guides(shape="none", size=guide_legend(title = "SD"))
+                     geom=c("")) + #Plot aesthetics using geom_point
+            geom_point(aes(colour=row_conditions, 
+                           size=calculated_sd)) +
+            geom_text_repel(label=row_conditions) +
+            guides(colour=guide_legend(title="Conditions"), 
+                   size=guide_legend(title = "SD"))
     })
     
     # zoomed out
@@ -369,34 +396,39 @@ server <- function(input, output, session) {
     })
     #Downloads
     output$dwn_pcaplot <- downloadHandler(
-        filename <- "pca_plot.pdf",
+        filename <- "pca_biplot.pdf",
         content = function(file) {
             ggsave(file, plot = pca_biplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
     })
     output$dwn_pcaplot_n <- downloadHandler(
-        filename <- "pca_plot_n.pdf",
+        filename <- "pca_plot.pdf",
         content = function(file) {
             ggsave(file, plot = pca_indplot() + coord_cartesian(xlim = zooming$x, ylim = zooming$y), height=12, width=20, device="pdf")
     })
     
     #Plotly:
     output$plotly_pca <- renderPlotly({
-        pcs_df <- pca_objects()$pcs_df
         pca_output <-  pca_objects()$pca_output
+        the_data_subset <- pca_objects()$the_data_subset
+        calculated_sd <- rowSds(as.matrix.data.frame(the_data_subset))
+        row_conditions <- rownames(pca_output$x)
+        
         var_expl_x <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                                                                 input$the_pcs_to_plot_x))]^2/sum(pca_output$sdev^2), 1)
         var_expl_y <- round(100 * pca_output$sdev[as.numeric(gsub("[^0-9]", "", 
                                                                 input$the_pcs_to_plot_y))]^2/sum(pca_output$sdev^2), 1)
-        labels <- rownames(pca_output$x)
         eixos = c(1,2)
         eixos = c(substr(input$the_pcs_to_plot_x, nchar(input$the_pcs_to_plot_x), 
                         nchar(input$the_pcs_to_plot_x)), substr(input$the_pcs_to_plot_y, 
                                                                 nchar(input$the_pcs_to_plot_y), nchar(input$the_pcs_to_plot_y)))
         
         print (ggplotly(fviz_pca_ind(pca_output,
-                                    axes = as.numeric(eixos),
-                                    col.ind = rownames(data4pca)) + 
-                            geom_point(aes(color = rownames(data4pca),size=(calculated_sd)))+ theme(legend.position="none")))
+                                     axes = as.numeric(eixos),
+                                     geom=c("")) + 
+                            geom_point(aes(colour=row_conditions, 
+                                           size=calculated_sd)) +
+                            geom_text(label=row_conditions) +
+                            theme(legend.position="none")))
     })
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PCA output~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#    
@@ -422,6 +454,10 @@ server <- function(input, output, session) {
 ###############################################################################
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Run PCA~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
+#Acknowledgment
+#The original code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer")
+#"Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick")
+
 # Run the application 
 if (getOption("browser") == "") {
     options(browser="xdg-open")
@@ -431,6 +467,3 @@ if (getOption("browser") == "") {
 
 shinyApp(ui = ui, server = server)
 
-
-#Acknowledgment
-#The original code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer"), "Based on the original work of ", a("Ben Marwick", href = "https://github.com/benmarwick")
