@@ -14,16 +14,17 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 [Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
+### Table of contents
+
 * [1.-System requirements](#1-system-requirements)
     * [Dependencies](#dependencies)
 * [2.-Using CygNAL](#2-using-cygnal)
     * [Input data](#input-data)
     * [A brief step-by-step tutorial](#a-brief-step-by-step-tutorial)
-* [3.-About us](#about-us)
-    * [Authors](#authors)
-    * [The group](#the-group)
+* [3.-About us](#authors)
 
-### WIP section -> Checklist of README contents
+
+<!-- ### WIP section -> Checklist of README contents
 
 * System requirements:
     * Dependencies
@@ -36,7 +37,7 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
     * Expected output
     * Expected run-time
 * Instructions for use (regarding data in Nat. Protocols)
-    * How to run software
+    * How to run software -->
 
 ## 1. System requirements
 
