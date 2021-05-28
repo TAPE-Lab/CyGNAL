@@ -33,7 +33,7 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 * Instructions for use (regarding data in Nat. Protocols)
     * How to run software
 
-## 1.-System requirements
+## 1. System requirements
 
 OS info here
 
