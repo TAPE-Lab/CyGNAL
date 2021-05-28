@@ -30,6 +30,7 @@ r('''
                             "FactoMineR",
                             "flowCore",
                             "GGally",
+                            "ggrepel",
                             "Hmisc",
                             "MASS",
                             "matrixStats",

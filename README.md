@@ -41,7 +41,8 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 ## 1. System requirements
 
-OS info here
+CyGNAL has been tested on both macOS (from Catalina onwards) and Debian-based 
+Linux distributions (including Ubuntu on [WSL](https://github.com/Microsoft/WSL)).
 
 ### Dependencies
 
@@ -58,7 +59,7 @@ workflow and most computational steps.
     * `sklearn`
     * `umap-learn`
 
-* R: Tested with v3.6.1 < R <= v4. Mostly used for visualisation, but also for 
+* R: Tested with v3.6 < R <= v4.0. Mostly used for visualisation, but also for 
 computing the PCA.
     * `ComplexHeatmap`
     * `DT`
@@ -66,6 +67,7 @@ computing the PCA.
     * `FactoMineR`
     * `flowCore`
     * `Ggally`
+    * `ggrepel`ma
     * `Hmisc`
     * `MASS`
     * `matrixStats`
@@ -81,16 +83,16 @@ computing the PCA.
 
 ## 2. Using CyGNAL
 
-CyGNAL is distributed as a multilevel directory. The 'code' folder contains the 
-main steps, with other utility scripts found in 'code/utils/'. 
-Input data should be added to 'Raw_Data' for pre-processing and processed 
+CyGNAL is distributed as a set of directories. The 'code' folder contains the 
+main steps, with other utility scripts found in 'code/utils/', to be run as `python` scripts.
+Input data should be added to 'Raw_Data' for pre-processing, and processed 
 datasets are stored in 'Preprocessed_Data'. Input and output directories for 
 the analysis and visualisation steps are found in the 'Analysis' directory.
 
 ### Input data
 
-Raw data contains sample dataset files. Pipeline can take in both FCS and 
-.txt files (as tab-separated dataframes).
+CyGNAL can take in both FCS and .txt files (as tab-separated dataframes and 
+without a header). The 'Raw Data' directory contains sample dataset files. 
 
 *NOTE*: The toy dataset used in this tutorial is a down-sampled version 
 (5,000 cells per time point, EpCAM/Pan-CK gated) of the small intestinal 
@@ -129,7 +131,8 @@ file listing all the markers measured in the given experiment.
     population(s) of interest, and export events as untransformed text files 
     (Actions - Export - Export events, with *'Include header with FCS filename'* unchecked).
 
-    *Note:* This step is essential for getting the dataset compatible with downstream analysis and has to be performed as the first step in our workflow.
+    *Note:* This step is essential for getting the dataset compatible with 
+    downstream analysis and has to be performed as the first step in our workflow.
 
 2. **UMAP:** Move the processed data file(s) and panel_marker.csv to 'Analysis/UMAP_input'. 
 Edit *'panel_markers.csv'* to set all the markers used for UMAP analysis from 'N' to 'Y'. 
@@ -146,11 +149,11 @@ The markers and the indices of the cells used in the analysis will also be saved
 3. **EMD:** To perform EMD calculation (using the tools available in the 
 [scprep](https://github.com/KrishnaswamyLab/scprep) library), copy the input 
 data files to 'Analysis/EMD_input'. Run `3-emd.py` and follow the instructions. 
-By default, the denominator of the EMD calculation will be the concatenation 
+By default, the reference of the EMD calculation will be the concatenation 
 of all the input data files, but the user is given the option to provide a 
-specific denominator data file. While EMD scores of all channels can be 
-calculated by default, by default the user should place the *'panel_markers.csv'* 
-in the input folder to specifiy which marker are to be used. 
+specific reference data file. While EMD scores of all channels can be 
+calculated, the default behaviour requires the user to place the *'panel_markers.csv'* 
+in the input folder to specifiy which markers are to be used. 
 The calculated EMD scores will be saved in 'Analysis/EMD_output', within the 
 'EMD_arc_no_norm' column in the saved file.
     * `python 3-emd.py`
@@ -190,7 +193,10 @@ Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and
 Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)). 
 Based also on original work by Pelagia Kyriakidou.
 
-We acknowledge the work of all third-parties whose packages are used in CyGNAL.
+### Support
+
+For any queries or issues regarding CyGNAL please check the 
+[Issues](https://github.com/TAPE-Lab/CyGNAL/issues) section in this repository.
 
 ### The group
 
@@ -199,3 +205,5 @@ The Cell Communication Lab studies how oncogenic mutations communicate with
 stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). 
 By understanding how mutations regulate all cell types within a tumour, 
 we aim to uncover novel approaches to treat cancer.
+
+We acknowledge the work of all third-parties whose packages are used in CyGNAL.
