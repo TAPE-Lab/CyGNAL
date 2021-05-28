@@ -15,8 +15,13 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 [Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
 * [1.-System requirements](#1-system-requirements)
-* Test
-    * Test2
+    * [Dependencies](#dependencies)
+* [2.-Using CygNAL](#2-using-cygnal)
+    * [Input data](#input-data)
+    * [A brief step-by-step tutorial](#a-brief-step-by-step-tutorial)
+* [3.-About us](#about-us)
+    * [Authors](#authors)
+    * [The group](#the-group)
 
 ### WIP section -> Checklist of README contents
 
@@ -73,7 +78,7 @@ computing the PCA.
     * `Rscript`
 
 
-## Using CyGNAL
+## 2. Using CyGNAL
 
 CyGNAL is distributed as a multilevel directory. The 'code' folder contains the 
 main steps, with other utility scripts found in 'code/utils/'. 
@@ -94,7 +99,7 @@ The users will need to register a free Cytobank Community account to access
 the project and are encouraged to clone the experiments and explore the data in 
 further details.
 
-### A Brief Step-by-Step Tutorial
+### A brief step-by-step tutorial
 
 Brief tutotorial to run all main steps in CyGNAL with a sequential order. 
 All console commands given assume the user is in the tool's root directory 
@@ -175,15 +180,9 @@ Run `5v2-pca.py` and follow the instructions in the GUI.
     * `python 5v2-pca.py`
 
 
-## About the group
+## 3. About us
 
-Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. 
-The Cell Communication Lab studies how oncogenic mutations communicate with 
-stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). 
-By understanding how mutations regulate all cell types within a tumour, 
-we aim to uncover novel approaches to treat cancer.
-
-## Authors
+### Authors
 
 The work here is actively being developed by 
 Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and 
@@ -191,3 +190,11 @@ Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)).
 Based also on original work by Pelagia Kyriakidou.
 
 We acknowledge the work of all third-parties whose packages are used in CyGNAL.
+
+### The group
+
+Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. 
+The Cell Communication Lab studies how oncogenic mutations communicate with 
+stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). 
+By understanding how mutations regulate all cell types within a tumour, 
+we aim to uncover novel approaches to treat cancer.
