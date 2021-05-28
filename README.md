@@ -14,7 +14,7 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 [Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
-* [1.-System requirements](#1.-system-requirements)
+* [1.-System requirements](#1-system-requirements)
 * Test
     * Test2
 
