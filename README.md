@@ -10,6 +10,22 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 
 [Overview]: https://github.com/TAPE-Lab/CyGNAL/blob/master/figs/flowchart_v1.2.png "Overview of CyGNAL"
 
+
+### WIP section -> Checklist of README contents
+
+* System requirements:
+    * Dependencies
+    * OS (version?) support
+* Installation guide:
+    * Instructions
+    * Typical install time
+* Demo:
+    * Instructions to run
+    * Expected output
+    * Expected run-time
+* Instructions for use (regarding data in Nat. Protocols)
+    * How to run software
+
 ## Using CyGNAL
 
 CyGNAL is distributed as a multilevel directory. The 'code' folder contains the main steps, with other utility scripts found in 'code/utils/'. Input data should be added to 'Raw_Data' for pre-processing and processed datasets are stored in 'Preprocessed_Data'.
