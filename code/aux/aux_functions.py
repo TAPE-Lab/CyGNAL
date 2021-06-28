@@ -114,11 +114,9 @@ def concatenate_fcs(input_dir):
         name = i.split('.')[0]
         fcounter += 1
         if i in txt_filelist:
-            print (i)
             df = pd.read_csv(file_path, sep = '\t')
         else:
             try: #Use fcsparser to read the fcs data files
-                print(i)
                 df = fcsparser.parse(file_path, meta_data_only=False)[1]
                 reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
                 pnn_extracted=[]                 #columns match PnN pattern

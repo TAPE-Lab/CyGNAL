@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest)
+<!-- [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest) -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4587193.svg)](https://doi.org/10.5281/zenodo.4587193)
 
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
@@ -21,23 +21,8 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 * [2.-Using CygNAL](#2-using-cygnal)
     * [Input data](#input-data)
     * [A brief step-by-step tutorial](#a-brief-step-by-step-tutorial)
-* [3.-About us](#authors)
+* [3.-About](#authors)
 
-
-<!-- ### WIP section -> Checklist of README contents
-
-* System requirements:
-    * Dependencies
-    * OS (version?) support
-* Installation guide:
-    * Instructions
-    * Typical install time
-* Demo:
-    * Instructions to run
-    * Expected output
-    * Expected run-time
-* Instructions for use (regarding data in Nat. Protocols)
-    * How to run software -->
 
 ## 1. System requirements
 
@@ -67,7 +52,7 @@ computing the PCA.
     * `FactoMineR`
     * `flowCore`
     * `Ggally`
-    * `ggrepel`ma
+    * `ggrepel`
     * `Hmisc`
     * `MASS`
     * `matrixStats`
@@ -184,7 +169,7 @@ Run `5v2-pca.py` and follow the instructions in the GUI.
     * `python 5v2-pca.py`
 
 
-## 3. About us
+## 3. About
 
 ### Authors
 

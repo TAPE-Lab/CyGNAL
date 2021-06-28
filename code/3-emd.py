@@ -11,14 +11,14 @@ import numpy as np
 import pandas as pd
 import scprep
 
-from aux.aux3_emd import *
+from aux.aux3_emd import calculate_emd
 from aux.aux_functions import (arcsinh_transf, concatenate_fcs,
                                 read_marker_csv, read_rFCS, yes_or_NO)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PARAMETER SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
-cofactor = 5
-normalisation = 'no_norm'
+cofactor = 5 #Cofactor to be used for the arcsinh transform
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 input_dir = f"{base_dir}/Analysis/EMD_input"
@@ -33,6 +33,7 @@ if os.path.isdir(f"{output_dir}/{info_run}") == False:
 else:
     if info_run !="UNNAMED":
         sys.exit("ERROR: You already used this name for a previous run. \nUse a different name!")
+print()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~User Input~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 filter_markers = yes_or_NO(
@@ -43,6 +44,11 @@ print ("In EMD, the individual Variable distributions are compared against a ref
 print ("By default concatenated input files will be used as the reference distribution.")
 user_defined_denominator = yes_or_NO(
                     "Would you like to define your own reference instead?")
+print (f"By default the input data is transformed using an arcinh transform. (cofactor={cofactor}) ",
+        "\nYou might want to omit this if your data has already been manually transformed")
+transformation = yes_or_NO("Would you like to automatically transform the data?", 
+                            default="YES")
+print()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -64,7 +70,6 @@ if user_defined_denominator:
         compare_to = pd.read_csv(denom_path, sep = '\t')
     elif denominator in fcs_filelist:
         try:
-            print(denominator)
             compare_to = fcsparser.parse(denom_path, meta_data_only=False)[1]
             reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
             pnn_extracted=[]                 #columns match PnN pattern
@@ -82,25 +87,26 @@ if user_defined_denominator:
     input_files = filelist
 else: 
     denominator = 'concatenated-inputs'
-    print('Concatenated input files will be used as the reference distribution')
+    print("Concatenated input files will be used as the reference distribution")
     compare_to, input_files = concatenate_fcs(input_dir) #compare_from=inputfile
 
 #Keep only selected markers
 if filter_markers:
     selected_markers = read_marker_csv(input_dir)
-    print (compare_to.columns)
     file_cols = compare_to.columns
-    [x for x in file_cols if x[0].isdigit()]
+    [x for x in file_cols if x[0].isdigit()] #Marker columns should start with isotope
     for x in file_cols:
         if x[0].isdigit():
             if x not in selected_markers:
                 compare_to = compare_to.drop(x, axis=1)
-    print (compare_to.columns)
 
-# compare_to = downsample_data(compare_to, info_run, output_dir) #Customtest_1
-compare_to_arc, marker_list = arcsinh_transf(cofactor, compare_to) #Leeave as default
-# compare_to_arc = compare_to #Customtest_2
-# marker_list = [x for x in compare_to_arc.columns if x[0].isdigit()] #Customtest_2
+#Transformation for the reference dataset (denominator/compare_to)
+if transformation:
+    # compare_to = downsample_data(compare_to, info_run, output_dir) #Customtest_1
+    compare_to_arc, marker_list = arcsinh_transf(cofactor, compare_to) #Leave as default
+else:
+    compare_to_arc = compare_to #Don't transform data
+    marker_list = [x for x in compare_to_arc.columns if x[0].isdigit()] 
 
 print('Sample files:')
 print('\n'.join([f for f in input_files]))
@@ -125,7 +131,6 @@ for compare_from_file in input_files:
         compare_from = pd.read_csv(file_path, sep = '\t')
     else:
         try:
-            print(compare_from_file)
             compare_from = fcsparser.parse(file_path, meta_data_only=False)[1]
             reg_pnn = re.compile("(\d+Di$)") #Detect if, despite flag
             pnn_extracted=[]                 #columns match PnN pattern
@@ -140,21 +145,21 @@ for compare_from_file in input_files:
             compare_from = read_rFCS(file_path)[0]
     
     if filter_markers:
-        print (compare_from.columns)
         file_cols = compare_from.columns
         [x for x in file_cols if x[0].isdigit()]
         for x in file_cols:
             if x[0].isdigit():
                 if x not in selected_markers:
                     compare_from = compare_from.drop(x, axis=1)
-        print (compare_from.columns)
 
-    # print (compare_from)
-    # compare_from = downsample_data(compare_from, info_run, output_dir)
-    compare_from_arc = arcsinh_transf(cofactor, compare_from)[0]
+    if transformation: #Transformation for the variable dataset (compare_from)
+        compare_from_arc = arcsinh_transf(cofactor, compare_from)[0] #Drop marker_list
+    else:
+        compare_from_arc = compare_from
+    
     #Calculate EMD for each markerVSdenominator
     emd_df = calculate_emd(marker_list, emd_infodict, compare_from_arc,
-                            compare_to_arc, normalisation, emd_df)
+                            compare_to_arc, emd_df)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
