@@ -11,7 +11,7 @@ import pandas as pd
 
 #Filtering
 def filter_columns(renamed_columns):
-    reg_filter = re.compile("^\d+[A-Za-z]+$")
+    reg_filter = re.compile("^\d+[A-Za-z]+$") #Removes columns with just isotope
     filtered_columns = [] #Stores the columns that where deemed unnecessary
     columns_to_keep = [] #Columns that the reduced file should have
     for i in renamed_columns:
@@ -25,11 +25,13 @@ def filter_columns(renamed_columns):
 #Renaming
 def rename_columns(df_file_cols):
     reg_rename = re.compile("(__[a-z].*$|__\d.*$|_\(.*$|___.*$)")
+        #First two options match ending constructs with double underscores
+        #Third option matches endings within brackets
     df_file_cols_processed = []
     df_file_cols_renamed = []
     df_file_cols_final = []
 
-    for i in df_file_cols:
+    for i in df_file_cols: #First pass to remove most issues
         try:
             df_file_cols_processed.append(reg_rename.sub("",i))
         except:

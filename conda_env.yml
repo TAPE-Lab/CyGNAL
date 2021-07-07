@@ -5,7 +5,8 @@ channels:
 dependencies: 
   - python=3.8  
   - pip=21  
-  - r-base=4.0  
+  - r-base=4.0
+  - natsort  
   - numpy #ALLarch
   - pandas  #ALLarch
   - scikit-learn  #ALLarch

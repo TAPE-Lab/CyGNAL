@@ -35,6 +35,7 @@ Linux distributions (including Ubuntu on [WSL](https://github.com/Microsoft/WSL)
 workflow and most computational steps.
     * `fcsparser`
     * `fcswrite`
+    * `natsort`
     * `numpy`
     * `pandas`
     * `plotly`

@@ -1,18 +1,21 @@
 ###############################################################################
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#~Pre-processing~#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~#~Batch rename panel markers~#~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###############################################################################
-#FIRST STEP: Data and panel preprocessing. Marker list generation.
+#OPTIONAL: This scripts renames the channel names in a collection of datasets
+#so that only the channel isotope (number and element) and the antibody target 
+#are kept, ignoring any version numbers and other details.
+# Works with both .txt files and FCS files.
+
 import os
 import re
-import sys
+import sys # Fix importing from diff. directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import fcsparser
 import fcswrite
 import pandas as pd
 
-from natsort import natsorted
-
-from aux.aux1_data_preprocess import *
+from aux.aux1_data_preprocess import filter_columns, write_panel_markers
 from aux.aux_functions import yes_or_NO
 
 #Future WIP: Add support for sequential hands off -> if flag use set of seq i/o
@@ -20,12 +23,13 @@ from aux.aux_functions import yes_or_NO
 # print(sequential_mode) #Will populate if run from superior script
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~I/O~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# 
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-input_dir = f"{base_dir}/Raw_Data"
-output_dir = f"{base_dir}/Preprocessed_Data"
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+folder_name = "opt6_renameMIN"
+
+input_dir = f"{base_dir}/Utils_Data/input/{folder_name}"
+output_dir = f"{base_dir}/Utils_Data/output/{folder_name}"
 
 # prepare file list; put the data files to be processed in the 'input' folder
-# IF WORKING WITH MULTIPLE FILES THEY SHOULD SHARE THE SAME panel
 txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
 fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
 filelist = txt_filelist+fcs_filelist
@@ -51,6 +55,45 @@ else:
     if info_run !="UNNAMED":
         sys.exit("ERROR: You already used this name for a previous run. \nUse a different name!")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~Minimal renaming function~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+def renameMIN_columns(df_file_cols):
+    reg_rename = re.compile("(__[a-z].*$|__\d.*$|_\(.*$|___.*$|_v\d$)")
+        #First two options match ending constructs with double underscores
+        #Third option matches endings within brackets
+        #Fourth option matches antibody version (unique to opt6)
+    df_file_cols_processed = []
+    df_file_cols_renamed = []
+    df_file_cols_final = []
+
+    for i in df_file_cols: #First pass to remove most issues
+        try: 
+            df_file_cols_processed.append(reg_rename.sub("",i))
+            print(df_file_cols_processed)
+        except:
+            df_file_cols_processed.append(i)
+    #Second pass to remove trailing underscores
+    for i in df_file_cols_processed:
+        try:
+            df_file_cols_renamed.append(re.sub(r"_$","",i))
+        except:
+            df_file_cols_renamed.append(i)
+    #Third pass replace '__' with '_'
+    for i in df_file_cols_renamed:
+        try:
+            df_file_cols_final.append(re.sub(r"__","_",i))
+        except:
+            df_file_cols_final.append(i)
+    # Keeping with Xiao's convention, rename Event # to Cell_Index
+    for n,i in enumerate(df_file_cols_final):
+        if i=="Event #":
+            df_file_cols_final[n] = "Cell_Index"
+    
+    return df_file_cols_final
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Pre-processing~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -90,11 +133,13 @@ for i in filelist:
     
     shape_before = df_file.shape
     df_file_cols = list(df_file.columns)
+    
+    #for i in df_file_cols: print(i) 
 
     #%% Perform renaming and filtering
     try:
         if no_filter==False:
-            renamed_columns = rename_columns(df_file_cols)
+            renamed_columns = renameMIN_columns(df_file_cols)
             columns_to_keep, filtered_columns = filter_columns(renamed_columns)
             df_file.columns = renamed_columns
             f_reduced = df_file[columns_to_keep].iloc[:].copy()
@@ -126,41 +171,24 @@ for i in filelist:
 
     #Saving files#:
     if i in txt_filelist:
-        f_reduced.to_csv(f"{output_dir}/{info_run}/Pro_{i}", index = False, sep = '\t') 
+        f_reduced.to_csv(f"{output_dir}/{info_run}/renamedMIN_{i}", 
+            index = False, sep = '\t') 
         # index = False to be compatible with Cytobank
         if txt_sopts:
             #SAVE AS FCS
-            fcswrite.write_fcs(f"{output_dir}/{info_run}/Pro_{i}.fcs", 
+            fcswrite.write_fcs(f"{output_dir}/{info_run}/renamedMIN_{i}.fcs", 
                                 chn_names=list(f_reduced.columns),
                                 compat_chn_names=False, 
                                 data=f_reduced.to_numpy())
             
     else:
-        # answ = yes_or_NO("File is an .fcs. Would you like to also save it as a .txt?", 
-        #             default=nonstandard_FCS)
-        fcswrite.write_fcs(f"{output_dir}/{info_run}/Pro_{i}", 
+        fcswrite.write_fcs(f"{output_dir}/{info_run}/renamedMIN_{i}", 
                             chn_names=list(f_reduced.columns),
                             compat_chn_names=False, 
                             data=f_reduced.to_numpy())
         if fcs_sopts:
             print("Converting .fcs to .txt")
-            f_reduced.to_csv(f"{output_dir}/{info_run}/Pro_{i}.txt", index = False, sep = '\t') #Changed to index=False
+            f_reduced.to_csv(f"{output_dir}/{info_run}/renamedMIN_{i}.txt", 
+                index = False, sep = '\t') #Changed to index=False
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Panel markers~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-if not all(x==cols[0] for x in cols):
-    print("WARNING when generating shared marker panel:\nCheck your input files as THE PANELS DON'T MATCH!") 
-    print("The panel_markers.csv file will contain only the following matching markers:\n")
-    shared_cols = set(cols[0])
-    for s in cols[1:]: #Use set intersection to get shared markers
-        shared_cols.intersection_update(s)
-    shared_cols = natsorted(list(shared_cols)) #Convert back to sorted list
-    for marker in shared_cols:
-        print(marker)
-    print("\nIf the resulting panel_markers.csv does not have the desired markers,",
-    "\nconsider building it manually or changing the files in the input directory.")
-    
-    cols = [shared_cols,0] #Keep format as nested list
-
-write_panel_markers(cols, f"{output_dir}/{info_run}", info_run)
 

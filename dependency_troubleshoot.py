@@ -1,9 +1,9 @@
 #Script to test if all necessary dependencies have been installed:
 import sys, importlib
 
-python_packages =["copy","fcsparser","fcswrite","itertools","numpy","pandas",
-                    "plotly","pynndescent","re","rpy2","scprep","sklearn",
-                    "subprocess","umap"]
+python_packages =["copy","fcsparser","fcswrite","itertools","natsort","numpy",
+                    "pandas","plotly","pynndescent","re","rpy2","scprep",
+                    "sklearn","subprocess","umap"]
 #copy, itertools, re, subprocess -> come with Python
 count=0
 for i in python_packages:
