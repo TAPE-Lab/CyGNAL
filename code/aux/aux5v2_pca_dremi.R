@@ -437,7 +437,7 @@ if (getOption("browser") == "") {
     print("You may have to manually open the ShinyApp in your browser at the addres indicated below.")
 } #The block below solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
 
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list("port"=12252))
 
 #Acknowledgment
 #The original code for this Shiny app is online at ", a("https://github.com/benmarwick/Interactive_PCA_Explorer", href = "https://github.com/benmarwick/Interactive_PCA_Explorer")

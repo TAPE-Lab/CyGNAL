@@ -139,4 +139,4 @@ if (getOption("browser") == "") {
     print("Please manually open in your browser the addres indicated below.")
 } #The block below solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
 
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list("port"=12242))

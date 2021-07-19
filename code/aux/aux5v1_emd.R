@@ -16,10 +16,10 @@ lapply(list.of.packages, require, character.only = TRUE)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DATA SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#Change selection to one based on col position (select from dplyr)
+#Change selection to one based on col name (select from dplyr)
 emd_info <- read_tsv(args)
-minx <- min(emd_info %>% select(1))
-maxx <- max(emd_info %>% select(1))
+minx <- min(emd_info %>% select(EMD_no_norm_arc))
+maxx <- max(emd_info %>% select(EMD_no_norm_arc))
 
 print(minx, maxx)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -180,4 +180,4 @@ if (getOption("browser") == "") {
     print("Please manually open in your browser the addres indicated below.")
 } #The block above solves the utils::browseURL(appUrl) ERROR present in certain conda/WSL installs
 
-shinyApp(ui = ui, server = server) #, options = list(launch.browser=TRUE))
+shinyApp(ui = ui, server = server, options = list("port"=12241)) #, options = list(launch.browser=TRUE))
