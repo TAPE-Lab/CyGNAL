@@ -119,7 +119,7 @@ necessary software and dependencies.
         `docker run -v ~/CyGNAL_docker/:/usr/app/CyGNAL -it --entrypoint /bin/bash -p 12241-12252:12241-12252 ferranc96/cygnal:one`
             * The command above runs a live terminal on the container with a conda environment that already contains all necessary dependencies. Communication with the host machine is done via the shared directory in ~/CyGNAL_docker (i.e. where you will need to input data and fetch CyGNAL's outputs), with open ports for the Heatmap and PCA shinyApps.
 
-            * This `docker run ...` command is to be run everytime the user wants to use CyGNAL through docker.
+            * This *docker run* command is to be run everytime the user wants to use CyGNAL through docker.
 
 1. **Pre-process:** Copy all the data files to the 'Raw_Data' folder and run
 `1-data_preprocess.py`. The output files with their antibody panel processed 
