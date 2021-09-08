@@ -3,8 +3,9 @@
 
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
-In this repository we present *CyGNAL*, a pipeline for analysing mass cytometry 
-data similar to that used in our *Nature Methods* paper: [Cell-type-specific signaling networks in heterocellular organoids](https://www.nature.com/articles/s41592-020-0737-8). 
+In this repository we present CyGNAL, a pipeline for analysing mass cytometry 
+data featured in our 2021 Nature Protocols, Sufi et al. paper: [Multiplexed single-cell analysis of organoid signaling networks](https://doi.org/10.1038/s41596-021-00603-4). 
+In [Qin et al. 2020](https://www.nature.com/articles/s41592-020-0737-8) we show a practical application to a complex biological system of the data analysis enabled by CyGNAL. 
 
 With code in both Python and R, CyGNAL assumes some preliminary and inter-step 
 processing through the platform [Cytobank](https://cytobank.org/) (although the 
@@ -80,6 +81,9 @@ main steps, with other utility scripts found in 'code/utils/', to be run as `pyt
 Input data should be added to 'Raw_Data' for pre-processing, and processed 
 datasets are stored in 'Preprocessed_Data'. Input and output directories for 
 the analysis and visualisation steps are found in the 'Analysis' directory.
+
+For detailed step-by-step instructions please read [Sufi et al. 2021](https://doi.org/10.1038/s41596-021-00603-4). 
+Otherwise see the brief tutorial below
 
 ### Input data
 
