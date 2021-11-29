@@ -82,7 +82,7 @@ Input data should be added to 'Raw_Data' for pre-processing, and processed
 datasets are stored in 'Preprocessed_Data'. Input and output directories for 
 the analysis and visualisation steps are found in the 'Analysis' directory.
 
-For detailed step-by-step instructions please read [Sufi et al. 2021](https://doi.org/10.1038/s41596-021-00603-4). 
+For detailed step-by-step instructions please read [Sufi and Qin et al. 2021](https://doi.org/10.1038/s41596-021-00603-4). 
 Otherwise see the brief tutorial below
 
 ### Input data
