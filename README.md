@@ -4,8 +4,11 @@
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
 In this repository we present CyGNAL, a pipeline for analysing mass cytometry 
-data featured in our 2021 Nature Protocols, Sufi and Qin et al. paper: [Multiplexed single-cell analysis of organoid signaling networks](https://doi.org/10.1038/s41596-021-00603-4). 
-In [Qin et al. 2020](https://www.nature.com/articles/s41592-020-0737-8) we show a practical application to a complex biological system of the data analysis enabled by CyGNAL. 
+data featured in our 2021 Nature Protocols, Sufi and Qin et al. paper: 
+[Multiplexed single-cell analysis of organoid signaling networks](https://doi.org/10.1038/s41596-021-00603-4). 
+In [Qin et al. 2020](https://www.nature.com/articles/s41592-020-0737-8) we show 
+a practical application to a complex biological system of the data analysis 
+enabled by CyGNAL. 
 
 With code in both Python and R, CyGNAL assumes some preliminary and inter-step 
 processing through the platform [Cytobank](https://cytobank.org/) (although the 
@@ -31,10 +34,17 @@ Overview of CyGNAL (dashed blue line) within a standard mass cytometry analysis:
 CyGNAL has been tested on both macOS (from Catalina onwards) and Debian-based 
 Linux distributions (including Ubuntu on [WSL](https://github.com/Microsoft/WSL)).
 
-We suggest users use [Conda](https://docs.conda.io/en/latest/) to setup an environment with all necessary dependencies. 
-Alternatively a [Docker](https://www.docker.com/) container is also available on [dockerhub](https://hub.docker.com/repository/docker/ferranc96/cygnal). 
+Windows users can run CyGNAL either using Ubuntu through [WSL](https://github.com/Microsoft/WSL)
+([available on the windows Store](https://www.microsoft.com/en-gb/p/ubuntu/9nblggh4msv6#activetab=pivot:overviewtab)) 
+or installing Docker and using the container (see below).
 
-For further details regarding seting up CyGNAL, please refer to the tutorial section below.
+We suggest users use [Conda](https://docs.conda.io/en/latest/) to setup an 
+environment with all necessary dependencies. 
+Alternatively a [Docker](https://www.docker.com/) container is also available 
+on [dockerhub](https://hub.docker.com/repository/docker/ferranc96/cygnal).
+
+For further details regarding seting up CyGNAL, please refer to the tutorial 
+section below.
 
 ### Dependencies
 
@@ -100,7 +110,8 @@ further details.
 
 ### **A brief step-by-step tutorial**
 
-This here is a brief tutotorial to run all main steps in CyGNAL with a sequential order. 
+This here is a brief tutotorial to run all main steps in CyGNAL with a 
+sequential order. 
 
 All console commands given assume the user is in the tool's root directory 
 (.../CyGNAL/) and moves the relevant data from the ouput folder of the previous 
@@ -115,15 +126,30 @@ Keep in mind however that runtimes will scale with bigger, or multiple, datasets
 necessary software and dependencies.
     * We strongly encourage using [conda](https://docs.conda.io/en/latest/miniconda.html) 
     to setup an environment with the following command once CyGNAL has been downloaded:
-        * `conda create -f conda_env.yml`.
-    * Alternatively, if you have Docker installed in your machine, you can use a Docker container [available on dockerhub](https://hub.docker.com/repository/docker/ferranc96/cygnal). If using the container we suggest the following workflow:
+        * `conda env create -f conda_env.yml`: This command creates a conda 
+        environment named *cygnal* that contains all necessary dependencies. 
+        It needs to be **run only once** when dowloading CyGNAL for the first time 
+        (or after a major update)
+        * `conda activate cygnal`: This command ensures that CyGNAL's conda 
+        environment is active and ready to use. It needs to be **run each session**.
+        
+    * Alternatively, if you have Docker installed in your machine, you can use 
+    a Docker container 
+    [available on dockerhub](https://hub.docker.com/repository/docker/ferranc96/cygnal). 
+    If using the container we suggest the following workflow:
         * Clone CyGNAL on your home directory: 
         `git clone https://github.com/TAPE-Lab/CyGNAL.git ~/CyGNAL_docker`
         * Run the CyGNAL docker container:
         `docker run -v ~/CyGNAL_docker/:/usr/app/CyGNAL -it --entrypoint /bin/bash -p 12241-12252:12241-12252 ferranc96/cygnal:one`
-            * The command above runs a live terminal on the container with a conda environment that already contains all necessary dependencies. Communication with the host machine is done via the shared directory in ~/CyGNAL_docker (i.e. where you will need to input data and fetch CyGNAL's outputs), with open ports for the Heatmap and PCA shinyApps.
+            * The command above runs a live terminal on the container with a 
+            conda environment that already contains all necessary dependencies. 
+            Communication with the host machine is done via the shared 
+            directory in ~/CyGNAL_docker (i.e. where you will need to input 
+            data and fetch CyGNAL's outputs), with open ports for the Heatmap 
+            and PCA shinyApps.
 
-            * This *docker run* command is to be run everytime the user wants to use CyGNAL through docker.
+            * This *docker run* command is to be run everytime the user wants 
+            to use CyGNAL through docker.
 
 1. **Pre-process:** Copy all the data files to the 'Raw_Data' folder and run
 `1-data_preprocess.py`. The output files with their antibody panel processed 
@@ -138,7 +164,8 @@ file listing all the markers measured in the given experiment.
     (Actions - Export - Export events, with *'Include header with FCS filename'* unchecked).
 
     *Note:* This step is essential for getting the dataset compatible with 
-    downstream analysis and has to be performed as the first step in our workflow.
+    downstream analysis and has to be performed as the first step in our 
+    workflow.
 
 2. **UMAP:** Move the processed data file(s) and panel_marker.csv to 'Analysis/UMAP_input'. 
 Edit *'panel_markers.csv'* to set all the markers used for UMAP analysis from 'N' to 'Y'. 
@@ -192,6 +219,13 @@ Run `5v2-pca.py` and follow the instructions in the GUI.
 
 ## 3. About
 
+### Support
+
+For any queries or issues regarding CyGNAL please check the 
+[Issues](https://github.com/TAPE-Lab/CyGNAL/issues) section in this repository.
+Alternatively you can also email Ferran Cardoso at 
+[ferran.cardoso.19@ucl.ac.uk](mailto:ferran.cardoso.19@ucl.ac.uk).
+
 ### Authors
 
 The work here is actively being developed by 
@@ -199,14 +233,10 @@ Ferran Cardoso ([@FerranC96](https://github.com/FerranC96)) and
 Dr. Xiao Qin ([@qinxiao1990](https://github.com/qinxiao1990)). 
 Based also on original work by Pelagia Kyriakidou.
 
-### Support
-
-For any queries or issues regarding CyGNAL please check the 
-[Issues](https://github.com/TAPE-Lab/CyGNAL/issues) section in this repository.
-
 ### The group
 
-Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's Cancer Institute. 
+Repository of the [Cell Communication Lab](http://tape-lab.com/) at UCL's 
+Cancer Institute. 
 
 The Cell Communication Lab studies how oncogenic mutations communicate with 
 stromal and immune cells in the colorectal cancer (CRC) tumour microenvironment (TME). 
