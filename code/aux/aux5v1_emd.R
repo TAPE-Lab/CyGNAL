@@ -6,7 +6,8 @@ list.of.packages <- c("tidyverse",
                         "RColorBrewer",
                         "shiny",
                         "plotly",
-                        "ComplexHeatmap"
+                        "ComplexHeatmap",
+                        "circlize"
                         )
 # check if pkgs are installed already, if not, install automatically:
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -36,7 +37,7 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(width=4,
             sliderInput("range",
-                        "Slider Range: (only for Plotly heatmap",
+                        "Slider Range:",
                         step = 0.1,
                         min = floor(minx) - 1,
                         max = ceiling(maxx) +1,
@@ -81,17 +82,24 @@ server <- function(input, output, session) {
         else{data_to_plot <- emd_info}
         initial_emd <- data_to_plot %>% ggplot(aes(x=file_origin, y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
         print(
-        ggplotly(initial_emd + scale_fill_distiller(
-            palette = "RdBu", limits=c(input$range[1], input$range[2]),
-            #breaks = c(floor(rng[1]), ceiling(rng[2])),
-            oob = scales::squish, guide = guide_colourbar(
-                nbin=100, draw.ulim = FALSE,
-                draw.llim = FALSE, ticks = FALSE)) +
+        ggplotly(initial_emd + 
+            scale_fill_gradientn(
+                colours=c("blue", "white", "red"),
+                values=scales::rescale(c(input$range[1], 0, input$range[2])),
+                limits=c(input$range[1], input$range[2]),
+                # low="blue", mid="white", high="red", 
+                # limits=c(input$range[1], input$range[2]),
+                # #breaks = c(floor(rng[1]), ceiling(rng[2])),
+                oob = scales::squish, guide = guide_colourbar(
+                    nbin=100, draw.ulim = FALSE,
+                    draw.llim = FALSE, ticks = FALSE)
+            ) +
             theme(legend.position="right", legend.direction="vertical", 
                     axis.text.x = element_text(angle = 45, hjust = 1)) + 
             xlab("Condition") + ylab("Markers") +
             ggtitle("EMD scores heatmap")
-        ) %>% layout(height = 700, width = 700))
+        ) %>% layout(height = 700, width = 700)
+        )
     })
     output$complexheatmap <- renderPlot({ #Process input data and make ComplexHeatmap
         if (!is.null(input$in6) & !is.null(input$in12)) {
@@ -110,7 +118,13 @@ server <- function(input, output, session) {
         conditions <- df$file_origin
         df_mat <- df %>% select(-file_origin) %>% as.matrix()
         rownames(df_mat) <- conditions
-        Heatmap(t(df_mat), name="EMD scores", column_title="Conditions",row_title="Markers",column_names_rot=60)
+        Heatmap(t(df_mat), name="EMD scores", 
+            column_title="Conditions", row_title="Markers",
+            column_names_rot=60,
+            col=circlize::colorRamp2(
+                c(input$range[1], 0, input$range[2]),
+                c("blue", "white", "red")
+            ))
     }, width=600, height=800)
 
     output$foo <- downloadHandler( #Download plotly heatmap
