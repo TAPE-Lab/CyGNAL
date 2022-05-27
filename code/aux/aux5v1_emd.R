@@ -145,17 +145,24 @@ server <- function(input, output, session) {
             
             initial_emd <- data_to_plot %>% ggplot(aes(x=file_origin, y=fct_rev(marker))) + geom_tile(aes(fill=EMD_no_norm_arc))
             
-            ggsave(file, plot = initial_emd + scale_fill_distiller(
-                                palette = "RdBu", limits=c(input$range[1], input$range[2]),
-                #breaks = c(floor(rng[1]), ceiling(rng[2])),
-                                oob = scales::squish, guide = guide_colourbar(
-                                    nbin=100, draw.ulim = FALSE,
-                                    draw.llim = FALSE, ticks = FALSE)) +
-                            theme(legend.position="right", legend.direction="vertical", 
-                                axis.text.x = element_text(angle = 45, hjust = 1)) +  #, aspect.ratio = 1)) +
-                            xlab("Condition") + ylab("Markers") +
-                    ggtitle("EMD scores heatmap")
-            , device = "pdf")
+            ggsave(file, plot = initial_emd + 
+                                scale_fill_gradientn(
+                                    colours=c("blue", "white", "red"),
+                                    values=scales::rescale(c(input$range[1], 
+                                                            0, 
+                                                            input$range[2])),
+                                    limits=c(input$range[1], input$range[2]),
+                                    oob = scales::squish, guide = guide_colourbar(
+                                        nbin=100, draw.ulim = FALSE,
+                                        draw.llim = FALSE, ticks = FALSE)
+                                ) +
+                                theme(legend.position="right", 
+                                    legend.direction="vertical", 
+                                    axis.text.x = element_text(angle = 45, 
+                                                    hjust = 1)) +  #, aspect.ratio = 1)) +
+                                xlab("Condition") + ylab("Markers") +
+                                ggtitle("EMD scores heatmap"),
+                    device = "pdf")
         }
     )
     output$complex <- downloadHandler( #Download ComplexHeatmap
@@ -179,7 +186,16 @@ server <- function(input, output, session) {
             df_mat <- df %>% select(-file_origin) %>% as.matrix()
             rownames(df_mat) <- conditions
             pdf(file)#Had to save using general method and calling draw() to heatmap
-            draw(Heatmap(t(df_mat), name="EMD scores", column_title="Conditions",row_title="Markers",column_names_rot=60)) #, heatmap_height=unit(16,"cm") apply to draw call to modify height
+            draw(
+                Heatmap(t(df_mat), name="EMD scores", 
+                    column_title="Conditions", row_title="Markers",
+                    column_names_rot=60,
+                    col=circlize::colorRamp2(
+                        c(input$range[1], 0, input$range[2]),
+                        c("blue", "white", "red")
+                        )
+                    )
+                ) #, heatmap_height=unit(16,"cm") apply to draw call to modify height
             dev.off()
         }
     )
