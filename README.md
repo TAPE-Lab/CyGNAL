@@ -1,6 +1,10 @@
 <!-- [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest) -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4587193.svg)](https://doi.org/10.5281/zenodo.4587193)
 
+Development branch to add some new functionality related to Dimensionality reduction 
+(and perhaps clustering), adding ARM support (for Apple silicon), and improving 
+code annotation for our functions.
+
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
 In this repository we present CyGNAL, a pipeline for analysing mass cytometry 
