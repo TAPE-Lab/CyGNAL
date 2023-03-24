@@ -6,6 +6,7 @@
 Development branch to add some new functionality related to Dimensionality reduction 
 (and perhaps clustering), adding ARM support (for Apple silicon), and improving 
 code annotation for our functions.
+Take also as an opportunity to redefine the conda environment file.
 
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 
