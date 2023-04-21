@@ -8,7 +8,7 @@ dependencies:
   - r-base=4.0
   - natsort  
   - numpy #ALLarch
-  - pandas  #ALLarch
+  - pandas=1.5  #ALLarch
   - scikit-learn  #ALLarch
   - pynndescent #ALLarch
   - umap-learn #ALL64arch
