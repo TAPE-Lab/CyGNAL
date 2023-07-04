@@ -145,7 +145,7 @@ for f in dremi_files:
                 if num_outliers_total == 0:
                     df_info_dict[colname_arc] = "-" # this is a placeholder
         # Store the info for each marker pair in df_info      
-        df_info = df_info.append(df_info_dict, ignore_index=True)    
+        df_info = pd.concat([df_info, df_info_dict], ignore_index=True)    
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Save to file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#

@@ -171,7 +171,7 @@ def concatenate_fcs(input_dir):
                                             lambda x: str(fcounter)+"-"+str(x))
         except KeyError:
             sys.exit("ERROR: Cell_Index missing from data. Have you preprocessed it?")
-        no_arc = no_arc.append(df, ignore_index=True)
+        no_arc = pd.concat([no_arc, df], ignore_index=True)
     return no_arc, filelist
 
 #Function to concatenate all files and save as txt -> DEPRECATE IN THE NEAR FUTURE!
@@ -199,7 +199,7 @@ def concatenate_save(input_dir, output_dir):
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
         # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
-        concat = concat.append(df, ignore_index=True)
+        concat = pd.concat([concat, df], ignore_index=True)
     print("Concatenating...")
     concat.to_csv(f'{output_dir}/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")

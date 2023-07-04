@@ -43,6 +43,6 @@ def calculate_emd(marker_list, emd_infodict, compare_from, compare_to,
                                                         compare_from[marker],
                                                         compare_to[marker])
         #Add EMD score to the output dataframe
-        emd_df = emd_df.append(emd_infodict, ignore_index=True)
+        emd_df = pd.concat([emd_df, pd.DataFrame([emd_infodict])], ignore_index=True)
     
     return emd_df
