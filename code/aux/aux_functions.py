@@ -11,6 +11,17 @@ import umap
 
 #Read broken FCS through r.flowCore
 def read_rFCS(file_path):
+    """
+    Reads an FCS file using R packages and returns a pandas DataFrame containing the data.
+
+    Args:
+        file_path (str): The path to the FCS file.
+
+    Returns:
+        df_file (pandas.DataFrame): A DataFrame containing the FCS data.
+        no_filter (bool): Indicates whether filtering was applied to the columns.
+            True if no filtering was applied, False otherwise.
+    """
     from rpy2.robjects import globalenv, pandas2ri, r
     from rpy2.robjects.packages import importr
     from rpy2.rinterface_lib.callbacks import logger
@@ -87,6 +98,17 @@ def read_rFCS(file_path):
 
 #Arcsinh transform the data
 def arcsinh_transf(cofactor, no_arc):
+    """
+    Applies the arcsinh transformation to selected columns of a DataFrame.
+
+    Args:
+        cofactor (float): The scaling factor for the arcsinh transformation.
+        no_arc (pandas.DataFrame): The DataFrame containing the data to be transformed.
+
+    Returns:
+        arc (pandas.DataFrame): The DataFrame with the selected columns transformed using arcsinh.
+        cols (list): The list of column names that were transformed.
+    """
     #Select only the columns containing the markers (as they start with a number for the isotope)
     cols = [x for x in no_arc.columns if x[0].isdigit()]
     #Apply the arcsinh only to those columns (don't want to change time or any other)
@@ -100,6 +122,16 @@ def arcsinh_transf(cofactor, no_arc):
 
 #Function to concatenate all files: Read input .txt and .fcs. Sanity check. Concatenate
 def concatenate_fcs(input_dir):
+    """
+    Reads and concatenates multiple mass cytometry FCS or text files from a directory.
+
+    Args:
+        input_dir (str): The directory path containing the FCS and text files.
+
+    Returns:
+        no_arc (pandas.DataFrame): The concatenated DataFrame containing the data from all files.
+        filelist (list): The list of file names that were read and concatenated.
+    """
     txt_filelist = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     fcs_filelist = [f for f in os.listdir(input_dir) if f.endswith(".fcs")]
     filelist = txt_filelist+fcs_filelist
@@ -139,11 +171,21 @@ def concatenate_fcs(input_dir):
                                             lambda x: str(fcounter)+"-"+str(x))
         except KeyError:
             sys.exit("ERROR: Cell_Index missing from data. Have you preprocessed it?")
-        no_arc = no_arc.append(df, ignore_index=True)
+        no_arc = pd.concat([no_arc, df], ignore_index=True)
     return no_arc, filelist
 
 #Function to concatenate all files and save as txt -> DEPRECATE IN THE NEAR FUTURE!
 def concatenate_save(input_dir, output_dir):
+    """
+    Reads and concatenates multiple tab-separated  mass cytometry text files from a directory and saves the concatenated data to a single file.
+
+    Args:
+        input_dir (str): The directory path containing the input text files.
+        output_dir (str): The directory path where the concatenated file will be saved.
+
+    Returns:
+        None
+    """
     input_files = [f for f in os.listdir(input_dir) if f.endswith(".txt")]
     concat = pd.DataFrame()
     #Add counter to keep track of the number of files in input -> 
@@ -157,14 +199,26 @@ def concatenate_save(input_dir, output_dir):
         df["Sample_ID-Cell_Index"] = df["Cell_Index"].apply(
                                         lambda x: str(fcounter)+"-"+str(x)) #File+ID #This way the cell-index will be preserved after Cytobank upload
         # df["Cell_Index"] = df["Cell_Index"].apply(lambda x: str(fcounter)+"-"+str(x)) #File+ID
-        concat = concat.append(df, ignore_index=True)
+        concat = pd.concat([concat, df], ignore_index=True)
     print("Concatenating...")
     concat.to_csv(f'{output_dir}/concat_{name}.txt', index = False, sep = '\t')
     print(f"Concatenated file saved as:\nconcat_{name}.txt")
 
 #Downsample dataframe by column and save to file which IDs were removed
 def downsample_data(no_arc, info_run, output_dir, 
-                    split_bycol="file_identifier"): 
+                    split_bycol="file_identifier"):
+    """
+    Performs downsampling on a DataFrame based on a specified column for splitting the data.
+
+    Args:
+        no_arc (pandas.DataFrame): The input DataFrame containing the data to be downsampled.
+        info_run (str): The name or identifier for the downsampling run.
+        output_dir (str): The directory path where the downsampling status file will be saved.
+        split_bycol (str, optional): The column name to split the data for downsampling. Defaults to "file_identifier".
+
+    Returns:
+        reduced_df (pandas.DataFrame): The downsampled DataFrame.
+    """
     downsampled_dframe = no_arc.copy()
     #Defiine downsampling size (N) per file: at least N cells in all input files
     downsample_size = downsampled_dframe[split_bycol].value_counts().min() 
@@ -190,11 +244,30 @@ def downsample_data(no_arc, info_run, output_dir,
 
 # Random downsampling of a dataframe to n rows
 def downsample_df(df, n):
+    """
+    Performs downsampling on a DataFrame by randomly selecting a specified number of rows.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame to be downsampled.
+        n (int): The number of rows to be randomly selected.
+
+    Returns:
+        df_downsampled (pandas.DataFrame): The downsampled DataFrame.
+    """
     df_downsampled = df.sample(n)
     return df_downsampled
 
 #Function to read a .csv file of the panel's markers with some to be selected
 def read_marker_csv(input_dir):
+    """
+    Reads a marker CSV file from the input directory and extracts the markers that are flagged for use.
+
+    Args:
+        input_dir (str): The directory path containing the marker CSV file.
+
+    Returns:
+        selected_markers (list): A list of selected markers.
+    """
     marker_files = [f for f in os.listdir(f"{input_dir}") if f.endswith(".csv")]
     if len(marker_files) != 1: #Sanity check
         sys.exit("ERROR: There should be ONE .csv file with the markers to use in the input folder!")
@@ -205,6 +278,16 @@ def read_marker_csv(input_dir):
     return selected_markers
 
 def write_panel_emd(df, input_dir):
+    """
+    Writes a panel markers CSV file based on the unique markers present in a DataFrame of EMD scores.
+
+    Args:
+        df (pandas.DataFrame): The input EMD DataFrame containing marker information.
+        input_dir (str): The directory path where the panel markers CSV file will be written.
+
+    Returns:
+        None
+    """
     all_markers = list(set(df['marker']))
     counter_marker = []
     for i in all_markers:
@@ -213,6 +296,16 @@ def write_panel_emd(df, input_dir):
     markers.to_csv(f"{input_dir}/panel_markers.csv", index=False, header=False)
 
 def write_panel_dremi(df, input_dir):
+    """
+    Writes a panel markers CSV file based on the unique markers present in a DataFrame of DREMI scores.
+
+    Args:
+        df (pandas.DataFrame): The input DREMI DataFrame containing marker information.
+        input_dir (str): The directory path where the panel markers CSV file will be written.
+
+    Returns:
+        None
+    """
     all_markers = list(set(df['marker_x']))
     counter_marker = []
     for i in all_markers:
@@ -222,6 +315,16 @@ def write_panel_dremi(df, input_dir):
 
 #Simple yes or no input function (default NO)
 def yes_or_NO(question, default="NO"):
+    """
+    Prompts the user with a yes or no question and returns a boolean value based on the response.
+
+    Args:
+        question (str): The question to prompt the user.
+        default (str): The default response. Options: "NO" (default) or "YES".
+
+    Returns:
+        bool: True if the user's response is yes, False otherwise.
+    """
     if default.lower() == "no":
         while True:
             reply = str(input(question+' (y/[N]): ')).lower().strip()

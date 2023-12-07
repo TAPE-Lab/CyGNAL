@@ -1,5 +1,11 @@
 <!-- [![Documentation Status](https://readthedocs.org/projects/cytof-dataanalysis/badge/?version=latest)](https://cytof-dataanalysis.readthedocs.io/en/latest/?badge=latest) -->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4587193.svg)](https://doi.org/10.5281/zenodo.4587193)
+[![zenodo:10.5281/zenodo.4587193](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.4587193-4B81BE.svg)](https://doi.org/10.5281/zenodo.4587193) <!-- 4B81BE is the colour for Zenodo -->
+[![natprotocols:10.1038/s41596-021-00603-4](https://img.shields.io/badge/DOI-10.1038%2Fs41596--021--00603--4-644B96.svg)](https://doi.org/10.1038/s41596-021-00603-4) <!-- 644B96 is the colour for Nature Protocols -->
+
+<!-- Development branch to add some new functionality related to Dimensionality reduction 
+(and perhaps clustering), adding ARM support (for Apple silicon), and improving 
+code annotation for our functions.
+Take also as an opportunity to redefine the conda environment file. -->
 
 # **Cy**TOF Si**gn**alling An**al**ysis (*CyGNAL*)
 

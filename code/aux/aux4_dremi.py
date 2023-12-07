@@ -12,7 +12,21 @@ import scprep
 # find outliers for both marker_x and marker_y based on cufoffs of standard deviations
 # return the number of outliers and a dataframe after outlier removal
 # update the df_info_dict with the number of outliers
+#The function identifies outliers based on the absolute difference between each marker's value and its mean, normalized by the marker's standard deviation. Rows that have values exceeding the cutoff multiplied by the standard deviation are considered outliers.
 def outlier_removal(df, cutoff, marker_x, marker_y, df_info_dict):
+    """
+    Removes outliers from a DataFrame based on a cutoff value and specific markers.
+
+    Args:
+        df (DataFrame): Input DataFrame.
+        cutoff (float): Cutoff value for outlier removal.
+        marker_x (str): Marker column name for x-axis.
+        marker_y (str): Marker column name for y-axis.
+        df_info_dict (dict): Dictionary to store outlier information.
+
+    Returns:
+        tuple: A tuple containing the number of total outliers removed and the DataFrame without outliers.
+    """
     num_outliers_total = 0
     num_outliers_x = 0
     num_outliers_y = 0

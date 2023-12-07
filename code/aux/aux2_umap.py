@@ -12,8 +12,19 @@ import umap
 # UMAP function
 # umap embedding calculation; result saved in a pandas dataframe
 # the names of the umap info columns are also defined here
-
+#The function applies UMAP dimensionality reduction to the input data and combines it with the original data, providing the UMAP-transformed data as the output.
 def perform_umap(umap_params, all_together_vs_marks, no_arc):
+    """
+    Performs UMAP dimensionality reduction on the given data.
+
+    Args:
+        umap_params (dict): UMAP parameters including "info", "n", "m", "d", "comp", "rs", and "nsr".
+        all_together_vs_marks (array-like): Input data for UMAP transformation.
+        no_arc (DataFrame): Untransformed data.
+
+    Returns:
+        DataFrame: UMAP-transformed data with added UMAP dimension columns.
+    """
     info_run = umap_params["info"]
     run_name = "UMAP_"+info_run
     #Calculate UMAP on arc tranf data (all_together...)
@@ -33,7 +44,3 @@ def perform_umap(umap_params, all_together_vs_marks, no_arc):
     no_arc = no_arc.join(umap_emb)
 
     return no_arc
-        
-
-
-            

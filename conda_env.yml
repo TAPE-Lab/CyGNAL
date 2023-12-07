@@ -3,9 +3,9 @@ channels:
   # - bioconda
   - conda-forge
 dependencies: 
-  - python=3.8  
-  - pip=21  
-  - r-base=4.0
+  - python=3 
+  - pip
+  - r-base=4
   - natsort  
   - numpy #ALLarch
   - pandas=1.5  #ALLarch
